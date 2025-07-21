@@ -2,7 +2,7 @@ import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory }
 
 export const initialApplications: Application[] = [
   {
-    id: 1,
+    id: '1',
     company: 'Google',
     role: 'Software Engineer, Cloud',
     link: '#',
@@ -15,7 +15,7 @@ export const initialApplications: Application[] = [
     notes: 'Target team: GKE Networking.'
   },
   {
-    id: 2,
+    id: '2',
     company: 'Microsoft',
     role: 'SDE 2, Azure',
     link: '#',
@@ -28,7 +28,7 @@ export const initialApplications: Application[] = [
     notes: 'Discussed 17LPA expectation.'
   },
   {
-    id: 3,
+    id: '3',
     company: 'Atlassian',
     role: 'Backend Engineer',
     link: '#',
@@ -44,7 +44,7 @@ export const initialApplications: Application[] = [
 
 export const initialPrepEntries: PrepEntry[] = [
   {
-    id: 1,
+    id: '1',
     date: '2025-07-21',
     topic: 'DSA: Arrays & Hashing',
     problems: 'https://leetcode.com/problems/two-sum/',
@@ -53,7 +53,7 @@ export const initialPrepEntries: PrepEntry[] = [
     notes: 'Two-pointer technique is very useful for sorted arrays.'
   },
   {
-    id: 2,
+    id: '2',
     date: '2025-07-22',
     topic: 'System Design: Core Concepts',
     problems: '',
@@ -65,7 +65,7 @@ export const initialPrepEntries: PrepEntry[] = [
 
 export const initialCompanyResearch: CompanyResearch[] = [
   {
-    id: 1,
+    id: '1',
     company: 'Oracle',
     whatTheyDo: 'Cloud Infrastructure (OCI), direct competitor to IBM Cloud.',
     values: 'Customer success, innovation.',
@@ -77,7 +77,7 @@ export const initialCompanyResearch: CompanyResearch[] = [
 
 export const initialNetworkingContacts: NetworkingContact[] = [
   {
-    id: 1,
+    id: '1',
     name: 'John Doe',
     company: 'Google',
     role: 'SDE 3',
@@ -90,7 +90,7 @@ export const initialNetworkingContacts: NetworkingContact[] = [
 
 export const initialStarStories: StarStory[] = [
   {
-    id: 1,
+    id: '1',
     title: 'K8s Test Automation',
     situation: 'Manual testing for K8s deployments was slow, error-prone, and inconsistent across multiple teams.',
     task: 'My task was to create a unified solution to automate the entire resource management and testing process.',
@@ -98,7 +98,7 @@ export const initialStarStories: StarStory[] = [
     result: 'This reduced testing times by a massive 90% and eliminated manual configuration errors, significantly improving developer productivity and release velocity.'
   },
   {
-    id: 2,
+    id: '2',
     title: 'Orphaned Object Cleanup',
     situation: 'Legacy cleanup scripts were unreliable and frequently failed, leaving orphaned network resources in our production and staging cloud environments, causing resource leakage.',
     task: 'I needed to build a robust, native solution to handle the resource lifecycle automatically and reliably.',

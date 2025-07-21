@@ -36,21 +36,97 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+    <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-lg shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
+        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
           <Briefcase className="w-5 h-5" />
           My Applications
         </h2>
         <button
           onClick={onAddApplication}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start"
         >
           <Plus className="w-4 h-4" />
           Add Application
         </button>
       </div>
-      <div className="overflow-x-auto">
+      
+      {/* Mobile Card View */}
+      <div className="sm:hidden space-y-4">
+        {applications.map(app => (
+          <div key={app.id} className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-3">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="font-semibold text-slate-900 dark:text-slate-100">{app.company}</h3>
+                <a
+                  href={app.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-sm mt-1"
+                >
+                  {app.role}
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+              <div className="flex items-center gap-2">
+                <button 
+                  onClick={() => onEditApplication(app)}
+                  className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1"
+                  aria-label="Edit application"
+                >
+                  <Pencil className="w-4 h-4" />
+                </button>
+                <button 
+                  onClick={() => onDeleteApplication(app.id)}
+                  className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors p-1"
+                  aria-label="Delete application"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-3 text-sm">
+              <div>
+                <span className="text-slate-500 dark:text-slate-400">Date:</span>
+                <span className="ml-1 text-slate-900 dark:text-slate-100">{app.date}</span>
+              </div>
+              <div>
+                <span className="text-slate-500 dark:text-slate-400">Location:</span>
+                <span className="ml-1 text-slate-900 dark:text-slate-100">{app.location}</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className={`px-2 py-1 rounded-full text-xs font-medium uppercase tracking-wide ${statusColors[app.status]}`}>
+                {app.status}
+              </span>
+            </div>
+            
+            {app.nextStep && (
+              <div className="text-sm">
+                <span className="text-slate-500 dark:text-slate-400">Next:</span>
+                <span className="ml-1 text-slate-900 dark:text-slate-100">{app.nextStep}</span>
+              </div>
+            )}
+            
+            {app.notes && (
+              <div className="text-sm">
+                <span className="text-slate-500 dark:text-slate-400">Notes:</span>
+                <p className="mt-1 text-slate-900 dark:text-slate-100">{app.notes}</p>
+              </div>
+            )}
+          </div>
+        ))}
+        {applications.length === 0 && (
+          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+            No applications yet. Click "Add Application" to get started!
+          </div>
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden sm:block overflow-x-auto">
         <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
           <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-700/50">
             <tr>
@@ -98,7 +174,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                       <Pencil className="w-4 h-4" />
                     </button>
                     <button 
-                      onClick={() => onDeleteApplication(app.id as string)}
+                      onClick={() => onDeleteApplication(app.id)}
                       className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                       aria-label="Delete application"
                     >

@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { 
   signInWithPopup, 
   signOut, 
-  onAuthStateChanged, 
+  onAuthStateChanged,
+  signInAnonymously,
   User 
 } from 'firebase/auth';
 import { auth, googleProvider } from '../config/firebase';
@@ -29,6 +30,15 @@ export function useAuth() {
     }
   };
 
+  const signInAnonymous = async () => {
+    try {
+      await signInAnonymously(auth);
+    } catch (error) {
+      console.error('Error signing in anonymously:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -42,6 +52,7 @@ export function useAuth() {
     user,
     loading,
     signInWithGoogle,
+    signInAnonymous,
     logout
   };
 }

@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
-import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory } from './types';
+import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem } from './types';
 import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { useFirestore } from './hooks/useFirestore';
-import {
-  initialApplications,
-  initialPrepEntries,
-  initialCompanyResearch,
-  initialNetworkingContacts,
-  initialStarStories
-} from './data/initialData';
 import ApplicationTracker from './components/ApplicationTracker';
 import PrepLog from './components/PrepLog';
 import CompanyResearchComponent from './components/CompanyResearch';
@@ -25,15 +18,17 @@ import StarForm from './components/StarForm';
 import AuthButton from './components/AuthButton';
 import ThemeToggle from './components/ThemeToggle';
 import HelpPage from './components/HelpPage';
+import './animations.css';
 
 function App() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { isDark } = useTheme();
+  
   const [activeTab, setActiveTab] = useState<TabType>('applications');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [modalType, setModalType] = useState<TabType>('applications');
-  const [editingItem, setEditingItem] = useState<any | null>(null);
+  const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { 
@@ -244,14 +239,22 @@ function App() {
     }
   };
 
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-900">
+        <div className="w-16 h-16 border-4 border-indigo-600 border-dashed rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-900 flex items-center justify-center" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-        <div className="max-w-md w-full mx-4">
-          <div className="bg-white dark:bg-slate-800 rounded-lg shadow-lg p-8 text-center">
+      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-slate-900" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+        <div className="w-full max-w-md mx-4">
+          <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-slate-800">
             <div className="mb-6">
-              <Briefcase className="w-16 h-16 text-indigo-600 mx-auto mb-4" />
-              <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+              <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
+              <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
                 Job Search Tracker
               </h1>
               <p className="text-slate-600 dark:text-slate-400">
@@ -259,12 +262,12 @@ function App() {
               </p>
             </div>
             <AuthButton />
-            <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
+            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-slate-700">
               <div className="flex items-center justify-center gap-4">
                 <ThemeToggle />
                 <button
                   onClick={() => setIsHelpOpen(true)}
-                  className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
+                  className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   <HelpCircle className="w-4 h-4" />
                   How it works
@@ -273,25 +276,37 @@ function App() {
             </div>
           </div>
         </div>
+        
+        {/* Help Modal for Login Page */}
+        <Modal
+          isOpen={isHelpOpen}
+          onClose={() => setIsHelpOpen(false)}
+          title="Help & Guide"
+          size="xl"
+        >
+          <HelpPage onClose={() => setIsHelpOpen(false)} />
+        </Modal>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      <div className="container mx-auto p-4 sm:p-6 lg:p-8">
-        <header className="mb-8">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">Job Switch Command Center</h1>
-              <p className="text-slate-600 dark:text-slate-400 mt-1">
-                Your comprehensive dashboard to manage preparation, applications, and interviews.
+      <div className="container p-4 mx-auto sm:p-6 lg:p-8">
+        <header className="mb-6 sm:mb-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex-1">
+              <h1 className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl animated-gradient-text">
+                JobTrac - Your Job Switch Command Center
+              </h1>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 sm:text-base">
+                A comprehensive dashboard to manage preparation, applications, and interviews.
               </p>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">
               <button
                 onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-slate-300 dark:bg-slate-800 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
               >
                 <HelpCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Help</span>
@@ -303,8 +318,8 @@ function App() {
         </header>
 
         {/* Tabs */}
-        <div className="mb-6 border-b border-slate-200 dark:border-slate-700">
-          <nav className="-mb-px flex space-x-6 overflow-x-auto" aria-label="Tabs">
+        <div className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-slate-700">
+          <nav className="flex pb-px -mb-px space-x-2 overflow-x-auto sm:space-x-6 scrollbar-hide" aria-label="Tabs">
             {tabs.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
@@ -312,14 +327,15 @@ function App() {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`whitespace-nowrap py-4 px-1 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
+                  className={`whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm font-medium border-b-2 transition-colors flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
                     isActive
                       ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 font-semibold'
                       : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
+                  <Icon className="flex-shrink-0 w-4 h-4" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
                 </button>
               );
             })}
@@ -328,6 +344,21 @@ function App() {
 
         {/* Content */}
         <main>{renderTabContent()}</main>
+
+        {/* Footer */}
+        <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">
+          <div className="text-center text-sm text-slate-600 dark:text-slate-400">
+            Built with 💖 by{' '}
+            <a 
+              href="https://hariharen9.site/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors"
+            >
+              Hariharen
+            </a>
+          </div>
+        </footer>
 
         {/* Modal */}
         <Modal
