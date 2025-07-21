@@ -23,6 +23,9 @@ export const db = getFirestore(app);
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 
+// Set auth persistence (should be default, but let's be explicit)
+auth.useDeviceLanguage();
+
 // Initialize Analytics (optional)
 export const analytics = getAnalytics(app);
 

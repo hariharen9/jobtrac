@@ -1,5 +1,5 @@
 export interface Application {
-  id: number;
+  id: string;
   company: string;
   role: string;
   link: string;
@@ -13,7 +13,7 @@ export interface Application {
 }
 
 export interface PrepEntry {
-  id: number;
+  id: string;
   date: string;
   topic: string;
   problems: string;
@@ -23,7 +23,7 @@ export interface PrepEntry {
 }
 
 export interface CompanyResearch {
-  id: number;
+  id: string;
   company: string;
   whatTheyDo: string;
   values: string;
@@ -33,7 +33,7 @@ export interface CompanyResearch {
 }
 
 export interface NetworkingContact {
-  id: number;
+  id: string;
   name: string;
   company: string;
   role: string;
@@ -44,7 +44,7 @@ export interface NetworkingContact {
 }
 
 export interface StarStory {
-  id: number;
+  id: string;
   title: string;
   situation: string;
   task: string;
@@ -63,5 +63,7 @@ export type ApplicationStatus =
   | 'Offer'
   | 'Rejected'
   | 'Ghosted';
+
+export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory;
 
 export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
