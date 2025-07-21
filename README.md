@@ -18,6 +18,7 @@
 -   **🏢 Company Research:** Store in-depth research on target companies, including their values, your motivations, and key questions to ask during interviews.
 -   **🤝 Networking & Referrals:** Manage your professional contacts, track outreach, and note who has provided referrals.
 -   **⭐ STAR Story Bank:** Build a powerful arsenal of behavioral interview answers using the STAR (Situation, Task, Action, Result) method.
+-   **📝 Smart Notes:** Advanced note-taking system with markdown support, multiple pages, and real-time sync.
 
 ### 📱 **Mobile-First Design**
 -   **Fully Responsive:** Card-based layouts on mobile, detailed tables on desktop
@@ -149,6 +150,18 @@ The project is organized with a clear separation of concerns to make it easy to 
 - **Help System:** Comprehensive in-app help and guidance
 - **Professional Footer:** Credit attribution with external links
 
+### 📝 **Smart Notes System**
+- **Floating Interface:** Always-accessible sticky note button in bottom-right corner
+- **Multiple Pages:** Create unlimited customizable note pages with editable titles
+- **Rich Markdown Support:** Full markdown editor with live preview and syntax highlighting
+- **Customizable Colors:** 8 beautiful color themes for note organization
+- **Pin Important Notes:** Keep crucial information at the top
+- **Responsive Sizing:** Normal (600x700px) and expanded (70% viewport) modes
+- **Real-time Sync:** Instant synchronization across all devices via Firestore
+- **Theme Integration:** Perfect rendering in both light and dark modes
+- **Advanced Settings:** Customizable font size (12-20px), theme override, and preview toggle
+- **Smooth Animations:** Framer Motion powered transitions and interactions
+
 ---
 
 ## 📊 Application Architecture
@@ -217,6 +230,7 @@ interface PrepEntry {
    - `companies`
    - `contacts`
    - `stories`
+   - `userNotes`
 4. Set up Firestore security rules to ensure user data isolation
 5. Copy your Firebase config to the `.env` file
 
@@ -240,8 +254,9 @@ npm run preview
 1. **Sign In:** Choose between Google sign-in or anonymous mode
 2. **Explore Modules:** Navigate through the five main sections using the tab bar
 3. **Add Data:** Click the "Add" button in any section to create new entries
-4. **Mobile Usage:** Swipe through tabs and enjoy the card-based mobile layout
-5. **Help:** Access the help system anytime via the help button
+4. **Smart Notes:** Click the floating note button (bottom-right) for instant note-taking
+5. **Mobile Usage:** Swipe through tabs and enjoy the card-based mobile layout
+6. **Help:** Access the help system anytime via the help button
 
 ### **Best Practices**
 - **Regular Updates:** Keep your application statuses current for better tracking

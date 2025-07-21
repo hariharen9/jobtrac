@@ -66,4 +66,27 @@ export type ApplicationStatus =
 
 export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory;
 
+export interface NotePage {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  updatedAt: string;
+  color: string;
+  tags: string[];
+  pinned: boolean;
+}
+
+export interface UserNotes {
+  id: string;
+  userId: string;
+  pages: NotePage[];
+  settings: {
+    defaultColor: string;
+    showPreview: boolean;
+    fontSize: number;
+    theme: 'light' | 'dark' | 'auto';
+  };
+}
+
 export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
