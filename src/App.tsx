@@ -18,6 +18,7 @@ import StarForm from './components/StarForm';
 import AuthButton from './components/AuthButton';
 import ThemeToggle from './components/ThemeToggle';
 import HelpPage from './components/HelpPage';
+import Notes from './components/Notes';
 import './animations.css';
 
 function App() {
@@ -380,6 +381,9 @@ function App() {
           <HelpPage onClose={() => setIsHelpOpen(false)} />
         </Modal>
       </div>
+      
+      {/* Notes Component */}
+      <Notes userId={user?.uid} />
     </div>
   );
 }
