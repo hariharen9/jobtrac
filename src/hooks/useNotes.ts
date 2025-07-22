@@ -18,13 +18,13 @@ const DEFAULT_SETTINGS = {
 };
 
 const DEFAULT_PAGE: Omit<NotePage, 'id'> = {
-  title: 'Quick Notes',
-  content: '# Welcome to your notes!\n\nStart writing your thoughts, ideas, and important information here.\n\n## Features:\n- Full markdown support\n- Multiple pages\n- Customizable colors\n- Tags for organization\n- Pinning important notes\n\n**Happy note-taking!** 📝',
+  title: 'My Notes',
+  content: 'Welcome to your quick notes!\n\nUse **bold text** and *italic text* for formatting.\n\nStart writing your thoughts and ideas here...',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   color: '#fbbf24',
-  tags: ['welcome'],
-  pinned: true,
+  tags: [],
+  pinned: false,
 };
 
 export const useNotes = (userId: string | undefined) => {
@@ -92,12 +92,13 @@ export const useNotes = (userId: string | undefined) => {
   }, [userId]);
 
   const addPage = async (title: string = 'New Note', color: string = DEFAULT_SETTINGS.defaultColor) => {
-    if (!userId || !userNotes) return;
+    if (!userId || !userNotes) return null;
 
+    const newPageId = generateId();
     const newPage: NotePage = {
-      id: generateId(),
+      id: newPageId,
       title,
-      content: `# ${title}\n\nStart writing your note here...`,
+      content: '',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       color,
@@ -112,9 +113,11 @@ export const useNotes = (userId: string | undefined) => {
       await updateDoc(notesDocRef, {
         pages: updatedPages,
       });
+      return newPageId;
     } catch (err) {
       console.error('Error adding page:', err);
       setError(err instanceof Error ? err.message : 'Failed to add page');
+      return null;
     }
   };
 
