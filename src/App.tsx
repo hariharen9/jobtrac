@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
-import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem } from './types';
+import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './hooks/useAuth';
 import { useTheme } from './hooks/useTheme';
 import { useFirestore } from './hooks/useFirestore';
@@ -19,6 +19,8 @@ import AuthButton from './components/AuthButton';
 import ThemeToggle from './components/ThemeToggle';
 import HelpPage from './components/HelpPage';
 import Notes from './components/Notes';
+import ActivityCalendar from './components/ActivityCalendar';
+import KanbanBoard from './components/KanbanBoard';
 import './animations.css';
 
 function App() {
@@ -113,6 +115,15 @@ function App() {
   ) => {
     const { id, ...data } = item;
     await handleFormSubmit(() => updater(id, data), data);
+  };
+
+  const handleApplicationStatusUpdate = async (id: string, newStatus: ApplicationStatus) => {
+    try {
+      await updateApplication(id, { status: newStatus });
+      console.log(`Updated application ${id} status to ${newStatus}`);
+    } catch (error) {
+      console.error('Failed to update application status:', error);
+    }
   };
 
   const renderTabContent = () => {
@@ -345,6 +356,29 @@ function App() {
 
         {/* Content */}
         <main>{renderTabContent()}</main>
+
+        {/* Activity Calendar */}
+        <div className="mt-8">
+          <ActivityCalendar 
+            applications={applications}
+            prepEntries={prepEntries}
+            companies={companies}
+            contacts={contacts}
+            stories={stories}
+          />
+        </div>
+
+        {/* Kanban Board */}
+        <div className="mt-8">
+          <KanbanBoard
+            applications={applications}
+            onAddApplication={() => openModal('applications')}
+            onEditApplication={(item) => openModal('applications', item)}
+            onDeleteApplication={deleteApplication}
+            onUpdateStatus={handleApplicationStatusUpdate}
+            loading={applicationsLoading}
+          />
+        </div>
 
         {/* Footer */}
         <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-slate-700">

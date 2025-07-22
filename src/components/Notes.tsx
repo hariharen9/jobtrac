@@ -4,23 +4,12 @@ import {
   StickyNote,
   Plus,
   X,
-  Settings,
-  Pin,
-  PinOff,
   Edit3,
   Trash2,
-  GripVertical,
-  Eye,
-  EyeOff,
   Save,
-  Hash,
-  Link,
   Maximize2,
   Minimize2
 } from 'lucide-react';
-import MDEditor from '@uiw/react-md-editor';
-import '@uiw/react-md-editor/markdown-editor.css';
-import '@uiw/react-markdown-preview/markdown.css';
 import { useNotes } from '../hooks/useNotes';
 import { NotePage } from '../types';
 import './Notes.css';
@@ -28,17 +17,6 @@ import './Notes.css';
 interface NotesProps {
   userId: string | undefined;
 }
-
-const COLORS = [
-  { value: '#fbbf24', name: 'Amber' },
-  { value: '#3b82f6', name: 'Blue' },
-  { value: '#ef4444', name: 'Red' },
-  { value: '#10b981', name: 'Emerald' },
-  { value: '#8b5cf6', name: 'Violet' },
-  { value: '#f59e0b', name: 'Orange' },
-  { value: '#06b6d4', name: 'Cyan' },
-  { value: '#ec4899', name: 'Pink' },
-];
 
 export default function Notes({ userId }: NotesProps) {
   const {
@@ -48,43 +26,15 @@ export default function Notes({ userId }: NotesProps) {
     addPage,
     updatePage,
     deletePage,
-    updateSettings,
     clearError
   } = useNotes(userId);
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
   const [activePageId, setActivePageId] = useState<string | null>(null);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
   const [titleInput, setTitleInput] = useState('');
-  const [isMaximized, setIsMaximized] = useState(false);
-  const [windowSize, setWindowSize] = useState({ width: 1200, height: 800 });
-
-  // Update window size on resize
-  useEffect(() => {
-    const updateWindowSize = () => {
-      setWindowSize({
-        width: window.innerWidth,
-        height: window.innerHeight
-      });
-    };
-
-    // Set initial size
-    updateWindowSize();
-
-    // Add event listener
-    window.addEventListener('resize', updateWindowSize);
-    
-    // Cleanup
-    return () => window.removeEventListener('resize', updateWindowSize);
-  }, []);
-  
-  // Define sizes with proper constraints
-  const normalSize = { width: '600px', height: '700px' };
-  const expandedSize = { 
-    width: Math.min(windowSize.width * 0.85, 1000), 
-    height: Math.min(windowSize.height * 0.8, 750) 
-  };
+  const [noteContent, setNoteContent] = useState('');
 
   // Set active page to first page when notes load
   useEffect(() => {
@@ -93,10 +43,25 @@ export default function Notes({ userId }: NotesProps) {
     }
   }, [userNotes, activePageId]);
 
+  // Update note content when active page changes
+  useEffect(() => {
+    const activePage = userNotes?.pages?.find(page => page.id === activePageId);
+    if (activePage) {
+      setNoteContent(activePage.content);
+    }
+  }, [activePageId, userNotes]);
+
   const activePage = userNotes?.pages?.find(page => page.id === activePageId);
 
   const handleAddPage = async () => {
-    await addPage();
+    const newPageId = await addPage();
+    if (newPageId) {
+      // Find the new page and set it as active
+      const newPage = userNotes?.pages?.find(p => p.id === newPageId);
+      if (newPage) {
+        setActivePageId(newPage.id);
+      }
+    }
   };
 
   const handleDeletePage = async (pageId: string) => {
@@ -110,21 +75,14 @@ export default function Notes({ userId }: NotesProps) {
     }
   };
 
-  const handleUpdateContent = async (content: string) => {
-    if (activePage) {
-      await updatePage(activePage.id, { content });
-    }
+  const handleContentChange = (content: string) => {
+    setNoteContent(content);
   };
 
-  const handleTogglePin = async (pageId: string) => {
-    const page = userNotes?.pages?.find(p => p.id === pageId);
-    if (page) {
-      await updatePage(pageId, { pinned: !page.pinned });
+  const handleSaveContent = async () => {
+    if (activePage && noteContent !== activePage.content) {
+      await updatePage(activePage.id, { content: noteContent });
     }
-  };
-
-  const handleColorChange = async (pageId: string, color: string) => {
-    await updatePage(pageId, { color });
   };
 
   const handleTitleEdit = (pageId: string, currentTitle: string) => {
@@ -202,7 +160,7 @@ export default function Notes({ userId }: NotesProps) {
         </motion.button>
       </motion.div>
 
-      {/* Notes Panel */}
+      {/* Simplified Notes Panel */}
       <AnimatePresence>
         {isExpanded && (
           <motion.div
@@ -217,57 +175,47 @@ export default function Notes({ userId }: NotesProps) {
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={`fixed z-40 bg-white dark:bg-slate-800 rounded-xl shadow-2xl border border-slate-200 dark:border-slate-700 flex flex-col overflow-hidden ${
               isMaximized 
-                ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
-                : 'bottom-20 right-4'
+                ? 'inset-4 max-w-6xl max-h-[90vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
+                : 'bottom-20 right-4 w-96 h-[500px]'
             }`}
-            style={{ 
-              width: isMaximized ? expandedSize.width : normalSize.width,
-              height: isMaximized ? expandedSize.height : normalSize.height,
-              maxWidth: '95vw',
-              maxHeight: '95vh'
-            }}
           >
             {/* Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900">
               <div className="flex items-center gap-2">
                 <StickyNote className="w-5 h-5 text-amber-500" />
                 <h3 className="font-semibold text-slate-900 dark:text-slate-100">
-                  My Notes
+                  Quick Notes
                 </h3>
-                {userNotes?.pages?.length && (
-                  <span className="text-xs text-slate-500 dark:text-slate-400 bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded">
-                    {userNotes.pages.length}
-                  </span>
-                )}
               </div>
               <div className="flex items-center gap-2">
-                <motion.button
-                  onClick={() => setIsMaximized(!isMaximized)}
-                  className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  {isMaximized ? (
-                    <Minimize2 className="w-4 h-4" />
-                  ) : (
-                    <Maximize2 className="w-4 h-4" />
-                  )}
-                </motion.button>
-                <motion.button
-                  onClick={() => setIsSettingsOpen(true)}
-                  className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <Settings className="w-4 h-4" />
-                </motion.button>
                 <motion.button
                   onClick={handleAddPage}
                   className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
+                  title="Add new note"
                 >
                   <Plus className="w-4 h-4" />
+                </motion.button>
+                {activePage && noteContent !== activePage.content && (
+                  <motion.button
+                    onClick={handleSaveContent}
+                    className="p-1.5 text-green-600 dark:text-green-400 hover:text-green-700 dark:hover:text-green-300 hover:bg-green-100 dark:hover:bg-green-900/20 rounded-lg transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    title="Save changes"
+                  >
+                    <Save className="w-4 h-4" />
+                  </motion.button>
+                )}
+                <motion.button
+                  onClick={() => setIsMaximized(!isMaximized)}
+                  className="p-1.5 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  title={isMaximized ? "Minimize" : "Expand"}
+                >
+                  {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                 </motion.button>
                 <motion.button
                   onClick={() => setIsExpanded(false)}
@@ -280,34 +228,24 @@ export default function Notes({ userId }: NotesProps) {
               </div>
             </div>
 
-            {/* Page Tabs */}
-            <div className="flex items-center gap-1 p-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 overflow-x-auto">
-              {userNotes?.pages?.map((page, index) => (
-                <div
-                  key={page.id}
-                  className="flex items-center gap-1 flex-shrink-0"
-                >
+            {/* Note Tabs */}
+            {userNotes?.pages && userNotes.pages.length > 1 && (
+              <div className="flex items-center gap-1 p-2 border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 overflow-x-auto">
+                {userNotes.pages.map((page) => (
                   <motion.div
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-all group relative ${
+                    key={page.id}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded-md cursor-pointer transition-all group text-xs ${
                       activePageId === page.id
-                        ? 'text-slate-900 dark:text-slate-100 shadow-sm'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
+                        ? 'bg-amber-100 dark:bg-amber-900/20 text-slate-900 dark:text-slate-100'
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                     }`}
-                    style={{
-                      backgroundColor: activePageId === page.id 
-                        ? `${page.color}20` 
-                        : 'transparent'
-                    }}
                     onClick={() => setActivePageId(page.id)}
+                    whileHover={{ scale: 1.02 }}
                   >
                     <div
-                      className="w-3 h-3 rounded-full flex-shrink-0"
+                      className="w-2 h-2 rounded-full flex-shrink-0"
                       style={{ backgroundColor: page.color }}
                     />
-                    
                     {editingTitle === page.id ? (
                       <input
                         type="text"
@@ -318,13 +256,13 @@ export default function Notes({ userId }: NotesProps) {
                           if (e.key === 'Escape') handleTitleCancel();
                         }}
                         onBlur={handleTitleSave}
-                        className="bg-transparent border-none outline-none text-sm font-medium min-w-0 max-w-24"
+                        className="bg-transparent border-none outline-none text-xs font-medium w-16"
                         autoFocus
                       />
                     ) : (
                       <span 
-                        className="text-sm font-medium truncate max-w-20"
-                        onClick={(e) => {
+                        className="font-medium truncate max-w-16"
+                        onDoubleClick={(e) => {
                           e.stopPropagation();
                           handleTitleEdit(page.id, page.title);
                         }}
@@ -332,211 +270,61 @@ export default function Notes({ userId }: NotesProps) {
                         {page.title}
                       </span>
                     )}
-
-                    {page.pinned && (
-                      <Pin className="w-3 h-3 text-slate-500 dark:text-slate-400 flex-shrink-0" />
-                    )}
-
-                    {/* Page Actions */}
-                    <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {userNotes.pages.length > 1 && (
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          handleTogglePin(page.id);
+                          handleDeletePage(page.id);
                         }}
-                        className="p-1 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 rounded transition-colors"
+                        className="p-0.5 text-slate-400 hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors opacity-0 group-hover:opacity-100"
+                        title="Delete note"
                       >
-                        {page.pinned ? (
-                          <PinOff className="w-3 h-3" />
-                        ) : (
-                          <Pin className="w-3 h-3" />
-                        )}
+                        <X className="w-3 h-3" />
                       </button>
-                      {userNotes.pages.length > 1 && (
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeletePage(page.id);
-                          }}
-                          className="p-1 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
-                        >
-                          <Trash2 className="w-3 h-3" />
-                        </button>
-                      )}
-                    </div>
+                    )}
                   </motion.div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )}
 
             {/* Content Area */}
-            <div className="flex-1 overflow-hidden">
+            <div className="flex-1 flex flex-col overflow-hidden">
               {activePage ? (
-                <div 
-                  className="h-full" 
-                  data-color-mode={userNotes?.settings?.theme === 'auto' ? 'auto' : userNotes?.settings?.theme || 'light'}
-                >
-                  <MDEditor
-                    key={`${activePage.id}-${userNotes?.settings?.theme}-${userNotes?.settings?.fontSize}-${userNotes?.settings?.showPreview}`}
-                    value={activePage.content}
-                    onChange={(value) => handleUpdateContent(value || '')}
-                    preview={userNotes?.settings?.showPreview ? 'live' : 'edit'}
-                    hideToolbar={false}
-                    visibleDragBar={false}
-                    textareaProps={{
-                      placeholder: 'Start writing your note...',
-                      style: { 
-                        fontSize: `${userNotes?.settings?.fontSize || 14}px`,
-                        fontFamily: 'Inter, system-ui, sans-serif',
-                        lineHeight: 1.6
-                      },
+                <div className="flex-1 flex flex-col">
+                  <textarea
+                    value={noteContent}
+                    onChange={(e) => handleContentChange(e.target.value)}
+                    placeholder="Start writing your note here...\n\nYou can use basic formatting:\n- **bold text**\n- *italic text*\n- Lists and more!"
+                    className="flex-1 w-full p-4 text-sm resize-none border-none outline-none bg-transparent text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
+                    style={{
+                      fontFamily: 'Inter, system-ui, sans-serif',
+                      lineHeight: 1.5
                     }}
-                    height={isMaximized ? expandedSize.height - 160 : 580}
-                    data-color-mode={userNotes?.settings?.theme === 'auto' ? 'auto' : userNotes?.settings?.theme || 'light'}
                   />
+                  {activePage.content && (
+                    <div className="border-t border-slate-200 dark:border-slate-700 p-4 max-h-32 overflow-y-auto bg-slate-50 dark:bg-slate-900">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mb-2">Preview:</div>
+                      <div 
+                        className="text-sm text-slate-700 dark:text-slate-300 prose prose-sm max-w-none"
+                        dangerouslySetInnerHTML={{
+                          __html: noteContent
+                            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                            .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                            .replace(/\n/g, '<br>')
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               ) : (
-                <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400">
+                <div className="flex-1 flex items-center justify-center text-slate-500 dark:text-slate-400">
                   <div className="text-center">
                     <StickyNote className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-600" />
-                    <p>Select a note to start writing</p>
+                    <p className="text-sm">Click the + button to create your first note</p>
                   </div>
                 </div>
               )}
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Settings Modal */}
-      <AnimatePresence>
-        {isSettingsOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center"
-            onClick={() => setIsSettingsOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="bg-white dark:bg-slate-800 rounded-xl shadow-xl p-6 w-full max-w-md mx-4 border border-slate-200 dark:border-slate-700"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
-                  Notes Settings
-                </h3>
-                <button
-                  onClick={() => setIsSettingsOpen(false)}
-                  className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="space-y-6">
-                {/* Default Color */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
-                    Default Color
-                  </label>
-                  <div className="flex gap-2 flex-wrap">
-                    {COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        onClick={() => updateSettings({ defaultColor: color.value })}
-                        className={`w-8 h-8 rounded-full border-2 transition-all ${
-                          userNotes?.settings?.defaultColor === color.value
-                            ? 'border-slate-900 dark:border-slate-100 scale-110'
-                            : 'border-slate-300 dark:border-slate-600 hover:scale-105'
-                        }`}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Font Size */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
-                    Font Size: {userNotes?.settings?.fontSize || 14}px
-                  </label>
-                  <input
-                    type="range"
-                    min="12"
-                    max="20"
-                    value={userNotes?.settings?.fontSize || 14}
-                    onChange={(e) => updateSettings({ fontSize: parseInt(e.target.value) })}
-                    className="w-full"
-                  />
-                </div>
-
-                {/* Theme */}
-                <div>
-                  <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
-                    Theme
-                  </label>
-                  <select
-                    value={userNotes?.settings?.theme || 'auto'}
-                    onChange={(e) => updateSettings({ theme: e.target.value as 'light' | 'dark' | 'auto' })}
-                    className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100"
-                  >
-                    <option value="auto">Auto</option>
-                    <option value="light">Light</option>
-                    <option value="dark">Dark</option>
-                  </select>
-                </div>
-
-                {/* Show Preview */}
-                <div className="flex items-center justify-between">
-                  <label className="text-sm font-medium text-slate-900 dark:text-slate-100">
-                    Show Preview
-                  </label>
-                  <button
-                    onClick={() => updateSettings({ showPreview: !userNotes?.settings?.showPreview })}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                      userNotes?.settings?.showPreview
-                        ? 'bg-amber-500'
-                        : 'bg-slate-300 dark:bg-slate-600'
-                    }`}
-                  >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        userNotes?.settings?.showPreview ? 'translate-x-6' : 'translate-x-1'
-                      }`}
-                    />
-                  </button>
-                </div>
-              </div>
-
-              {/* Color Picker for Active Page */}
-              {activePage && (
-                <div className="mt-6 pt-6 border-t border-slate-200 dark:border-slate-700">
-                  <label className="block text-sm font-medium text-slate-900 dark:text-slate-100 mb-2">
-                    Current Note Color
-                  </label>
-                  <div className="flex gap-2 flex-wrap">
-                    {COLORS.map((color) => (
-                      <button
-                        key={color.value}
-                        onClick={() => handleColorChange(activePage.id, color.value)}
-                        className={`w-8 h-8 rounded-full border-2 transition-all ${
-                          activePage.color === color.value
-                            ? 'border-slate-900 dark:border-slate-100 scale-110'
-                            : 'border-slate-300 dark:border-slate-600 hover:scale-105'
-                        }`}
-                        style={{ backgroundColor: color.value }}
-                        title={color.name}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
