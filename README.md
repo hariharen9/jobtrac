@@ -118,50 +118,6 @@ The project is organized with a clear separation of concerns to make it easy to 
 ├── package.json
 └── README.md
 ```
-
----
-
-## 🎯 Production Features
-
-### 🔒 **Authentication & Security**
-- **Google OAuth Integration:** Secure sign-in with Google accounts
-- **Anonymous Authentication:** Try the app without account creation
-- **User Data Isolation:** Each user's data is completely private and secure
-- **Real-time Auth State:** Seamless authentication state management
-
-### 📱 **Mobile Optimization**
-- **Responsive Design:** Mobile-first approach with breakpoint-specific layouts
-- **Touch-Friendly:** Minimum 44px touch targets for optimal mobile interaction
-- **Card-Based Mobile UI:** Intuitive card layouts for mobile data viewing
-- **Horizontal Tab Scrolling:** Smooth, swipeable navigation on mobile devices
-- **Optimized Modal Experience:** Full-screen modals on mobile with proper scrolling
-
-### 🚀 **Performance & Reliability**
-- **Error Boundaries:** Graceful error handling with user-friendly fallbacks
-- **Loading States:** Consistent loading indicators across all operations
-- **Optimistic Updates:** Immediate UI feedback with Firestore sync
-- **Real-time Data Sync:** Live updates across all connected devices
-- **Production Build Optimization:** Minified, tree-shaken bundles for fast loading
-
-### 🎨 **User Experience Enhancements**
-- **Theme Persistence:** Dark/light mode preference saved across sessions
-- **Smooth Animations:** CSS transitions and micro-interactions
-- **Accessible Design:** Proper ARIA labels and keyboard navigation
-- **Help System:** Comprehensive in-app help and guidance
-- **Professional Footer:** Credit attribution with external links
-
-### 📝 **Smart Notes System**
-- **Floating Interface:** Always-accessible sticky note button in bottom-right corner
-- **Multiple Pages:** Create unlimited customizable note pages with editable titles
-- **Rich Markdown Support:** Full markdown editor with live preview and syntax highlighting
-- **Customizable Colors:** 8 beautiful color themes for note organization
-- **Pin Important Notes:** Keep crucial information at the top
-- **Responsive Sizing:** Normal (600x700px) and expanded (70% viewport) modes
-- **Real-time Sync:** Instant synchronization across all devices via Firestore
-- **Theme Integration:** Perfect rendering in both light and dark modes
-- **Advanced Settings:** Customizable font size (12-20px), theme override, and preview toggle
-- **Smooth Animations:** Framer Motion powered transitions and interactions
-
 ---
 
 ## 📊 Application Architecture
@@ -200,23 +156,6 @@ interface PrepEntry {
 
 // Additional interfaces for Company Research, Networking, STAR Stories
 ```
-
----
-
-## 🔧 Development Features
-
-### **Code Quality**
-- **ESLint Configuration:** Strict linting rules for code consistency
-- **TypeScript Strict Mode:** Enhanced type checking and error prevention
-- **Component Organization:** Clear separation of concerns and file structure
-- **Custom Hooks:** Reusable business logic abstraction
-
-### **Development Experience**
-- **Hot Module Replacement:** Instant feedback during development
-- **TypeScript Integration:** Full IDE support with intelligent code completion
-- **Vite Build Tool:** Lightning-fast development server and builds
-- **Environment Configuration:** Easy setup with environment variables
-
 ---
 
 ## 🌐 Deployment
@@ -245,26 +184,6 @@ npm run preview
 # Deploy to your preferred hosting service
 # (Vercel, Netlify, Firebase Hosting, etc.)
 ```
-
----
-
-## 🎮 Usage Guide
-
-### **Getting Started**
-1. **Sign In:** Choose between Google sign-in or anonymous mode
-2. **Explore Modules:** Navigate through the five main sections using the tab bar
-3. **Add Data:** Click the "Add" button in any section to create new entries
-4. **Smart Notes:** Click the floating note button (bottom-right) for instant note-taking
-5. **Mobile Usage:** Swipe through tabs and enjoy the card-based mobile layout
-6. **Help:** Access the help system anytime via the help button
-
-### **Best Practices**
-- **Regular Updates:** Keep your application statuses current for better tracking
-- **Detailed Notes:** Use the notes fields to capture important details
-- **STAR Method:** Structure your behavioral stories using Situation, Task, Action, Result
-- **Company Research:** Maintain comprehensive research for better interview preparation
-- **Network Tracking:** Record all networking interactions and follow-ups
-
 ---
 
 ## 💖 Credits
