@@ -2,7 +2,7 @@
 
 **JobTrac** is a sleek, production-ready, all-in-one dashboard designed to streamline and organize every facet of your job search. From tracking applications to preparing for interviews, JobTrac is the command center you need to conquer your next career move.
 
-![JobTrac Screenshot](./assets/sample.png)
+![JobTrac Screenshot](https://ik.imagekit.io/halcyonweb/jt.png?updatedAt=1755524242386)
 
 ---
 
