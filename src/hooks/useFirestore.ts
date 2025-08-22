@@ -11,17 +11,16 @@ import {
   where,
   Timestamp
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
+import { db } from '../lib/firebase';
 
-// Add a more specific type for Firestore documents
-interface FirestoreDoc {
-  id: string;
-  userId: string;
+
+
+interface FirestoreDocument {
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
 
-export function useFirestore<T extends { id: string }>(
+export function useFirestore<T extends { id: string } & FirestoreDocument>(
   collectionName: string,
   userId?: string | null
 ) {
@@ -68,7 +67,7 @@ export function useFirestore<T extends { id: string }>(
           } as T));
           
           // If we couldn't use orderBy in query, sort client-side
-          const sortedItems = items.sort((a: any, b: any) => {
+          const sortedItems = items.sort((a: T, b: T) => {
             const aTime = a.createdAt?.toMillis?.() || 0;
             const bTime = b.createdAt?.toMillis?.() || 0;
             return bTime - aTime; // desc order
@@ -98,7 +97,7 @@ export function useFirestore<T extends { id: string }>(
                 } as T));
                 
                 // Sort client-side
-                const sortedItems = items.sort((a: any, b: any) => {
+                const sortedItems = items.sort((a: T, b: T) => {
                   const aTime = a.createdAt?.toMillis?.() || 0;
                   const bTime = b.createdAt?.toMillis?.() || 0;
                   return bTime - aTime;

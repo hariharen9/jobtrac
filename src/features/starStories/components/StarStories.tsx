@@ -1,6 +1,6 @@
 import React from 'react';
 import { Star, Plus, Trash2, Pencil } from 'lucide-react';
-import { StarStory } from '../types';
+import { StarStory } from '../../../types';
 
 interface StarStoriesProps {
   stories: StarStory[];

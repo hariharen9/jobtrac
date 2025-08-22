@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { NetworkingContact } from '../types';
+import { NetworkingContact } from '../../../types';
 
 interface NetworkingFormProps {
   onSubmit: (contact: Omit<NetworkingContact, 'id'>) => void;

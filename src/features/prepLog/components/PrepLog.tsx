@@ -1,6 +1,6 @@
 import React from 'react';
 import { BookOpen, Plus, ExternalLink, Star, Trash2, Pencil } from 'lucide-react';
-import { PrepEntry } from '../types';
+import { PrepEntry } from '../../../types';
 
 interface PrepLogProps {
   prepEntries: PrepEntry[];

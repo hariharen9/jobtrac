@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { MoreHorizontal, Briefcase, ExternalLink, Pencil, Trash2, Plus } from 'lucide-react';
-import { Application, ApplicationStatus } from '../types';
-import { statusColors } from '../utils/statusColors';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus } from 'lucide-react';
+import { Application, ApplicationStatus } from '../../../types';
+import { statusColors } from '../../../utils/statusColors';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -77,6 +77,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
+    void e; // Explicitly ignore the parameter
     dragCounter.current--;
     if (dragCounter.current === 0) {
       setDragOverColumn(null);

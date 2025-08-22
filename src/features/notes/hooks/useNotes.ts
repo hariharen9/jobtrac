@@ -7,8 +7,8 @@ import {
   onSnapshot,
   Unsubscribe
 } from 'firebase/firestore';
-import { db } from '../config/firebase';
-import { UserNotes, NotePage } from '../types';
+import { db } from '../../../lib/firebase';
+import { UserNotes, NotePage } from '../../../types';
 
 const DEFAULT_SETTINGS = {
   defaultColor: '#fbbf24', // amber-400

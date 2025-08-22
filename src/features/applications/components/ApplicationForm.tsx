@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Application, ApplicationStatus } from '../types';
+import { Application, ApplicationStatus } from '../../../types';
 
 interface ApplicationFormProps {
   onSubmit: (application: Omit<Application, 'id'>) => void;

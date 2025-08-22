@@ -1,31 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
-import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
-import { useAuth } from './hooks/useAuth';
-import { useTheme } from './hooks/useTheme';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
+import { useAuth } from './features/auth/hooks/useAuth';
+import AuthButton from './features/auth/components/AuthButton';
+import { useTheme } from './hooks/shared/useTheme';
 import { useFirestore } from './hooks/useFirestore';
-import ApplicationTracker from './components/ApplicationTracker';
-import PrepLog from './components/PrepLog';
-import CompanyResearchComponent from './components/CompanyResearch';
-import Networking from './components/Networking';
-import StarStories from './components/StarStories';
-import Modal from './components/Modal';
-import ApplicationForm from './components/ApplicationForm';
-import PrepForm from './components/PrepForm';
-import CompanyForm from './components/CompanyForm';
-import NetworkingForm from './components/NetworkingForm';
-import StarForm from './components/StarForm';
-import AuthButton from './components/AuthButton';
-import ThemeToggle from './components/ThemeToggle';
-import HelpPage from './components/HelpPage';
-import Notes from './components/Notes';
-import ActivityCalendar from './components/ActivityCalendar';
-import KanbanBoard from './components/KanbanBoard';
+import ApplicationTracker from './features/applications/components/ApplicationTracker';
+import ApplicationForm from './features/applications/components/ApplicationForm';
+import ActivityCalendar from './features/applications/components/ActivityCalendar';
+import KanbanBoard from './features/applications/components/KanbanBoard';
+import PrepLog from './features/prepLog/components/PrepLog';
+import PrepForm from './features/prepLog/components/PrepForm';
+import CompanyResearch from './features/companyResearch/components/CompanyResearch';
+import CompanyForm from './features/companyResearch/components/CompanyForm';
+import Networking from './features/networking/components/Networking';
+import NetworkingForm from './features/networking/components/NetworkingForm';
+import StarStories from './features/starStories/components/StarStories';
+import StarForm from './features/starStories/components/StarForm';
+import Modal from './components/shared/Modal';
+import ThemeToggle from './components/shared/ThemeToggle';
+import HelpPage from './components/shared/HelpPage';
+import Notes from './features/notes/components/Notes';
 import './animations.css';
+
+
 
 function App() {
   const { user, loading: authLoading } = useAuth();
-  const { isDark } = useTheme();
+  useTheme();
   
   const [activeTab, setActiveTab] = useState<TabType>('applications');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -83,7 +85,7 @@ function App() {
     { id: 'star', label: 'Behavioral Story Bank', icon: Star },
   ];
 
-  const openModal = (type: TabType, itemToEdit: any | null = null) => {
+  const openModal = (type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
     setEditingItem(itemToEdit);
     setIsModalOpen(true);
@@ -94,9 +96,9 @@ function App() {
     setEditingItem(null);
   };
 
-  const handleFormSubmit = async (
-    handler: (data: any) => Promise<any>, 
-    data: any
+  const handleFormSubmit = async <T,>(
+    handler: (data: T) => Promise<void>,
+    data: T
   ) => {
     try {
       setIsSubmitting(true);
@@ -109,9 +111,9 @@ function App() {
     }
   };
   
-  const handleUpdate = async (
-    updater: (id: string, data: any) => Promise<void>,
-    item: any
+  const handleUpdate = async <T extends { id: string }>(
+    updater: (id: string, data: Partial<T>) => Promise<void>,
+    item: T
   ) => {
     const { id, ...data } = item;
     await handleFormSubmit(() => updater(id, data), data);
@@ -150,7 +152,7 @@ function App() {
         );
       case 'research':
         return (
-          <CompanyResearchComponent 
+          <CompanyResearch 
             companies={companies} 
             onAddCompany={() => openModal('research')} 
             onEditCompany={(item) => openModal('research', item)}
@@ -185,8 +187,8 @@ function App() {
 
   const renderModalContent = () => {
     const handleSubmit = editingItem 
-      ? (data: any) => handleUpdate(updateApplication, { ...editingItem, ...data })
-      : (data: any) => handleFormSubmit(addApplication, data);
+      ? (data: Partial<Application>) => handleUpdate(updateApplication, { ...editingItem, ...data })
+      : (data: Omit<Application, 'id'>) => handleFormSubmit(addApplication, data);
 
     switch (modalType) {
       case 'applications':
@@ -202,8 +204,8 @@ function App() {
         return (
           <PrepForm
             onSubmit={editingItem 
-              ? (data: any) => handleUpdate(updatePrepEntry, { ...editingItem, ...data })
-              : (data: any) => handleFormSubmit(addPrepEntry, data)
+              ? (data: Partial<PrepEntry>) => handleUpdate(updatePrepEntry, { ...editingItem, ...data })
+              : (data: Omit<PrepEntry, 'id'>) => handleFormSubmit(addPrepEntry, data)
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -214,8 +216,8 @@ function App() {
         return (
           <CompanyForm
             onSubmit={editingItem
-              ? (data: any) => handleUpdate(updateCompany, { ...editingItem, ...data })
-              : (data: any) => handleFormSubmit(addCompany, data)
+              ? (data: Partial<CompanyResearch>) => handleUpdate(updateCompany, { ...editingItem, ...data })
+              : (data: Omit<CompanyResearch, 'id'>) => handleFormSubmit(addCompany, data)
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -226,8 +228,8 @@ function App() {
         return (
           <NetworkingForm
             onSubmit={editingItem
-              ? (data: any) => handleUpdate(updateContact, { ...editingItem, ...data })
-              : (data: any) => handleFormSubmit(addContact, data)
+              ? (data: Partial<NetworkingContact>) => handleUpdate(updateContact, { ...editingItem, ...data })
+              : (data: Omit<NetworkingContact, 'id'>) => handleFormSubmit(addContact, data)
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -238,8 +240,8 @@ function App() {
         return (
           <StarForm
             onSubmit={editingItem
-              ? (data: any) => handleUpdate(updateStory, { ...editingItem, ...data })
-              : (data: any) => handleFormSubmit(addStory, data)
+              ? (data: Partial<StarStory>) => handleUpdate(updateStory, { ...editingItem, ...data })
+              : (data: Omit<StarStory, 'id'>) => handleFormSubmit(addStory, data)
             }
             onCancel={closeModal}
             initialData={editingItem}

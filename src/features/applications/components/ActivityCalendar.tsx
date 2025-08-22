@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Briefcase, BookOpen, Building, Users, Star } from 'lucide-react';
-import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory } from '../types';
+import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory } from '../../../types';
 
 interface ActivityCalendarProps {
   applications: Application[];

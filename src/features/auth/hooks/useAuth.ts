@@ -4,9 +4,11 @@ import {
   signOut, 
   onAuthStateChanged,
   signInAnonymously,
-  User 
+  User,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
-import { auth, googleProvider } from '../config/firebase';
+import { auth, googleProvider } from '../../../lib/firebase';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -39,6 +41,26 @@ export function useAuth() {
     }
   };
 
+  const signUpWithEmail = async (email, password) => {
+    console.log('Attempting to sign up with email:', email);
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error signing up with email:', error);
+      throw error;
+    }
+  };
+
+  const signInWithEmail = async (email, password) => {
+    console.log('Attempting to sign in with email:', email);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error signing in with email:', error);
+      throw error;
+    }
+  };
+
   const logout = async () => {
     try {
       await signOut(auth);
@@ -53,6 +75,8 @@ export function useAuth() {
     loading,
     signInWithGoogle,
     signInAnonymous,
+    signUpWithEmail,
+    signInWithEmail,
     logout
   };
 }
