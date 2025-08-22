@@ -1,6 +1,6 @@
 import React from 'react';
 import { Users, Plus, CheckCircle, XCircle, Pencil, Trash2 } from 'lucide-react';
-import { NetworkingContact } from '../types';
+import { NetworkingContact } from '../../../types';
 
 interface NetworkingProps {
   contacts: NetworkingContact[];

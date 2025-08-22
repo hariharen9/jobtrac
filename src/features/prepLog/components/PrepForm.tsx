@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PrepEntry } from '../types';
+import { PrepEntry } from '../../../types';
 
 interface PrepFormProps {
   onSubmit: (entry: Omit<PrepEntry, 'id'>) => void;

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StarStory } from '../types';
+import { StarStory } from '../../../types';
 
 interface StarFormProps {
   onSubmit: (story: Omit<StarStory, 'id'>) => void;

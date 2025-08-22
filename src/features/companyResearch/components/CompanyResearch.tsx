@@ -1,6 +1,6 @@
 import React from 'react';
 import { Building, Plus, Trash2, Pencil } from 'lucide-react';
-import { CompanyResearch } from '../types';
+import { CompanyResearch } from '../../../types';
 
 interface CompanyResearchProps {
   companies: CompanyResearch[];

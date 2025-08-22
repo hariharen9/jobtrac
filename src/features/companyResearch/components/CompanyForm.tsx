@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { CompanyResearch } from '../types';
+import { CompanyResearch } from '../../../types';
 
 interface CompanyFormProps {
   onSubmit: (company: Omit<CompanyResearch, 'id'>) => void;

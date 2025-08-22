@@ -4,14 +4,11 @@ import {
   StickyNote,
   Plus,
   X,
-  Edit3,
-  Trash2,
   Save,
   Maximize2,
   Minimize2
 } from 'lucide-react';
 import { useNotes } from '../hooks/useNotes';
-import { NotePage } from '../types';
 import './Notes.css';
 
 interface NotesProps {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Briefcase, Plus, ExternalLink, Trash2, Pencil } from 'lucide-react';
-import { Application } from '../types';
-import { statusColors } from '../utils/statusColors';
+import { Application } from '../../../types';
+import { statusColors } from '../../../utils/statusColors';
 
 interface ApplicationTrackerProps {
   applications: Application[];
