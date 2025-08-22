@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
@@ -23,7 +23,14 @@ import HelpPage from './components/shared/HelpPage';
 import Notes from './features/notes/components/Notes';
 import './animations.css';
 
-
+const MemoizedApplicationTracker = React.memo(ApplicationTracker);
+const MemoizedPrepLog = React.memo(PrepLog);
+const MemoizedCompanyResearch = React.memo(CompanyResearch);
+const MemoizedNetworking = React.memo(Networking);
+const MemoizedStarStories = React.memo(StarStories);
+const MemoizedActivityCalendar = React.memo(ActivityCalendar);
+const MemoizedKanbanBoard = React.memo(KanbanBoard);
+const MemoizedNotes = React.memo(Notes);
 
 function App() {
   const { user, loading: authLoading } = useAuth();
@@ -77,26 +84,26 @@ function App() {
   } = useFirestore<StarStory>('stories', user?.uid);
 
 
-  const tabs = [
+  const tabs = useMemo(() => [
     { id: 'applications', label: 'Application Tracker', icon: Briefcase },
     { id: 'prep', label: 'Prep Log', icon: BookOpen },
     { id: 'research', label: 'Company Research', icon: Building },
     { id: 'networking', label: 'Networking & Referrals', icon: Users },
     { id: 'star', label: 'Behavioral Story Bank', icon: Star },
-  ];
+  ], []);
 
-  const openModal = (type: TabType, itemToEdit: EditableItem | null = null) => {
+  const openModal = useCallback((type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
     setEditingItem(itemToEdit);
     setIsModalOpen(true);
-  };
+  }, []);
 
-  const closeModal = () => {
+  const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setEditingItem(null);
-  };
+  }, []);
 
-  const handleFormSubmit = async <T,>(
+  const handleFormSubmit = useCallback(async <T,>(
     handler: (data: T) => Promise<void>,
     data: T
   ) => {
@@ -109,30 +116,30 @@ function App() {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [closeModal, modalType]);
   
-  const handleUpdate = async <T extends { id: string }>(
+  const handleUpdate = useCallback(async <T extends { id: string }>(
     updater: (id: string, data: Partial<T>) => Promise<void>,
     item: T
   ) => {
     const { id, ...data } = item;
     await handleFormSubmit(() => updater(id, data), data);
-  };
+  }, [handleFormSubmit]);
 
-  const handleApplicationStatusUpdate = async (id: string, newStatus: ApplicationStatus) => {
+  const handleApplicationStatusUpdate = useCallback(async (id: string, newStatus: ApplicationStatus) => {
     try {
       await updateApplication(id, { status: newStatus });
       console.log(`Updated application ${id} status to ${newStatus}`);
     } catch (error) {
       console.error('Failed to update application status:', error);
     }
-  };
+  }, [updateApplication]);
 
   const renderTabContent = () => {
     switch (activeTab) {
       case 'applications':
         return (
-          <ApplicationTracker 
+          <MemoizedApplicationTracker 
             applications={applications} 
             onAddApplication={() => openModal('applications')} 
             onEditApplication={(item) => openModal('applications', item)}
@@ -142,7 +149,7 @@ function App() {
         );
       case 'prep':
         return (
-          <PrepLog 
+          <MemoizedPrepLog 
             prepEntries={prepEntries} 
             onAddPrepEntry={() => openModal('prep')} 
             onEditPrepEntry={(item) => openModal('prep', item)}
@@ -152,7 +159,7 @@ function App() {
         );
       case 'research':
         return (
-          <CompanyResearch 
+          <MemoizedCompanyResearch 
             companies={companies} 
             onAddCompany={() => openModal('research')} 
             onEditCompany={(item) => openModal('research', item)}
@@ -162,7 +169,7 @@ function App() {
         );
       case 'networking':
         return (
-          <Networking 
+          <MemoizedNetworking 
             contacts={contacts} 
             onAddContact={() => openModal('networking')} 
             onEditContact={(item) => openModal('networking', item)}
@@ -172,7 +179,7 @@ function App() {
         );
       case 'star':
         return (
-          <StarStories 
+          <MemoizedStarStories 
             stories={stories} 
             onAddStory={() => openModal('star')} 
             onEditStory={(item) => openModal('star', item)}
@@ -361,7 +368,7 @@ function App() {
 
         {/* Activity Calendar */}
         <div className="mt-8">
-          <ActivityCalendar 
+          <MemoizedActivityCalendar 
             applications={applications}
             prepEntries={prepEntries}
             companies={companies}
@@ -372,7 +379,7 @@ function App() {
 
         {/* Kanban Board */}
         <div className="mt-8">
-          <KanbanBoard
+          <MemoizedKanbanBoard
             applications={applications}
             onAddApplication={() => openModal('applications')}
             onEditApplication={(item) => openModal('applications', item)}
@@ -419,7 +426,7 @@ function App() {
       </div>
       
       {/* Notes Component */}
-      <Notes userId={user?.uid} />
+      <MemoizedNotes userId={user?.uid} />
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import React from 'react';
-import { Building, Plus, Trash2, Pencil } from 'lucide-react';
+import { Building, Plus } from 'lucide-react';
 import { CompanyResearch } from '../../../types';
+import CompanyCard from './CompanyCard';
 
 interface CompanyResearchProps {
   companies: CompanyResearch[];
@@ -51,48 +52,12 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
       </div>
       <div className="space-y-4">
         {companies.map(company => (
-          <div key={company.id} className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 hover:shadow-md transition-shadow relative">
-            <div className="absolute top-3 right-3 flex items-center gap-2">
-              <button 
-                onClick={() => onEditCompany(company)}
-                className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
-                aria-label="Edit company research"
-              >
-                <Pencil className="w-4 h-4" />
-              </button>
-              <button 
-                onClick={() => onDeleteCompany(company.id as string)}
-                className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
-                aria-label="Delete company research"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
-            </div>
-            <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100 mb-2 pr-16">{company.company}</h3>
-            <p className="text-sm text-slate-600 dark:text-slate-400 mb-4">{company.whatTheyDo}</p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">Why I want to work here:</h4>
-                <p className="text-slate-700 dark:text-slate-300">{company.why}</p>
-              </div>
-              <div>
-                <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">My questions for them:</h4>
-                <p className="italic text-slate-700 dark:text-slate-300">"{company.questions}"</p>
-              </div>
-              {company.values && (
-                <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">Company Values:</h4>
-                  <p className="text-slate-700 dark:text-slate-300">{company.values}</p>
-                </div>
-              )}
-              {company.news && (
-                <div>
-                  <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-1">Recent News:</h4>
-                  <p className="text-slate-700 dark:text-slate-300">{company.news}</p>
-                </div>
-              )}
-            </div>
-          </div>
+          <CompanyCard 
+            key={company.id} 
+            company={company} 
+            onEditCompany={onEditCompany} 
+            onDeleteCompany={onDeleteCompany} 
+          />
         ))}
         {companies.length === 0 && (
           <div className="text-center py-12 text-slate-500 dark:text-slate-400">
@@ -104,4 +69,4 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
   );
 };
 
-export default CompanyResearchComponent;
+export default React.memo(CompanyResearchComponent);
