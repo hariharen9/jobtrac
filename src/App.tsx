@@ -281,7 +281,7 @@ function App() {
             <div className="mb-6">
               <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
               <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-slate-100">
-                Job Search Tracker
+                JobTrac
               </h1>
               <p className="text-slate-600 dark:text-slate-400">
                 Sign in to start tracking your job search journey

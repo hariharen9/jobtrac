@@ -20,7 +20,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100 mb-4">
-          Job Search Tracker Guide
+          JobTrac Guide
         </h1>
         <p className="text-lg text-slate-600 dark:text-slate-400">
           Master your job search with this comprehensive tracking system. Here's how to use each feature effectively.
