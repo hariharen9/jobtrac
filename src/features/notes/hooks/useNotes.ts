@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   doc, 
   getDoc, 
@@ -18,8 +18,8 @@ const DEFAULT_SETTINGS = {
 };
 
 const DEFAULT_PAGE: Omit<NotePage, 'id'> = {
-  title: 'My Notes',
-  content: 'Welcome to your quick notes!\n\nUse **bold text** and *italic text* for formatting.\n\nStart writing your thoughts and ideas here...',
+  title: 'My First Note',
+  content: '# Welcome to Your Notes!\n\nThis is your brand new note-taking space. Here are some things you can do:\n\n- **Bold text** with `**`\n- *Italicize* with `*`\n- Create lists\n  - Like this one\n- Write `code` snippets\n\nFeel free to explore and make this space your own!\n',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   color: '#fbbf24',
@@ -42,26 +42,22 @@ export const useNotes = (userId: string | undefined) => {
     let unsubscribe: Unsubscribe | null = null;
 
     const initializeNotes = async () => {
+      setLoading(true);
+      const notesDocRef = doc(db, 'userNotes', userId);
+      
       try {
-        const notesDocRef = doc(db, 'userNotes', userId);
-        
-        // Check if user notes exist
         const notesDoc = await getDoc(notesDocRef);
         
         if (!notesDoc.exists()) {
-          // Create initial notes document
           const initialNotes: UserNotes = {
             id: userId,
             userId,
             pages: [{ ...DEFAULT_PAGE, id: generateId() }],
             settings: DEFAULT_SETTINGS,
           };
-          
           await setDoc(notesDocRef, initialNotes);
-          setUserNotes(initialNotes);
         }
 
-        // Set up real-time listener
         unsubscribe = onSnapshot(notesDocRef, (doc) => {
           if (doc.exists()) {
             setUserNotes(doc.data() as UserNotes);
@@ -69,9 +65,9 @@ export const useNotes = (userId: string | undefined) => {
             setUserNotes(null);
           }
           setLoading(false);
-        }, (error) => {
-          console.error('Error listening to notes:', error);
-          setError(error.message);
+        }, (err) => {
+          console.error('Error listening to notes:', err);
+          setError(err.message);
           setLoading(false);
         });
 
@@ -91,7 +87,7 @@ export const useNotes = (userId: string | undefined) => {
     };
   }, [userId]);
 
-  const addPage = async (title: string = 'New Note', color: string = DEFAULT_SETTINGS.defaultColor) => {
+  const addPage = useCallback(async (title: string = 'New Note', color: string = DEFAULT_SETTINGS.defaultColor) => {
     if (!userId || !userNotes) return null;
 
     const newPageId = generateId();
@@ -110,18 +106,16 @@ export const useNotes = (userId: string | undefined) => {
     
     try {
       const notesDocRef = doc(db, 'userNotes', userId);
-      await updateDoc(notesDocRef, {
-        pages: updatedPages,
-      });
+      await updateDoc(notesDocRef, { pages: updatedPages });
       return newPageId;
     } catch (err) {
       console.error('Error adding page:', err);
       setError(err instanceof Error ? err.message : 'Failed to add page');
       return null;
     }
-  };
+  }, [userId, userNotes]);
 
-  const updatePage = async (pageId: string, updates: Partial<NotePage>) => {
+  const updatePage = useCallback(async (pageId: string, updates: Partial<Omit<NotePage, 'id'>>) => {
     if (!userId || !userNotes) return;
 
     const pageIndex = userNotes.pages.findIndex(page => page.id === pageId);
@@ -136,21 +130,19 @@ export const useNotes = (userId: string | undefined) => {
 
     try {
       const notesDocRef = doc(db, 'userNotes', userId);
-      await updateDoc(notesDocRef, {
-        pages: updatedPages,
-      });
+      await updateDoc(notesDocRef, { pages: updatedPages });
     } catch (err) {
       console.error('Error updating page:', err);
       setError(err instanceof Error ? err.message : 'Failed to update page');
     }
-  };
+  }, [userId, userNotes]);
 
-  const deletePage = async (pageId: string) => {
+  const deletePage = useCallback(async (pageId: string) => {
     if (!userId || !userNotes) return;
     
-    // Don't allow deleting the last page
     if (userNotes.pages.length <= 1) {
-      setError('Cannot delete the last page');
+      setError('Cannot delete the last page.');
+      setTimeout(() => setError(null), 3000);
       return;
     }
 
@@ -158,16 +150,14 @@ export const useNotes = (userId: string | undefined) => {
     
     try {
       const notesDocRef = doc(db, 'userNotes', userId);
-      await updateDoc(notesDocRef, {
-        pages: updatedPages,
-      });
+      await updateDoc(notesDocRef, { pages: updatedPages });
     } catch (err) {
       console.error('Error deleting page:', err);
       setError(err instanceof Error ? err.message : 'Failed to delete page');
     }
-  };
+  }, [userId, userNotes]);
 
-  const reorderPages = async (fromIndex: number, toIndex: number) => {
+  const reorderPages = useCallback(async (fromIndex: number, toIndex: number) => {
     if (!userId || !userNotes) return;
 
     const updatedPages = [...userNotes.pages];
@@ -176,32 +166,28 @@ export const useNotes = (userId: string | undefined) => {
 
     try {
       const notesDocRef = doc(db, 'userNotes', userId);
-      await updateDoc(notesDocRef, {
-        pages: updatedPages,
-      });
+      await updateDoc(notesDocRef, { pages: updatedPages });
     } catch (err) {
       console.error('Error reordering pages:', err);
       setError(err instanceof Error ? err.message : 'Failed to reorder pages');
     }
-  };
+  }, [userId, userNotes]);
 
-  const updateSettings = async (settings: Partial<UserNotes['settings']>) => {
+  const updateSettings = useCallback(async (settings: Partial<UserNotes['settings']>) => {
     if (!userId || !userNotes) return;
 
     const updatedSettings = { ...userNotes.settings, ...settings };
 
     try {
       const notesDocRef = doc(db, 'userNotes', userId);
-      await updateDoc(notesDocRef, {
-        settings: updatedSettings,
-      });
+      await updateDoc(notesDocRef, { settings: updatedSettings });
     } catch (err) {
       console.error('Error updating settings:', err);
       setError(err instanceof Error ? err.message : 'Failed to update settings');
     }
-  };
+  }, [userId, userNotes]);
 
-  const clearError = () => setError(null);
+  const clearError = useCallback(() => setError(null), []);
 
   return {
     userNotes,
@@ -219,3 +205,4 @@ export const useNotes = (userId: string | undefined) => {
 const generateId = () => {
   return Date.now().toString(36) + Math.random().toString(36).substr(2);
 };
+
