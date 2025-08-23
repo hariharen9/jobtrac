@@ -30,6 +30,7 @@ export interface CompanyResearch {
   why: string;
   questions: string;
   news: string;
+  createdAt: string;
 }
 
 export interface NetworkingContact {
@@ -50,6 +51,7 @@ export interface StarStory {
   task: string;
   action: string;
   result: string;
+  createdAt: string;
 }
 
 export type ApplicationStatus = 

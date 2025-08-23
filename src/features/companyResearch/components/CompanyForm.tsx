@@ -33,7 +33,7 @@ const CompanyForm: React.FC<CompanyFormProps> = ({ onSubmit, onCancel, initialDa
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, createdAt: new Date().toISOString() });
   };
 
   return (
