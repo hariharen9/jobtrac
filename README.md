@@ -27,6 +27,12 @@ We believe powerful tools should also be a pleasure to use.
 -   **🔄 Real-Time Updates:** Experience live data synchronization with Firestore, so your dashboard is always current.
 -   **🚀 Polished & Reliable:** Built with production-grade polish, including robust error boundaries, clear loading states, and smooth animations for a seamless experience.
 -   **❓ Comprehensive Help:** Get answers instantly with a built-in help system accessible from anywhere within the application.
+
+### **👤 Profile & Insights**
+-   **📊 Analytics Dashboard:** Visualize your job search activity with charts showing application success rates by source, company, or role.
+-   **🎯 Goal Setting:** Set and track weekly or monthly goals for your job search, such as the number of applications to submit, networking contacts to make, and prep sessions to complete.
+-   **🎉 Celebrate Your Wins:** Get a little motivation boost with confetti when you reach your goals!
+
 ---
 
 ## 🚀 Why JobTrac is Different: Beyond Just Tracking
