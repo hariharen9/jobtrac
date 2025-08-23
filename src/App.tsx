@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
@@ -24,6 +24,7 @@ import Notes from './features/notes/components/Notes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
+import { ProfileModal } from './features/profile';
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -34,8 +35,6 @@ const MemoizedActivityCalendar = React.memo(ActivityCalendar);
 const MemoizedKanbanBoard = React.memo(KanbanBoard);
 const MemoizedNotes = React.memo(Notes);
 
-
-
 function App() {
   const { user, loading: authLoading } = useAuth();
   useTheme();
@@ -44,6 +43,7 @@ function App() {
   const [activeTab, setActiveTab] = useState<TabType>('applications');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isProfileModalOpen, setProfileModalOpen] = useState(false);
   const [modalType, setModalType] = useState<TabType>('applications');
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -107,6 +107,9 @@ function App() {
     setIsModalOpen(false);
     setEditingItem(null);
   }, []);
+
+  const openProfileModal = () => setProfileModalOpen(true);
+  const closeProfileModal = () => setProfileModalOpen(false);
 
   const handleFormSubmit = useCallback(async <T,>(
     handler: (data: T) => Promise<void>,
@@ -324,6 +327,7 @@ function App() {
           setActiveTab={setActiveTab}
           renderTabContent={renderTabContent}
           openHelpModal={() => setIsHelpOpen(true)}
+          openProfileModal={openProfileModal}
           activityCalendar={<MemoizedActivityCalendar 
             applications={applications}
             prepEntries={prepEntries}
@@ -347,6 +351,14 @@ function App() {
           size={modalType === 'star' ? 'lg' : 'md'}
         >
           {renderModalContent()}
+        </Modal>
+        <Modal
+          isOpen={isProfileModalOpen}
+          onClose={closeProfileModal}
+          title="Profile"
+          size="lg"
+        >
+          <ProfileModal applications={applications} contacts={contacts} prepEntries={prepEntries} />
         </Modal>
         <Modal
           isOpen={isHelpOpen}
@@ -382,6 +394,9 @@ function App() {
                 <span className="hidden sm:inline">Help</span>
               </button>
               <ThemeToggle />
+              <button onClick={openProfileModal} className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700">
+                <UserIcon className="w-6 h-6 text-slate-700 dark:text-slate-300" />
+              </button>
               <AuthButton />
             </div>
           </div>
@@ -461,6 +476,16 @@ function App() {
           size={modalType === 'star' ? 'lg' : 'md'}
         >
           {renderModalContent()}
+        </Modal>
+
+        {/* Profile Modal */}
+        <Modal
+          isOpen={isProfileModalOpen}
+          onClose={closeProfileModal}
+          title="Profile"
+          size="lg"
+        >
+          <ProfileModal applications={applications} contacts={contacts} prepEntries={prepEntries} />
         </Modal>
 
         {/* Help Modal */}

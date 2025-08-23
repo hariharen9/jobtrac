@@ -1,5 +1,5 @@
 import React from 'react';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon } from 'lucide-react';
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
@@ -9,6 +9,7 @@ interface MobileDashboardProps {
   setActiveTab: (tab: TabType) => void;
   renderTabContent: () => React.ReactNode;
   openHelpModal: () => void;
+  openProfileModal: () => void;
   activityCalendar: React.ReactNode;
   kanbanBoard: React.ReactNode;
 }
@@ -21,9 +22,7 @@ const tabs = [
   { id: 'star', label: 'STARs', icon: Star },
 ];
 
-
-
-const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, activityCalendar, kanbanBoard }) => {
+const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, activityCalendar, kanbanBoard }) => {
   return (
     <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900">
       <header className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
@@ -37,6 +36,12 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
             className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
           >
             <HelpCircle className="w-5 h-5" />
+          </button>
+          <button
+            onClick={openProfileModal}
+            className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+          >
+            <UserIcon className="w-5 h-5" />
           </button>
           <ThemeToggle />
           <AuthButton />

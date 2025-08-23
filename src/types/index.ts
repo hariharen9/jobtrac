@@ -90,3 +90,11 @@ export interface UserNotes {
 }
 
 export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
+
+export interface Goal {
+  id: string;
+  type: 'weekly' | 'monthly';
+  applications: number;
+  networking: number;
+  prep: number;
+}

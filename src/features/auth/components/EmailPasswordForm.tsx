@@ -25,10 +25,11 @@ const EmailPasswordForm = () => {
       } else {
         await signInWithEmail(email, password);
       }
-    } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
+    } catch (error: unknown) {
+      const firebaseError = error as { code?: string };
+      if (firebaseError.code === 'auth/email-already-in-use') {
         setError('Email already in use. Please sign in or use a different email.');
-      } else if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+      } else if (firebaseError.code === 'auth/wrong-password' || firebaseError.code === 'auth/user-not-found') {
         setError('Invalid email or password.');
       } else {
         setError('An unexpected error occurred. Please try again.');
