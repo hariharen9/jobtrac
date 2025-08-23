@@ -22,6 +22,8 @@ import ThemeToggle from './components/shared/ThemeToggle';
 import HelpPage from './components/shared/HelpPage';
 import Notes from './features/notes/components/Notes';
 import './animations.css';
+import { useMediaQuery } from './hooks/shared/useMediaQuery';
+import MobileDashboard from './components/shared/MobileDashboard';
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -32,9 +34,12 @@ const MemoizedActivityCalendar = React.memo(ActivityCalendar);
 const MemoizedKanbanBoard = React.memo(KanbanBoard);
 const MemoizedNotes = React.memo(Notes);
 
+
+
 function App() {
   const { user, loading: authLoading } = useAuth();
   useTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   
   const [activeTab, setActiveTab] = useState<TabType>('applications');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -309,6 +314,50 @@ function App() {
         </Modal>
       </div>
     );
+  }
+
+  if (isMobile) {
+    return (
+      <>
+        <MobileDashboard 
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          renderTabContent={renderTabContent}
+          openHelpModal={() => setIsHelpOpen(true)}
+          activityCalendar={<MemoizedActivityCalendar 
+            applications={applications}
+            prepEntries={prepEntries}
+            companies={companies}
+            contacts={contacts}
+            stories={stories}
+          />}
+          kanbanBoard={<MemoizedKanbanBoard
+            applications={applications}
+            onAddApplication={() => openModal('applications')}
+            onEditApplication={(item) => openModal('applications', item)}
+            onDeleteApplication={deleteApplication}
+            onUpdateStatus={handleApplicationStatusUpdate}
+            loading={applicationsLoading}
+          />}
+        />
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title={`${editingItem ? 'Edit' : 'Add'} ${modalType.charAt(0).toUpperCase() + modalType.slice(1)}`}
+          size={modalType === 'star' ? 'lg' : 'md'}
+        >
+          {renderModalContent()}
+        </Modal>
+        <Modal
+          isOpen={isHelpOpen}
+          onClose={() => setIsHelpOpen(false)}
+          title="Help & Guide"
+          size="xl"
+        >
+          <HelpPage onClose={() => setIsHelpOpen(false)} />
+        </Modal>
+      </>
+    )
   }
 
   return (

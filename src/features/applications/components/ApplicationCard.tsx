@@ -11,10 +11,10 @@ interface ApplicationCardProps {
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication }) => {
   return (
-    <div className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-3">
+    <div className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4">
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h3 className="font-semibold text-slate-900 dark:text-slate-100">{app.company}</h3>
+          <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{app.company}</h3>
           <a
             href={app.link}
             target="_blank"
@@ -22,54 +22,54 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
             className="text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 text-sm mt-1"
           >
             {app.role}
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-4 h-4" />
           </a>
         </div>
         <div className="flex items-center gap-2">
           <button 
             onClick={() => onEditApplication(app)}
-            className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1"
+            className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
             aria-label="Edit application"
           >
-            <Pencil className="w-4 h-4" />
+            <Pencil className="w-5 h-5" />
           </button>
           <button 
             onClick={() => onDeleteApplication(app.id)}
-            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors p-1"
+            className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
             aria-label="Delete application"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-5 h-5" />
           </button>
         </div>
       </div>
       
-      <div className="grid grid-cols-2 gap-3 text-sm">
+      <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
-          <span className="text-slate-500 dark:text-slate-400">Date:</span>
-          <span className="ml-1 text-slate-900 dark:text-slate-100">{app.date}</span>
+          <p className="text-slate-500 dark:text-slate-400">Date Applied</p>
+          <p className="text-slate-900 dark:text-slate-100 font-medium">{app.date}</p>
         </div>
         <div>
-          <span className="text-slate-500 dark:text-slate-400">Location:</span>
-          <span className="ml-1 text-slate-900 dark:text-slate-100">{app.location}</span>
+          <p className="text-slate-500 dark:text-slate-400">Location</p>
+          <p className="text-slate-900 dark:text-slate-100 font-medium">{app.location}</p>
         </div>
       </div>
       
       <div className="flex items-center justify-between">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium uppercase tracking-wide ${statusColors[app.status]}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusColors[app.status]}`}>
           {app.status}
         </span>
       </div>
       
       {app.nextStep && (
         <div className="text-sm">
-          <span className="text-slate-500 dark:text-slate-400">Next:</span>
-          <span className="ml-1 text-slate-900 dark:text-slate-100">{app.nextStep}</span>
+          <p className="text-slate-500 dark:text-slate-400">Next Step</p>
+          <p className="mt-1 text-slate-900 dark:text-slate-100 font-medium">{app.nextStep}</p>
         </div>
       )}
       
       {app.notes && (
         <div className="text-sm">
-          <span className="text-slate-500 dark:text-slate-400">Notes:</span>
+          <p className="text-slate-500 dark:text-slate-400">Notes</p>
           <p className="mt-1 text-slate-900 dark:text-slate-100">{app.notes}</p>
         </div>
       )}

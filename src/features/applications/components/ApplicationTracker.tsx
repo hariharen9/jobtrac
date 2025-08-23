@@ -45,7 +45,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
         </h2>
         <button
           onClick={onAddApplication}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start"
+          className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Add Application
