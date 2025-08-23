@@ -56,12 +56,11 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
     });
 
     companies.forEach(company => {
-      // For companies, we'll use today's date as they don't have a date field
       items.push({
         id: company.id,
         type: 'company',
         title: `Research: ${company.company}`,
-        date: new Date().toISOString().split('T')[0],
+        date: company.createdAt,
         icon: Building,
         color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
       });
@@ -79,12 +78,11 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
     });
 
     stories.forEach(story => {
-      // For stories, we'll use today's date as they don't have a date field
       items.push({
         id: story.id,
         type: 'story',
         title: story.title,
-        date: new Date().toISOString().split('T')[0],
+        date: story.createdAt,
         icon: Star,
         color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300'
       });

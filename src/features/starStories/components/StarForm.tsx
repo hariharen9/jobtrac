@@ -31,7 +31,7 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    onSubmit({ ...formData, createdAt: new Date().toISOString() });
   };
 
   return (
