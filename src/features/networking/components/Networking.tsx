@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Plus } from 'lucide-react';
 import { NetworkingContact } from '../../../types';
 import NetworkingRow from './NetworkingRow';
@@ -12,6 +13,22 @@ interface NetworkingProps {
   onDeleteContact: (id: string) => void;
   loading?: boolean;
 }
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
 
 const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditContact, onDeleteContact, loading = false }) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
@@ -40,30 +57,40 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
           <Users className="w-5 h-5" />
           Networking & Referrals
         </h2>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onAddContact}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Add Contact
-        </button>
+        </motion.button>
       </div>
       {isMobile ? (
-        <div className="space-y-4">
-          {contacts.map(contact => (
-            <NetworkingCard 
-              key={contact.id} 
-              contact={contact} 
-              onEditContact={onEditContact} 
-              onDeleteContact={onDeleteContact} 
-            />
-          ))}
+        <motion.div 
+          className="space-y-4"
+          variants={listVariants}
+          initial="hidden"
+          animate="visible"
+        >
+          <AnimatePresence>
+            {contacts.map(contact => (
+              <motion.div key={contact.id} variants={itemVariants} layout>
+                <NetworkingCard 
+                  contact={contact} 
+                  onEditContact={onEditContact} 
+                  onDeleteContact={onDeleteContact} 
+                />
+              </motion.div>
+            ))}
+          </AnimatePresence>
           {contacts.length === 0 && (
             <div className="text-center py-12 text-slate-500 dark:text-slate-400">
               No networking contacts yet. Click "Add Contact" to start building your network!
             </div>
           )}
-        </div>
+        </motion.div>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
@@ -78,14 +105,25 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
                 <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>
-            <tbody>
+            <motion.tbody
+              variants={listVariants}
+              initial="hidden"
+              animate="visible"
+            >
               {contacts.map(contact => (
-                <NetworkingRow 
+                <motion.tr 
                   key={contact.id} 
-                  contact={contact} 
-                  onEditContact={onEditContact} 
-                  onDeleteContact={onDeleteContact} 
-                />
+                  variants={itemVariants}
+                  className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700"
+                  whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.02)' }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <NetworkingRow 
+                    contact={contact} 
+                    onEditContact={onEditContact} 
+                    onDeleteContact={onDeleteContact} 
+                  />
+                </motion.tr>
               ))}
               {contacts.length === 0 && (
                 <tr>
@@ -94,7 +132,7 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
                   </td>
                 </tr>
               )}
-            </tbody>
+            </motion.tbody>
           </table>
         </div>
       )}

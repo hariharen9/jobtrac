@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, Pencil, Trash2 } from 'lucide-react';
 import { NetworkingContact } from '../../../types';
 
@@ -10,12 +11,12 @@ interface NetworkingRowProps {
 
 const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, onDeleteContact }) => {
   return (
-    <tr className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-      <td className="px-6 py-4 font-medium text-slate-900 dark:text-slate-100">{contact.name}</td>
-      <td className="px-6 py-4">{contact.company} - {contact.role}</td>
-      <td className="px-6 py-4">{contact.date}</td>
-      <td className="px-6 py-4">{contact.status}</td>
-      <td className="px-6 py-4">
+    <>
+      <td className="px-6 py-6 font-medium text-slate-900 dark:text-slate-100">{contact.name}</td>
+      <td className="px-6 py-6">{contact.company} - {contact.role}</td>
+      <td className="px-6 py-6">{contact.date}</td>
+      <td className="px-6 py-6">{contact.status}</td>
+      <td className="px-6 py-6">
         <div className="flex items-center gap-1">
           {contact.referral === 'Y' ? (
             <>
@@ -30,26 +31,30 @@ const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, o
           )}
         </div>
       </td>
-      <td className="px-6 py-4">{contact.notes}</td>
-      <td className="px-6 py-4 text-right">
+      <td className="px-6 py-6">{contact.notes}</td>
+      <td className="px-6 py-6 text-right">
         <div className="flex items-center justify-end gap-2">
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onEditContact(contact)}
             className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
             aria-label="Edit contact"
           >
             <Pencil className="w-4 h-4" />
-          </button>
-          <button
+          </motion.button>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onDeleteContact(contact.id as string)}
             className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             aria-label="Delete contact"
           >
             <Trash2 className="w-4 h-4" />
-          </button>
+          </motion.button>
         </div>
       </td>
-    </tr>
+    </>
   );
 };
 
