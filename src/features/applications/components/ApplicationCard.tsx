@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { ExternalLink, Trash2, Pencil } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
@@ -11,7 +12,12 @@ interface ApplicationCardProps {
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication }) => {
   return (
-    <div className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4">
+    <motion.div 
+      className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4"
+      whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+    >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{app.company}</h3>
@@ -26,20 +32,24 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
           </a>
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onEditApplication(app)}
             className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
             aria-label="Edit application"
           >
             <Pencil className="w-5 h-5" />
-          </button>
-          <button 
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onDeleteApplication(app.id)}
             className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
             aria-label="Delete application"
           >
             <Trash2 className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
       
@@ -73,7 +83,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
           <p className="mt-1 text-slate-900 dark:text-slate-100">{app.notes}</p>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

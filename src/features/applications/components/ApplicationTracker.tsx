@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, Plus } from 'lucide-react';
 import { Application } from '../../../types';
 import ApplicationCard from './ApplicationCard';
@@ -11,6 +12,22 @@ interface ApplicationTrackerProps {
   onDeleteApplication: (id: string) => void;
   loading?: boolean;
 }
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
 
 const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({ 
   applications, 
@@ -43,31 +60,41 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           <Briefcase className="w-5 h-5" />
           My Applications
         </h2>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onAddApplication}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Add Application
-        </button>
+        </motion.button>
       </div>
       
       {/* Mobile Card View */}
-      <div className="sm:hidden space-y-4">
-        {applications.map(app => (
-          <ApplicationCard 
-            key={app.id} 
-            app={app} 
-            onEditApplication={onEditApplication} 
-            onDeleteApplication={onDeleteApplication} 
-          />
-        ))}
+      <motion.div 
+        className="sm:hidden space-y-4"
+        variants={listVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <AnimatePresence>
+          {applications.map(app => (
+            <motion.div key={app.id} variants={itemVariants} layout>
+              <ApplicationCard 
+                app={app} 
+                onEditApplication={onEditApplication} 
+                onDeleteApplication={onDeleteApplication} 
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
         {applications.length === 0 && (
           <div className="text-center py-12 text-slate-500 dark:text-slate-400">
             No applications yet. Click "Add Application" to get started!
           </div>
         )}
-      </div>
+      </motion.div>
 
       {/* Desktop Table View */}
       <div className="hidden sm:block overflow-x-auto">
@@ -84,14 +111,25 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
-          <tbody>
+          <motion.tbody
+            variants={listVariants}
+            initial="hidden"
+            animate="visible"
+          >
             {applications.map(app => (
-              <ApplicationRow 
+              <motion.tr 
                 key={app.id} 
-                app={app} 
-                onEditApplication={onEditApplication} 
-                onDeleteApplication={onDeleteApplication} 
-              />
+                variants={itemVariants}
+                className="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700"
+                whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.02)' }}
+                transition={{ duration: 0.2 }}
+              >
+                <ApplicationRow 
+                  app={app} 
+                  onEditApplication={onEditApplication} 
+                  onDeleteApplication={onDeleteApplication} 
+                />
+              </motion.tr>
             ))}
             {applications.length === 0 && (
               <tr>
@@ -100,7 +138,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </td>
               </tr>
             )}
-          </tbody>
+          </motion.tbody>
         </table>
       </div>
     </div>

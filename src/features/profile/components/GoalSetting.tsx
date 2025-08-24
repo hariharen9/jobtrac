@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Confetti from 'react-confetti';
 import { useFirestore } from '../../../hooks/useFirestore';
 import { useAuth } from '../../../features/auth/hooks/useAuth';
@@ -44,7 +44,7 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
     alert('Goal saved!');
   };
 
-  const getProgress = (activity: 'applications' | 'contacts' | 'prepEntries') => {
+  const getProgress = useCallback((activity: 'applications' | 'contacts' | 'prepEntries') => {
     const today = new Date();
     const firstDayOfWeek = new Date(today.setDate(today.getDate() - today.getDay()));
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -61,9 +61,9 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
       default:
         return 0;
     }
-  }
+  }, [type, applications, contacts, prepEntries]);
 
-  const checkGoalCompletion = () => {
+  const checkGoalCompletion = useCallback(() => {
     if (!goal) return;
 
     const applicationsProgress = getProgress('applications');
@@ -77,7 +77,11 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
     ) {
       setShowConfetti(true);
     }
-  };
+  }, [goal, getProgress]);
+
+  useEffect(() => {
+    checkGoalCompletion();
+  }, [applications, contacts, prepEntries, goal, checkGoalCompletion]);
 
   useEffect(() => {
     if (showConfetti) {

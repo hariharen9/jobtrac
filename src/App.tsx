@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
@@ -375,7 +376,12 @@ function App() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="container p-4 mx-auto sm:p-6 lg:p-8">
-        <header className="mb-6 sm:mb-8">
+        <motion.header 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="mb-6 sm:mb-8"
+        >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1">
               <h1 className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl animated-gradient-text">
@@ -386,49 +392,83 @@ function App() {
               </p>
             </div>
             <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">
-              <button
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => setIsHelpOpen(true)}
                 className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-slate-300 dark:bg-slate-800 border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700"
               >
                 <HelpCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Help</span>
-              </button>
+              </motion.button>
               <ThemeToggle />
-              <button onClick={openProfileModal} className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700">
+              <motion.button 
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={openProfileModal} 
+                className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-slate-800 dark:border-slate-600 dark:hover:bg-slate-700"
+              >
                 <UserIcon className="w-6 h-6 text-slate-700 dark:text-slate-300" />
-              </button>
+              </motion.button>
               <AuthButton />
             </div>
           </div>
-        </header>
+        </motion.header>
 
         {/* Tabs */}
-        <div className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-slate-700">
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
+          className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-slate-700"
+        >
           <nav className="flex pb-px -mb-px space-x-2 overflow-x-auto sm:space-x-6 scrollbar-hide" aria-label="Tabs">
             {tabs.map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
-                <button
+                <motion.button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as TabType)}
-                  className={`whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm font-medium border-b-2 transition-colors flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
+                  className={`relative whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
                     isActive
-                      ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400 font-semibold'
-                      : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 hover:border-slate-300 dark:hover:border-slate-600'
+                      ? 'text-indigo-600 dark:text-indigo-400 font-semibold'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
                   }`}
+                  whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.02)' }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <Icon className="flex-shrink-0 w-4 h-4" />
                   <span className="hidden sm:inline">{tab.label}</span>
                   <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
-                </button>
+                  {isActive && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-indigo-500"
+                      layoutId="underline"
+                      initial={false}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
               );
             })}
           </nav>
-        </div>
+        </motion.div>
 
         {/* Content */}
-        <main>{renderTabContent()}</main>
+        <main>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.2 }}
+            >
+              {renderTabContent()}
+            </motion.div>
+          </AnimatePresence>
+        </main>
 
         {/* Activity Calendar */}
         <div className="mt-8">

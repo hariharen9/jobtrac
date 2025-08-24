@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Plus } from 'lucide-react';
 import { StarStory } from '../../../types';
 import StarStoryCard from './StarStoryCard';
@@ -10,6 +11,22 @@ interface StarStoriesProps {
   onDeleteStory: (id: string) => void;
   loading?: boolean;
 }
+
+const listVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
 
 const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditStory, onDeleteStory, loading = false }) => {
   if (loading) {
@@ -36,29 +53,39 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
           <Star className="w-5 h-5" />
           Behavioral Story Bank (STAR Method)
         </h2>
-        <button
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onAddStory}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
         >
           <Plus className="w-4 h-4" />
           Add Story
-        </button>
+        </motion.button>
       </div>
-      <div className="space-y-6">
-        {stories.map(story => (
-          <StarStoryCard 
-            key={story.id} 
-            story={story} 
-            onEditStory={onEditStory} 
-            onDeleteStory={onDeleteStory} 
-          />
-        ))}
+      <motion.div 
+        className="space-y-6"
+        variants={listVariants}
+        initial="hidden"
+        animate="visible"
+      >
+        <AnimatePresence>
+          {stories.map(story => (
+            <motion.div key={story.id} variants={itemVariants} layout>
+              <StarStoryCard 
+                story={story} 
+                onEditStory={onEditStory} 
+                onDeleteStory={onDeleteStory} 
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
         {stories.length === 0 && (
           <div className="text-center py-12 text-slate-500 dark:text-slate-400">
             No behavioral stories yet. Click "Add Story" to start building your STAR method story bank!
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };

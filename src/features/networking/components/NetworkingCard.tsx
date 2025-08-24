@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { NetworkingContact } from '../../../types';
 import { Pencil, Trash2 } from 'lucide-react';
 
@@ -10,34 +11,43 @@ interface NetworkingCardProps {
 
 const NetworkingCard: React.FC<NetworkingCardProps> = ({ contact, onEditContact, onDeleteContact }) => {
   return (
-    <div className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4">
+    <motion.div 
+      className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4"
+      whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+    >
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{contact.name}</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">{contact.company} - {contact.role}</p>
         </div>
         <div className="flex items-center gap-2">
-          <button 
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onEditContact(contact)}
             className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
             aria-label="Edit contact"
           >
             <Pencil className="w-5 h-5" />
-          </button>
-          <button 
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onDeleteContact(contact.id)}
             className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
             aria-label="Delete contact"
           >
             <Trash2 className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
       
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-slate-500 dark:text-slate-400">Date Contacted</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{contact.dateContacted}</p>
+          <p className="text-slate-900 dark:text-slate-100 font-medium">{contact.date}</p>
         </div>
         <div>
           <p className="text-slate-500 dark:text-slate-400">Status</p>
@@ -48,7 +58,7 @@ const NetworkingCard: React.FC<NetworkingCardProps> = ({ contact, onEditContact,
       {contact.referral && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Referral</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100">Yes</p>
+          <p className="mt-1 text-slate-900 dark:text-slate-100">{contact.referral === 'Y' ? 'Yes' : 'No'}</p>
         </div>
       )}
       
@@ -58,7 +68,7 @@ const NetworkingCard: React.FC<NetworkingCardProps> = ({ contact, onEditContact,
           <p className="mt-1 text-slate-900 dark:text-slate-100">{contact.notes}</p>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

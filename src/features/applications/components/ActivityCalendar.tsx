@@ -250,38 +250,66 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           </h3>
           
           <div className="space-y-3 max-h-96 overflow-y-auto">
-            {(selectedActivities.length > 0 ? selectedActivities : activities.slice(0, 10)).map(activity => {
-              const Icon = activity.icon;
-              return (
-                <div
-                  key={activity.id}
-                  className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className={`p-2 rounded-lg ${activity.color}`}>
-                      <Icon className="w-4 h-4" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
-                        {activity.title}
-                      </h4>
-                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        {new Date(activity.date).toLocaleDateString()}
-                      </p>
-                      <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
-                        {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
-                      </span>
-                    </div>
+            {selectedDate 
+              ? selectedActivities.length > 0 
+                ? selectedActivities.map(activity => {
+                    const Icon = activity.icon;
+                    return (
+                      <div
+                        key={activity.id}
+                        className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg ${activity.color}`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                              {activity.title}
+                            </h4>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                              {new Date(activity.date).toLocaleDateString()}
+                            </p>
+                            <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
+                              {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                : (
+                  <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                    No activities on this date
                   </div>
-                </div>
-              );
-            })}
-            
-            {selectedDate && selectedActivities.length === 0 && (
-              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                No activities on this date
-              </div>
-            )}
+                )
+              : activities.slice(0, 10).map(activity => {
+                  const Icon = activity.icon;
+                  return (
+                    <div
+                      key={activity.id}
+                      className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                    >
+                      <div className="flex items-start gap-3">
+                        <div className={`p-2 rounded-lg ${activity.color}`}>
+                          <Icon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                            {activity.title}
+                          </h4>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                            {new Date(activity.date).toLocaleDateString()}
+                          </p>
+                          <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
+                            {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+            }
             
             {!selectedDate && activities.length === 0 && (
               <div className="text-center py-8 text-slate-500 dark:text-slate-400">

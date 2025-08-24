@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { Trash2, Pencil } from 'lucide-react';
 import { StarStory } from '../../../types';
 
@@ -10,24 +11,32 @@ interface StarStoryCardProps {
 
 const StarStoryCard: React.FC<StarStoryCardProps> = ({ story, onEditStory, onDeleteStory }) => {
   return (
-    <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 flex justify-between items-center">
+    <motion.div 
+      className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+      whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
+      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+    >
+      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 flex justify-between items-center relative">
         <h3 className="font-bold text-xl text-slate-900 dark:text-slate-100">{story.title}</h3>
-        <div className="flex items-center gap-2">
-          <button
+        <div className="flex items-center gap-2 z-10">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onEditStory(story)}
             className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
             aria-label="Edit story"
           >
             <Pencil className="w-5 h-5" />
-          </button>
-          <button 
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => onDeleteStory(story.id as string)}
             className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
             aria-label="Delete story"
           >
             <Trash2 className="w-5 h-5" />
-          </button>
+          </motion.button>
         </div>
       </div>
       <div className="p-4 space-y-4 text-base">
@@ -48,7 +57,7 @@ const StarStoryCard: React.FC<StarStoryCardProps> = ({ story, onEditStory, onDel
           <p className="mt-1 text-slate-700 dark:text-slate-300">{story.result}</p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
