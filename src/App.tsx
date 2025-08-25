@@ -271,7 +271,7 @@ function App() {
 
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-dark-bg">
+      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg">
         <div className="w-16 h-16 border-4 border-indigo-600 border-dashed rounded-full animate-spin"></div>
       </div>
     );
@@ -279,25 +279,25 @@ function App() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-dark-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
         <div className="w-full max-w-md mx-4">
-          <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-dark-card">
+          <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
             <div className="mb-6">
               <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
-              <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-dark-text">
+              <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                 JobTrac
               </h1>
-              <p className="text-slate-600 dark:text-dark-text-secondary">
+              <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                 Sign in to start tracking your job search journey
               </p>
             </div>
             <AuthButton />
-            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-dark-border">
+            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
               <div className="flex items-center justify-center gap-4">
                 <ThemeToggle />
                 <button
                   onClick={() => setIsHelpOpen(true)}
-                  className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-dark-text-secondary hover:text-slate-900 dark:hover:text-dark-text"
+                  className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text"
                 >
                   <HelpCircle className="w-4 h-4" />
                   How it works
@@ -374,7 +374,7 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-dark-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+    <div className="min-h-screen dark:bg-dark-bg amoled:bg-amoled-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       <div className="container p-4 mx-auto sm:p-6 lg:p-8">
         <motion.header 
           initial={{ opacity: 0, y: -20 }}
@@ -387,7 +387,7 @@ function App() {
               <h1 className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl animated-gradient-text">
                 JobTrac - Your Job Switch Command Center
               </h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-dark-text-secondary sm:text-base">
+              <p className="mt-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base">
                 A comprehensive dashboard to manage preparation, applications, and interviews.
               </p>
             </div>
@@ -396,7 +396,7 @@ function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text dark:bg-dark-card border-slate-300 dark:border-dark-border hover:bg-slate-50 dark:hover:bg-dark-card"
+                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
               >
                 <HelpCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Help</span>
@@ -406,9 +406,9 @@ function App() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={openProfileModal} 
-                className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card dark:border-dark-border dark:hover:bg-dark-card"
+                className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card dark:border-dark-border amoled:border-amoled-border dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
               >
-                <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text" />
+                <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
               </motion.button>
               <AuthButton />
             </div>
@@ -420,7 +420,7 @@ function App() {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-          className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-dark-border"
+          className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-dark-border amoled:border-amoled-border"
         >
           <nav className="flex pb-px -mb-px space-x-2 overflow-x-auto sm:space-x-6 scrollbar-hide" aria-label="Tabs">
             {tabs.map(tab => {
@@ -432,8 +432,8 @@ function App() {
                   onClick={() => setActiveTab(tab.id as TabType)}
                   className={`relative whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
                     isActive
-                      ? 'text-indigo-600 dark:text-indigo-400 font-semibold'
-                      : 'text-slate-500 dark:text-dark-text-secondary hover:text-slate-700 dark:hover:text-dark-text'
+                      ? 'text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 font-semibold'
+                      : 'text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-700 dark:hover:text-dark-text amoled:hover:text-amoled-text'
                   }`}
                   whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.02)' }}
                   whileTap={{ scale: 0.95 }}
@@ -494,14 +494,14 @@ function App() {
         </div>
 
         {/* Footer */}
-        <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-dark-border">
-          <div className="text-center text-sm text-slate-600 dark:text-dark-text-secondary">
+        <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+          <div className="text-center text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
             Built with 💖 by{' '}
             <a 
               href="https://hariharen9.site/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 font-medium transition-colors"
+              className="text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
             >
               Hariharen
             </a>
