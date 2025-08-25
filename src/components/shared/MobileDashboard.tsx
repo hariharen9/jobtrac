@@ -25,23 +25,23 @@ const tabs = [
 
 const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, activityCalendar, kanbanBoard }) => {
   return (
-    <div className="flex flex-col h-screen bg-slate-50 dark:bg-slate-900">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-dark-bg">
       <motion.header 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700"
+        className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-dark-border"
       >
         <div className="flex items-center gap-2">
           <Briefcase className="w-6 h-6 text-indigo-600" />
-          <h1 className="text-lg font-bold text-slate-900 dark:text-slate-100">JobTrac</h1>
+          <h1 className="text-lg font-bold text-slate-900 dark:text-dark-text">JobTrac</h1>
         </div>
         <div className="flex items-center gap-2">
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={openHelpModal}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+            className="p-2 text-slate-500 dark:text-dark-text-secondary hover:text-slate-700 dark:hover:text-dark-text"
           >
             <HelpCircle className="w-5 h-5" />
           </motion.button>
@@ -49,7 +49,7 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={openProfileModal}
-            className="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300"
+            className="p-2 text-slate-500 dark:text-dark-text-secondary hover:text-slate-700 dark:hover:text-dark-text"
           >
             <UserIcon className="w-5 h-5" />
           </motion.button>
@@ -84,7 +84,7 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700"
+        className="fixed bottom-0 left-0 right-0 bg-white dark:bg-dark-card border-t border-slate-200 dark:border-dark-border"
       >
         <nav className="flex justify-around">
           {tabs.map(tab => {
@@ -97,7 +97,7 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
                 className={`relative flex flex-col items-center justify-center w-full pt-2 pb-1 text-xs font-medium transition-colors ${
                   isActive
                     ? 'text-indigo-600 dark:text-indigo-400'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+                    : 'text-slate-500 dark:text-dark-text-secondary hover:text-slate-700 dark:hover:text-dark-text'
                 }`}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
