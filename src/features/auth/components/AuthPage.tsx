@@ -9,12 +9,17 @@ const AuthPage: React.FC = () => {
       try {
         const result = await signInWithPopup(auth, googleProvider);
         const user = result.user;
-        // Send a message to the extension with the user data.
-        window.parent.postMessage({ name: 'auth-complete', user }, '*');
-      } catch (error) {
+        const serializableUser = {
+          uid: user.uid,
+          displayName: user.displayName,
+          email: user.email,
+          photoURL: user.photoURL,
+          isAnonymous: user.isAnonymous,
+        };
+        window.parent.postMessage({ name: 'auth-complete', user: serializableUser }, '*');
+      } catch (error: any) {
         console.error('Error during sign-in:', error);
-        // Send an error message to the extension.
-        window.parent.postMessage({ name: 'auth-complete', error }, '*');
+        window.parent.postMessage({ name: 'auth-complete', error: error.message || 'Unknown authentication error' }, '*');
       }
     };
 
