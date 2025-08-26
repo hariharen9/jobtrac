@@ -65,7 +65,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
       </div>
       
       <div className="flex items-center justify-between">
-        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${statusColors[app.status]}`}>
+        <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap ${statusColors[app.status]}`}>
           {app.status}
         </span>
       </div>
