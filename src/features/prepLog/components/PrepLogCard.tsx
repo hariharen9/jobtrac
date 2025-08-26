@@ -19,7 +19,7 @@ const PrepLogCard: React.FC<PrepLogCardProps> = ({ entry, onEditPrepEntry, onDel
     >
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{entry.topic}</h3>
+          <h3 className="font-semibold text-lg text-slate-900 dark:text-dark-text amoled:text-amoled-text">{entry.topic}</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">{entry.date}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -47,22 +47,22 @@ const PrepLogCard: React.FC<PrepLogCardProps> = ({ entry, onEditPrepEntry, onDel
       <div className="grid grid-cols-3 gap-4 text-sm">
         <div>
           <p className="text-slate-500 dark:text-slate-400">Problems</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{entry.problems}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{entry.problems}</p>
         </div>
         <div>
           <p className="text-slate-500 dark:text-slate-400">Time (Hrs)</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{entry.time}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{entry.time}</p>
         </div>
         <div>
           <p className="text-slate-500 dark:text-slate-400">Confidence</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{entry.confidence}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{entry.confidence}</p>
         </div>
       </div>
       
       {entry.notes && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Notes</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100">{entry.notes}</p>
+          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text">{entry.notes}</p>
         </div>
       )}
     </motion.div>

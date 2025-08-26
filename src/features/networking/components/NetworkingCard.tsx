@@ -19,7 +19,7 @@ const NetworkingCard: React.FC<NetworkingCardProps> = ({ contact, onEditContact,
     >
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{contact.name}</h3>
+          <h3 className="font-semibold text-lg text-slate-900 dark:text-dark-text amoled:text-amoled-text">{contact.name}</h3>
           <p className="text-sm text-slate-500 dark:text-slate-400">{contact.company} - {contact.role}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -47,25 +47,25 @@ const NetworkingCard: React.FC<NetworkingCardProps> = ({ contact, onEditContact,
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-slate-500 dark:text-slate-400">Date Contacted</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{contact.date}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{contact.date}</p>
         </div>
         <div>
           <p className="text-slate-500 dark:text-slate-400">Status</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{contact.status}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{contact.status}</p>
         </div>
       </div>
       
       {contact.referral && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Referral</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100">{contact.referral === 'Y' ? 'Yes' : 'No'}</p>
+          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text">{contact.referral === 'Y' ? 'Yes' : 'No'}</p>
         </div>
       )}
       
       {contact.notes && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Notes</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100">{contact.notes}</p>
+          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text">{contact.notes}</p>
         </div>
       )}
     </motion.div>

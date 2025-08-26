@@ -12,7 +12,7 @@ interface NetworkingRowProps {
 const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, onDeleteContact }) => {
   return (
     <>
-      <td className="px-6 py-6 font-medium text-slate-900 dark:text-slate-100">{contact.name}</td>
+      <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{contact.name}</td>
       <td className="px-6 py-6">{contact.company} - {contact.role}</td>
       <td className="px-6 py-6">{contact.date}</td>
       <td className="px-6 py-6">{contact.status}</td>

@@ -18,7 +18,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEditCompany, onDel
     >
       <div className="flex justify-between items-start">
         <div className="flex-1 pr-12">
-          <h3 className="font-bold text-xl text-slate-900 dark:text-slate-100">{company.company}</h3>
+          <h3 className="font-bold text-xl text-slate-900 dark:text-dark-text amoled:text-amoled-text">{company.company}</h3>
           <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{company.whatTheyDo}</p>
         </div>
         <div className="absolute top-4 right-4 flex items-center gap-2 z-10">
@@ -45,23 +45,23 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company, onEditCompany, onDel
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
         <div>
-          <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Why I want to work here:</h4>
-          <p className="text-slate-700 dark:text-slate-300">{company.why}</p>
+          <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">Why I want to work here:</h4>
+          <p className="text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{company.why}</p>
         </div>
         <div>
-          <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">My questions for them:</h4>
-          <p className="italic text-slate-700 dark:text-slate-300">"{company.questions}"</p>
+          <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">My questions for them:</h4>
+          <p className="italic text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">"{company.questions}"</p>
         </div>
         {company.values && (
           <div className="md:col-span-2">
-            <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Company Values:</h4>
-            <p className="text-slate-700 dark:text-slate-300">{company.values}</p>
+            <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">Company Values:</h4>
+            <p className="text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{company.values}</p>
           </div>
         )}
         {company.news && (
           <div className="md:col-span-2">
-            <h4 className="font-semibold text-slate-900 dark:text-slate-100 mb-2">Recent News:</h4>
-            <p className="text-slate-700 dark:text-slate-300">{company.news}</p>
+            <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">Recent News:</h4>
+            <p className="text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{company.news}</p>
           </div>
         )}
       </div>

@@ -37,14 +37,14 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Story Title *</label>
+        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Story Title *</label>
         <input
           type="text"
           required
           value={formData.title}
           onChange={(e) => setFormData({ ...formData, title: e.target.value })}
           placeholder="e.g., Led Team Through Critical System Migration"
-          className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
         />
       </div>
       
@@ -59,7 +59,7 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
             onChange={(e) => setFormData({ ...formData, situation: e.target.value })}
             rows={3}
             placeholder="Describe the context and background. What was the situation you were in?"
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
@@ -73,7 +73,7 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
             onChange={(e) => setFormData({ ...formData, task: e.target.value })}
             rows={3}
             placeholder="What was your responsibility or goal? What needed to be accomplished?"
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
@@ -87,7 +87,7 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
             onChange={(e) => setFormData({ ...formData, action: e.target.value })}
             rows={4}
             placeholder="What specific actions did you take? Focus on YOUR contributions and decisions."
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
 
@@ -101,13 +101,13 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
             onChange={(e) => setFormData({ ...formData, result: e.target.value })}
             rows={3}
             placeholder="What was the outcome? Include metrics, impact, and lessons learned."
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
       </div>
 
-      <div className="bg-slate-50 dark:bg-slate-800 p-4 rounded-lg">
-        <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">💡 STAR Method Tips:</h4>
+      <div className="bg-slate-50 dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">💡 STAR Method Tips:</h4>
         <ul className="text-xs text-slate-600 dark:text-slate-400 space-y-1">
           <li>• Keep each section concise but detailed enough to understand the context</li>
           <li>• Focus on YOUR specific contributions in the Action section</li>
@@ -121,7 +121,7 @@ const StarForm: React.FC<StarFormProps> = ({ onSubmit, onCancel, initialData, lo
           type="button"
           onClick={onCancel}
           disabled={loading}
-          className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+          className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
         >
           Cancel
         </button>

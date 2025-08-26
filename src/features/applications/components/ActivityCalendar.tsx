@@ -151,9 +151,9 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   const selectedActivities = selectedDate ? activitiesByDate[selectedDate] || [] : [];
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
           <Calendar className="w-5 h-5" />
           Activity Calendar
         </h2>
@@ -170,7 +170,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
               {monthName} {year}
             </h3>
             <button
@@ -213,7 +213,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                     onClick={() => setSelectedDate(dateStr)}
                   >
                     <div className={`text-sm font-medium mb-1 ${
-                      isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-slate-100'
+                      isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
                     }`}>
                       {day}
                     </div>
@@ -245,7 +245,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
 
         {/* Activity Details */}
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
             {selectedDate ? `Activities for ${new Date(selectedDate).toLocaleDateString()}` : 'Recent Activities'}
           </h3>
           
@@ -264,7 +264,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                             <Icon className="w-4 h-4" />
                           </div>
                           <div className="flex-1 min-w-0">
-                            <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                            <h4 className="text-sm font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
                               {activity.title}
                             </h4>
                             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -295,7 +295,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                           <Icon className="w-4 h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                          <h4 className="text-sm font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
                             {activity.title}
                           </h4>
                           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">

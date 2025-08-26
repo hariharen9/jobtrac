@@ -13,7 +13,7 @@ interface ApplicationRowProps {
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication, onDeleteApplication }) => {
   return (
     <>
-      <td className="px-6 py-6 font-medium text-slate-900 dark:text-slate-100">{app.company}</td>
+      <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</td>
       <td className="px-6 py-6">
         <a
           href={app.link}
