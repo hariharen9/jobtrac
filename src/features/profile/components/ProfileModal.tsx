@@ -126,7 +126,7 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
                   🌐 Portfolio
                 </a>
                 <a 
-                  href="https://linkedin.com/in/hariahren9" 
+                  href="https://linkedin.com/in/hariharen9" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-blue-100/70 dark:bg-blue-900/30 amoled:bg-blue-900/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-blue-700 dark:text-blue-300"
