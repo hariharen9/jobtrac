@@ -7,11 +7,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        'dark-bg': '#0D1117',
-        'dark-card': '#161B22',
-        'dark-border': '#30363D',
-        'dark-text': '#C9D1D9',
-        'dark-text-secondary': '#8B949E',
+        'dark-bg': '#161B22',
+        'dark-card': '#1F242B',
+        'dark-border': '#3A3F48',
+        'dark-text': '#B4BCC5',
+        'dark-text-secondary': '#7E8995',
         'amoled-bg': '#000000',
         'amoled-card': '#000000',
         'amoled-border': '#333333',
