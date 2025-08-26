@@ -27,7 +27,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
       </td>
       <td className="px-6 py-6">{app.date}</td>
       <td className="px-6 py-6">
-        <span className={`px-2 py-1 rounded-full text-xs font-medium uppercase tracking-wide ${statusColors[app.status]}`}>
+        <span className={`px-2 py-1 rounded-full text-xs font-medium uppercase tracking-wide whitespace-nowrap ${statusColors[app.status]}`}>
           {app.status}
         </span>
       </td>
