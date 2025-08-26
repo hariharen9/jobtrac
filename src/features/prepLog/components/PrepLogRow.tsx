@@ -16,7 +16,7 @@ const PrepLogRow: React.FC<PrepLogRowProps> = ({ entry, onEditPrepEntry, onDelet
         {[1, 2, 3, 4, 5].map(star => (
           <Star
             key={star}
-            className={`w-4 h-4 ${star <= confidence ? 'text-yellow-400 fill-current' : 'text-slate-300 dark:text-slate-600'}`}
+            className={`w-4 h-4 ${star <= confidence ? 'text-yellow-400 fill-current' : 'text-slate-300 dark:text-dark-text-secondary amoled:text-amoled-text-secondary'}`}
           />
         ))}
       </div>
@@ -26,7 +26,7 @@ const PrepLogRow: React.FC<PrepLogRowProps> = ({ entry, onEditPrepEntry, onDelet
   return (
     <>
       <td className="px-6 py-6">{entry.date}</td>
-      <td className="px-6 py-6 font-medium text-slate-900 dark:text-slate-100">{entry.topic}</td>
+      <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{entry.topic}</td>
       <td className="px-6 py-6">
         {entry.problems ? (
           <a

@@ -40,14 +40,14 @@ const EmailPasswordForm = () => {
 
   return (
     <div className="w-full max-w-xs mx-auto">
-      <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md dark:bg-slate-800">
+      <form onSubmit={handleSubmit} className="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md dark:bg-dark-card amoled:bg-amoled-card">
         {error && <p className="mb-4 text-xs italic text-red-500">{error}</p>}
         <div className="mb-4">
-          <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-slate-300" htmlFor="email">
+          <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-dark-text amoled:text-amoled-text" htmlFor="email">
             Email
           </label>
           <input
-            className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600"
+            className="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-dark-bg amoled:bg-amoled-bg dark:text-dark-text amoled:text-amoled-text dark:border-slate-600"
             id="email"
             type="email"
             placeholder="Email"
@@ -56,11 +56,11 @@ const EmailPasswordForm = () => {
           />
         </div>
         <div className="relative mb-6">
-          <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-slate-300" htmlFor="password">
+          <label className="block mb-2 text-sm font-bold text-gray-700 dark:text-dark-text amoled:text-amoled-text" htmlFor="password">
             Password
           </label>
           <input
-            className="w-full px-3 py-2 pr-10 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600"
+            className="w-full px-3 py-2 pr-10 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline dark:bg-dark-bg amoled:bg-amoled-bg dark:text-dark-text amoled:text-amoled-text dark:border-slate-600"
             id="password"
             type={showPassword ? 'text' : 'password'}
             placeholder="******************"

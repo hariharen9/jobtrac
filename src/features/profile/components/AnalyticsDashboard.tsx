@@ -10,7 +10,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   if (active && payload && payload.length) {
     return (
       <div className="p-2 text-white bg-gray-800 rounded-md bg-opacity-80">
-        <p className="label">{`${label} : ${payload[0].value}`}</p>
+        <p className="label">{`${label} : ${payload[0].value} (Count)`}</p>
       </div>
     );
   }
@@ -32,15 +32,15 @@ const AnalyticsDashboard = ({ applications }: { applications: Application[] }) =
 
   return (
     <div>
-      <h4 className="mb-2 text-center text-md text-slate-800 dark:text-slate-200">Applications by Status</h4>
+      <h4 className="mb-2 text-center text-md text-slate-800 dark:text-dark-text amoled:text-amoled-text">Applications by Status</h4>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
-          <YAxis allowDecimals={false} />
+          <YAxis allowDecimals={false} label={{ value: 'Count', angle: -90, position: 'insideLeft' }} />
           <Tooltip content={<CustomTooltip />} />
-          <Legend />
-          <Bar dataKey="value" fill="#8884d8">
+          <Legend formatter={(value, entry) => (entry.dataKey === 'value' ? '' : value)} />
+          <Bar dataKey="value" fill="#FFFFFF">
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}

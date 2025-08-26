@@ -31,16 +31,16 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const dragCounter = useRef(0);
 
   const columns: KanbanColumn[] = [
-    { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50' },
-    { id: 'Applied', title: 'Applied', color: 'bg-blue-50 dark:bg-blue-900/20' },
-    { id: 'HR Screen', title: 'HR Screen', color: 'bg-yellow-50 dark:bg-yellow-900/20' },
-    { id: 'Tech Screen', title: 'Tech Screen', color: 'bg-orange-50 dark:bg-orange-900/20' },
-    { id: 'Round 1', title: 'Round 1', color: 'bg-purple-50 dark:bg-purple-900/20' },
-    { id: 'Manager Round', title: 'Manager Round', color: 'bg-indigo-50 dark:bg-indigo-900/20' },
-    { id: 'Final Round', title: 'Final Round', color: 'bg-pink-50 dark:bg-pink-900/20' },
-    { id: 'Offer', title: 'Offer', color: 'bg-green-50 dark:bg-green-900/20' },
-    { id: 'Rejected', title: 'Rejected', color: 'bg-red-50 dark:bg-red-900/20' },
-    { id: 'Ghosted', title: 'Ghosted', color: 'bg-gray-100 dark:bg-gray-700/50' }
+    { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
+    { id: 'Applied', title: 'Applied', color: 'bg-blue-50 dark:bg-blue-900/20 amoled:bg-amoled-card' },
+    { id: 'HR Screen', title: 'HR Screen', color: 'bg-yellow-50 dark:bg-yellow-900/20 amoled:bg-amoled-card' },
+    { id: 'Tech Screen', title: 'Tech Screen', color: 'bg-orange-50 dark:bg-orange-900/20 amoled:bg-amoled-card' },
+    { id: 'Round 1', title: 'Round 1', color: 'bg-purple-50 dark:bg-purple-900/20 amoled:bg-amoled-card' },
+    { id: 'Manager Round', title: 'Manager Round', color: 'bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-amoled-card' },
+    { id: 'Final Round', title: 'Final Round', color: 'bg-pink-50 dark:bg-pink-900/20 amoled:bg-amoled-card' },
+    { id: 'Offer', title: 'Offer', color: 'bg-green-50 dark:bg-green-900/20 amoled:bg-amoled-card' },
+    { id: 'Rejected', title: 'Rejected', color: 'bg-red-50 dark:bg-red-900/20 amoled:bg-amoled-card' },
+    { id: 'Ghosted', title: 'Ghosted', color: 'bg-gray-100 dark:bg-gray-700/50 amoled:bg-amoled-card' }
   ];
 
   // Group applications by status
@@ -98,9 +98,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
 
   if (loading) {
     return (
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm">
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
             <MoreHorizontal className="w-5 h-5" />
             Application Pipeline
           </h2>
@@ -114,9 +114,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-4 sm:p-6 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
           <MoreHorizontal className="w-5 h-5" />
           Application Pipeline
         </h2>
@@ -137,7 +137,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           return (
             <div key={column.id} className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text flex items-center gap-2">
                   <span className={`w-3 h-3 rounded-full ${statusColors[column.id].split(' ')[0]}`}></span>
                   {column.title}
                 </h3>
@@ -189,7 +189,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 {/* Column Header */}
                 <div className="p-4 border-b border-slate-200 dark:border-slate-600">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                    <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text flex items-center gap-2">
                       <span className={`w-3 h-3 rounded-full ${statusColors[column.id].split(' ')[0]}`}></span>
                       {column.title}
                     </h3>
@@ -263,13 +263,13 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       draggable={!!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, application) : undefined}
       onDragEnd={onDragEnd}
-      className={`bg-white dark:bg-slate-700 p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
+      className={`bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
         isDragging ? 'opacity-50 rotate-2 scale-105' : 'hover:scale-[1.02]'
       } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''}`}
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-slate-900 dark:text-slate-100 truncate">
+          <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
             {application.company}
           </h4>
           <a

@@ -25,20 +25,20 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
   );
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-slate-800">
-      <h2 className="mb-6 text-2xl font-bold text-center text-slate-900 dark:text-slate-100">User Profile</h2>
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
+      <h2 className="mb-6 text-2xl font-bold text-center text-slate-900 dark:text-dark-text amoled:text-amoled-text">User Profile</h2>
+      <div className="flex flex-col gap-6">
         <div>
-          <div className="p-4 rounded-lg bg-slate-100 dark:bg-slate-700">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">User Information</h3>
+          <div className="p-4 rounded-lg bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card">
+            <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">User Information</h3>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="font-medium text-slate-600 dark:text-slate-400">Email:</span>
-                <span className="text-slate-900 dark:text-slate-100">{user?.email}</span>
+                <span className="text-slate-900 dark:text-dark-text amoled:text-amoled-text">{user?.email}</span>
               </div>
               <div className="flex justify-between">
                 <span className="font-medium text-slate-600 dark:text-slate-400">Name:</span>
-                <span className="text-slate-900 dark:text-slate-100">{user?.displayName || 'Not set'}</span>
+                <span className="text-slate-900 dark:text-dark-text amoled:text-amoled-text">{user?.displayName || 'Not set'}</span>
               </div>
             </div>
           </div>
@@ -55,13 +55,13 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
           )}
         </div>
         <div>
-          <div className="p-4 rounded-lg bg-slate-100 dark:bg-slate-700">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Analytics Dashboard</h3>
+          <div className="p-4 rounded-lg bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card">
+            <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">Analytics Dashboard</h3>
             <AnalyticsDashboard applications={applications} />
           </div>
 
-          <div className="p-4 mt-6 rounded-lg bg-slate-100 dark:bg-slate-700">
-            <h3 className="mb-4 text-lg font-semibold text-slate-900 dark:text-slate-100">Goal Setting</h3>
+          <div className="p-4 mt-6 rounded-lg bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            <h3 className="mb-4 text-lg font-semibold">Goal Setting</h3>
             <GoalSetting applications={applications} contacts={contacts} prepEntries={prepEntries} />
           </div>
         </div>

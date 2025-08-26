@@ -22,7 +22,7 @@ interface NotesProps {
 const MotionButton = ({ children, onClick, title, className = '' }) => (
   <motion.button
     onClick={onClick}
-    className={`p-1.5 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text hover:bg-slate-200 dark:hover:bg-dark-card amoled:hover:bg-amoled-card rounded-lg transition-colors ${className}`}
+    className={`p-1.5 text-slate-600 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text hover:bg-slate-200 dark:hover:bg-dark-card amoled:hover:bg-amoled-card rounded-lg transition-colors ${className}`}
     whileHover={{ scale: 1.1 }}
     whileTap={{ scale: 0.95 }}
     title={title}
@@ -174,16 +174,16 @@ export default function Notes({ userId }: NotesProps) {
             animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, x: 50, y: 50 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className={`fixed z-40 bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-xl shadow-2xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border flex flex-col overflow-hidden ${
+            className={`fixed z-40 bg-white dark:bg-dark-card amoled:bg-amoled-card amoled:bg-amoled-card rounded-xl shadow-2xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border flex flex-col overflow-hidden ${
               isMaximized
                 ? 'inset-4 max-w-6xl max-h-[90vh] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'
                 : 'bottom-20 right-4 w-[450px] h-[600px]'
             }`}
           >
-            <header className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border bg-slate-50 dark:bg-dark-bg/50 amoled:bg-amoled-bg/50 flex-shrink-0">
+            <header className="flex items-center justify-between p-3 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border bg-slate-50 dark:bg-dark-bg/50 amoled:bg-amoled-bg/50 amoled:bg-amoled-bg/50 flex-shrink-0">
               <div className="flex items-center gap-2">
                 <StickyNote className="w-5 h-5 text-amber-500" />
-                <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text amoled:text-amoled-text">
                   Quick Notes
                 </h3>
               </div>
@@ -206,9 +206,9 @@ export default function Notes({ userId }: NotesProps) {
             </header>
 
             <div className="flex flex-1 overflow-hidden">
-              <aside className="w-40 border-r border-slate-200 dark:border-dark-border amoled:border-amoled-border flex flex-col bg-slate-50/50 dark:bg-dark-bg/20 amoled:bg-amoled-bg/20">
-                <div className="p-2 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border">
-                  <h4 className="text-xs font-semibold uppercase text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary flex items-center gap-2">
+              <aside className="w-40 border-r border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border flex flex-col bg-slate-50/50 dark:bg-dark-bg/20 amoled:bg-amoled-bg/20 amoled:bg-amoled-bg/20">
+                <div className="p-2 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border">
+                  <h4 className="text-xs font-semibold uppercase text-slate-500 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary flex items-center gap-2">
                     <Book className="w-3 h-3"/>
                     My Notes
                   </h4>
@@ -219,8 +219,8 @@ export default function Notes({ userId }: NotesProps) {
                       key={page.id}
                       className={`flex items-center justify-between gap-2 p-2 cursor-pointer transition-all group text-sm ${
                         activePageId === page.id
-                          ? 'bg-amber-100 dark:bg-amber-900/30 amoled:bg-amber-900/30 text-slate-900 dark:text-dark-text amoled:text-amoled-text'
-                          : 'text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:bg-slate-200/50 dark:hover:bg-dark-card/50 amoled:hover:bg-amoled-card/50'
+                          ? 'bg-amber-100 dark:bg-amber-900/30 amoled:bg-amber-900/30 amoled:bg-amber-900/30 text-slate-900 dark:text-dark-text amoled:text-amoled-text amoled:text-amoled-text'
+                          : 'text-slate-600 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary hover:bg-slate-200/50 dark:hover:bg-dark-card/50 amoled:hover:bg-amoled-card/50 amoled:hover:bg-amoled-card/50'
                       }`}
                       onClick={() => setActivePageId(page.id)}
                       whileHover={{ scale: 1.02 }}
@@ -278,9 +278,9 @@ export default function Notes({ userId }: NotesProps) {
                     onBlur={handleSaveContent}
                   />
                 ) : (
-                  <div className="flex-1 flex items-center justify-center text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                  <div className="flex-1 flex items-center justify-center text-slate-500 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary">
                     <div className="text-center">
-                      <StickyNote className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-dark-text-secondary amoled:text-amoled-text-secondary" />
+                      <StickyNote className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary" />
                       <p className="text-sm">
                         Click the <Plus className="inline w-3 h-3"/> button to create your first note.
                       </p>

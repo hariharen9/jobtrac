@@ -93,7 +93,7 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
   }, [showConfetti]);
 
   const Progress = ({ value, max }: { value: number, max: number }) => (
-    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-dark-card amoled:bg-amoled-card">
       <div className="bg-indigo-600 h-2.5 rounded-full" style={{ width: `${(value / max) * 100}%` }}></div>
     </div>
   );
@@ -104,7 +104,7 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
       <form onSubmit={handleSubmit}>
         <div className="flex items-center mb-4">
           <label className="mr-4 font-medium">Goal Type:</label>
-          <select value={type} onChange={(e) => setType(e.target.value as 'weekly' | 'monthly')} className="px-2 py-1 border rounded-md dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600">
+          <select value={type} onChange={(e) => setType(e.target.value as 'weekly' | 'monthly')} className="px-2 py-1 border rounded-md dark:bg-dark-card amoled:bg-amoled-card dark:text-dark-text amoled:text-amoled-text dark:border-slate-600">
             <option value="weekly">Weekly</option>
             <option value="monthly">Monthly</option>
           </select>
@@ -112,17 +112,17 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
             <label className="block mb-1 font-medium">Applications</label>
-            <input type="number" value={applicationsGoal} onChange={(e) => setApplicationsGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600" />
+            <input type="number" value={applicationsGoal} onChange={(e) => setApplicationsGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-dark-card amoled:bg-amoled-card dark:text-dark-text amoled:text-amoled-text dark:border-slate-600" />
             <Progress value={getProgress('applications')} max={applicationsGoal} />
           </div>
           <div>
             <label className="block mb-1 font-medium">Networking Contacts</label>
-            <input type="number" value={networkingGoal} onChange={(e) => setNetworkingGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600" />
+            <input type="number" value={networkingGoal} onChange={(e) => setNetworkingGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-dark-card amoled:bg-amoled-card dark:text-dark-text amoled:text-amoled-text dark:border-slate-600" />
             <Progress value={getProgress('contacts')} max={networkingGoal} />
           </div>
           <div>
             <label className="block mb-1 font-medium">Prep Sessions</label>
-            <input type="number" value={prepGoal} onChange={(e) => setPrepGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-slate-700 dark:text-slate-300 dark:border-slate-600" />
+            <input type="number" value={prepGoal} onChange={(e) => setPrepGoal(parseInt(e.target.value, 10))} className="w-full px-2 py-1 border rounded-md dark:bg-dark-card amoled:bg-amoled-card dark:text-dark-text amoled:text-amoled-text dark:border-slate-600" />
             <Progress value={getProgress('prepEntries')} max={prepGoal} />
           </div>
         </div>

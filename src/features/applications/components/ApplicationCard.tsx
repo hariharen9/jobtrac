@@ -20,7 +20,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
     >
       <div className="flex justify-between items-start">
         <div className="flex-1">
-          <h3 className="font-semibold text-lg text-slate-900 dark:text-slate-100">{app.company}</h3>
+          <h3 className="font-semibold text-lg text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</h3>
           <a
             href={app.link}
             target="_blank"
@@ -56,11 +56,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
       <div className="grid grid-cols-2 gap-4 text-sm">
         <div>
           <p className="text-slate-500 dark:text-slate-400">Date Applied</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{app.date}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{app.date}</p>
         </div>
         <div>
           <p className="text-slate-500 dark:text-slate-400">Location</p>
-          <p className="text-slate-900 dark:text-slate-100 font-medium">{app.location}</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{app.location}</p>
         </div>
       </div>
       
@@ -73,14 +73,14 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
       {app.nextStep && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Next Step</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100 font-medium">{app.nextStep}</p>
+          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{app.nextStep}</p>
         </div>
       )}
       
       {app.notes && (
         <div className="text-sm">
           <p className="text-slate-500 dark:text-slate-400">Notes</p>
-          <p className="mt-1 text-slate-900 dark:text-slate-100">{app.notes}</p>
+          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.notes}</p>
         </div>
       )}
     </motion.div>

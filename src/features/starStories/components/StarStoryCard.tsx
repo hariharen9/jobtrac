@@ -16,8 +16,8 @@ const StarStoryCard: React.FC<StarStoryCardProps> = ({ story, onEditStory, onDel
       whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
       transition={{ type: 'spring', stiffness: 400, damping: 15 }}
     >
-      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 flex justify-between items-center relative">
-        <h3 className="font-bold text-xl text-slate-900 dark:text-slate-100">{story.title}</h3>
+      <div className="bg-slate-50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 p-4 flex justify-between items-center relative">
+        <h3 className="font-bold text-xl text-slate-900 dark:text-dark-text amoled:text-amoled-text">{story.title}</h3>
         <div className="flex items-center gap-2 z-10">
           <motion.button
             whileHover={{ scale: 1.1 }}
@@ -42,19 +42,19 @@ const StarStoryCard: React.FC<StarStoryCardProps> = ({ story, onEditStory, onDel
       <div className="p-4 space-y-4 text-base">
         <div>
           <strong className="text-blue-600 dark:text-blue-400 font-semibold">Situation:</strong>
-          <p className="mt-1 text-slate-700 dark:text-slate-300">{story.situation}</p>
+          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.situation}</p>
         </div>
         <div>
           <strong className="text-purple-600 dark:text-purple-400 font-semibold">Task:</strong>
-          <p className="mt-1 text-slate-700 dark:text-slate-300">{story.task}</p>
+          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.task}</p>
         </div>
         <div>
           <strong className="text-orange-600 dark:text-orange-400 font-semibold">Action:</strong>
-          <p className="mt-1 text-slate-700 dark:text-slate-300">{story.action}</p>
+          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.action}</p>
         </div>
         <div>
           <strong className="text-green-600 dark:text-green-400 font-semibold">Result:</strong>
-          <p className="mt-1 text-slate-700 dark:text-slate-300">{story.result}</p>
+          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.result}</p>
         </div>
       </div>
     </motion.div>

@@ -37,9 +37,9 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
 }) => {
   if (loading) {
     return (
-      <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm">
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
             <Building className="w-5 h-5" />
             Company Research
           </h2>
@@ -53,9 +53,9 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm">
+    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-slate-100">
+        <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
           <Building className="w-5 h-5" />
           Company Research
         </h2>
