@@ -10,7 +10,7 @@ const CustomTooltip = ({ active, payload, label }: TooltipProps<number, string>)
   if (active && payload && payload.length) {
     return (
       <div className="p-2 text-white bg-gray-800 rounded-md bg-opacity-80">
-        <p className="label">{`${label} : ${payload[0].value} (Count)`}</p>
+        <p className="label">{`${label} : ${payload[0].value}`}</p>
       </div>
     );
   }
