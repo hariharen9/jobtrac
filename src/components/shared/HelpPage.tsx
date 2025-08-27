@@ -29,7 +29,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
 
       <div className="space-y-8">
         {/* Application Tracker */}
-        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm">
+        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-indigo-100 dark:bg-indigo-900 amoled:bg-indigo-900 rounded-lg">
               <Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
@@ -71,7 +71,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
         </section>
 
         {/* Prep Log */}
-        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm">
+        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-green-100 dark:bg-green-900 amoled:bg-green-900 rounded-lg">
               <BookOpen className="w-6 h-6 text-green-600 dark:text-green-400" />
@@ -113,7 +113,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
         </section>
 
         {/* Company Research */}
-        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm">
+        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-blue-100 dark:bg-blue-900 amoled:bg-blue-900 rounded-lg">
               <Building className="w-6 h-6 text-blue-600 dark:text-blue-400" />
@@ -146,7 +146,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
         </section>
 
         {/* Networking */}
-        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm">
+        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-purple-100 dark:bg-purple-900 amoled:bg-purple-900 rounded-lg">
               <Users className="w-6 h-6 text-purple-600 dark:text-purple-400" />
@@ -188,7 +188,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
         </section>
 
         {/* STAR Stories */}
-        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm">
+        <section className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg p-6 shadow-sm border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 bg-yellow-100 dark:bg-yellow-900 amoled:bg-yellow-900 rounded-lg">
               <Star className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
@@ -257,7 +257,7 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
         </section>
 
         {/* Best Practices */}
-        <section className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 amoled:from-amoled-card amoled:to-amoled-card rounded-lg p-6">
+        <section className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 amoled:from-amoled-card amoled:to-amoled-card rounded-lg p-6 border-2 border-dashed border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
           <h2 className="text-xl font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-4">
             🎯 Best Practices for Job Search Success
           </h2>
