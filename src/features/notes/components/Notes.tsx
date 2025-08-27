@@ -34,7 +34,8 @@ const MotionButton = ({ children, onClick, title, className = '' }) => (
 
 export default function Notes({ userId }: NotesProps) {
   const {
-    userNotes,
+    notes,
+    settings,
     loading,
     error,
     addPage,
@@ -52,19 +53,19 @@ export default function Notes({ userId }: NotesProps) {
   const { theme } = useTheme();
 
   useEffect(() => {
-    if (userNotes?.pages?.length && !activePageId) {
-      setActivePageId(userNotes.pages[0].id);
+    if (notes?.length && !activePageId) {
+      setActivePageId(notes[0].id);
     }
-  }, [userNotes, activePageId]);
+  }, [notes, activePageId]);
 
   useEffect(() => {
-    const activePage = userNotes?.pages?.find((page) => page.id === activePageId);
+    const activePage = notes?.find((page) => page.id === activePageId);
     if (activePage) {
       setNoteContent(activePage.content);
     }
-  }, [activePageId, userNotes]);
+  }, [activePageId, notes]);
 
-  const activePage = userNotes?.pages?.find((page) => page.id === activePageId);
+  const activePage = notes?.find((page) => page.id === activePageId);
 
   const handleAddPage = useCallback(async () => {
     const newPageId = await addPage();
@@ -77,11 +78,11 @@ export default function Notes({ userId }: NotesProps) {
     if (window.confirm('Are you sure you want to delete this note?')) {
       await deletePage(pageId);
       if (activePageId === pageId) {
-        const remainingPages = userNotes?.pages.filter((p) => p.id !== pageId);
+        const remainingPages = notes?.filter((p) => p.id !== pageId);
         setActivePageId(remainingPages?.[0]?.id || null);
       }
     }
-  }, [deletePage, userNotes, activePageId]);
+  }, [deletePage, notes, activePageId]);
 
   const handleContentChange = (content: string | undefined) => {
     setNoteContent(content);
@@ -213,7 +214,7 @@ export default function Notes({ userId }: NotesProps) {
                   </h4>
                 </div>
                 <div className="flex-1 overflow-y-auto">
-                  {userNotes?.pages?.map((page) => (
+                  {notes?.map((page) => (
                     <motion.div
                       key={page.id}
                       className={`flex items-center justify-between gap-2 p-2 cursor-pointer transition-all group text-sm ${
@@ -249,7 +250,7 @@ export default function Notes({ userId }: NotesProps) {
                           {page.title}
                         </span>
                       )}
-                      {userNotes.pages.length > 1 && (
+                      {notes.length > 1 && (
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -266,7 +267,7 @@ export default function Notes({ userId }: NotesProps) {
                 </div>
               </aside>
 
-              <main className="flex-1 flex flex-col overflow-hidden" data-color-mode={theme}>
+              <main className="flex-1 flex flex-col overflow-hidden" data-color-mode={settings.theme}>
                 {activePage ? (
                   <MDEditor
                     value={noteContent}

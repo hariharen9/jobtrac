@@ -10,7 +10,7 @@ import {
   deleteUser
 } from 'firebase/auth';
 import { auth, googleProvider, db } from '../../../lib/firebase';
-import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { collection, query, where, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 
 export function useAuth() {
@@ -18,9 +18,31 @@ export function useAuth() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       setLoading(false);
+
+      if (user) {
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+
+        if (!userDocSnap.exists()) {
+          // Create user document if it doesn't exist
+          await setDoc(userDocRef, {
+            uid: user.uid,
+            email: user.email || null,
+            createdAt: user.metadata.creationTime,
+            lastLoginAt: user.metadata.lastSignInTime,
+          }, { merge: true });
+          console.log('User document created/updated with metadata.');
+        } else {
+          // Update last login time if document exists
+          await updateDoc(userDocRef, {
+            lastLoginAt: user.metadata.lastSignInTime,
+          });
+          console.log('User lastLoginAt updated.');
+        }
+      }
     });
 
     return () => unsubscribe();
@@ -64,31 +86,71 @@ export function useAuth() {
     }
   };
 
+  const deleteUserData = async (userId: string) => {
+    const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'notesCollection'];
+    const batch = writeBatch(db);
+
+    // Delete documents from main collections
+    for (const collectionName of collectionsToDelete) {
+      const q = query(collection(db, 'users', userId, collectionName));
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        batch.delete(doc.ref);
+      });
+    }
+
+    // Delete the notesSettings document
+    console.log('Attempting to delete notesSettings for user:', userId);
+    const notesSettingsDocRef = doc(db, 'users', userId, 'settings', 'notesSettings');
+    batch.delete(notesSettingsDocRef);
+    console.log('notesSettings document added to batch for deletion.');
+
+    await batch.commit();
+    toast.success('All user data deleted from Firestore.');
+  };
+
   const logout = async () => {
     try {
-      if (auth.currentUser && auth.currentUser.isAnonymous) {
+      if (auth.currentUser) {
         const confirmation = window.confirm(
-          'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
+          auth.currentUser.isAnonymous
+            ? 'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
+            : 'Are you sure you want to log out? All your data will be permanently deleted.'
         );
         if (!confirmation) {
           return;
         }
 
-        const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'userNotes'];
-        const batch = writeBatch(db);
-  
-        for (const collectionName of collectionsToDelete) {
-          const q = query(collection(db, collectionName), where('userId', '==', auth.currentUser.uid));
-          const querySnapshot = await getDocs(q);
-          querySnapshot.forEach((doc) => {
-            batch.delete(doc.ref);
-          });
+        if (auth.currentUser.isAnonymous) {
+          try {
+            // Re-authenticate anonymous user to refresh token before deletion
+            await signInAnonymously(auth);
+            console.log('Anonymous user re-authenticated successfully.');
+          } catch (reauthError) {
+            console.error('Error re-authenticating anonymous user:', reauthError);
+            toast.error('Failed to re-authenticate guest user. Please try again.');
+            return; // Stop if re-authentication fails
+          }
         }
-        await batch.commit();
-        toast.success('All user data deleted from Firestore.');
 
-        await deleteUser(auth.currentUser);
-        toast.success('Guest user account deleted successfully.');
+        try {
+          await deleteUserData(auth.currentUser.uid);
+          console.log('User data deleted from Firestore.');
+        } catch (dataDeleteError) {
+          console.error('Error deleting user data:', dataDeleteError);
+          toast.error('Failed to delete user data. Please try again.');
+          return; // Stop if data deletion fails
+        }
+
+        try {
+          await deleteUser(auth.currentUser);
+          toast.success('User account deleted successfully.');
+          console.log('User account deleted from Firebase Auth.');
+        } catch (authDeleteError) {
+          console.error('Error deleting user account from Auth:', authDeleteError);
+          toast.error('Failed to delete user account. Please try again.');
+          return; // Stop if auth deletion fails
+        }
       }
       await signOut(auth);
     } catch (error) {
