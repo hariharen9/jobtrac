@@ -17,9 +17,13 @@ const AuthPage: React.FC = () => {
           isAnonymous: user.isAnonymous,
         };
         window.parent.postMessage({ name: 'auth-complete', user: serializableUser }, '*');
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error during sign-in:', error);
-        window.parent.postMessage({ name: 'auth-complete', error: error.message || 'Unknown authentication error' }, '*');
+        let errorMessage = 'Unknown authentication error';
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        window.parent.postMessage({ name: 'auth-complete', error: errorMessage }, '*');
       }
     };
 
