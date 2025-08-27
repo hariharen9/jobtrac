@@ -1,14 +1,14 @@
 import React from 'react';
-import { Sun, Moon, Star } from 'lucide-react';
+import { Sun, Moon, Sparkles } from 'lucide-react';
 import { useTheme } from '../../hooks/shared/useTheme';
 
 const ThemeToggle: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   const renderIcon = () => {
-    if (theme === 'light') return <Moon className="w-4 h-4" />;
-    if (theme === 'dark') return <Star className="w-4 h-4" />;
-    return <Sun className="w-4 h-4" />;
+    if (theme === 'light') return <Sun className="w-4 h-4" />;
+    if (theme === 'dark') return <Moon className="w-4 h-4" />;
+    return <Sparkles className="w-4 h-4" />;
   };
 
   const getAriaLabel = () => {
