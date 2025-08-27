@@ -6,7 +6,8 @@ import {
   signInAnonymously,
   User,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  deleteUser
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../../lib/firebase';
 
@@ -70,6 +71,7 @@ export function useAuth() {
         if (!confirmation) {
           return;
         }
+        await deleteUser(auth.currentUser);
       }
       await signOut(auth);
     } catch (error) {
