@@ -10,6 +10,7 @@ export interface Application {
   referral: 'Y' | 'N';
   location: string;
   notes: string;
+  jobDescription?: string;
 }
 
 export interface PrepEntry {
