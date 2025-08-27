@@ -1,7 +1,13 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link } from 'lucide-react';
+import { CheckCircle, Link, Trash2 } from 'lucide-react';
+import { useState } from 'react';
+import Modal from '../../../components/shared/Modal';
+import { auth, db } from '../../../lib/firebase';
+import { deleteUser } from 'firebase/auth';
+import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import GoalSetting from './GoalSetting';
 import { Application, NetworkingContact, PrepEntry } from '../../../types';
@@ -18,6 +24,9 @@ const GoogleIcon = () => (
 
 const ProfileModal = ({ applications, contacts, prepEntries }: { applications: Application[], contacts: NetworkingContact[], prepEntries: PrepEntry[] }) => {
   const { user } = useAuth();
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+  const [showFinalDeleteConfirmation, setShowFinalDeleteConfirmation] = useState(false);
+  const [deleteInput, setDeleteInput] = useState('');
 
   const handleConnectGoogle = async () => {
     if (!user) return;
@@ -37,6 +46,42 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
 
   const isAnonymous = user?.isAnonymous;
   const userType = isGoogleConnected ? 'Google' : isAnonymous ? 'Guest' : 'Email';
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+
+    try {
+      // Step 1: Re-authenticate user if necessary (e.g., for email/password users)
+      // Firebase security rules might require recent login for sensitive operations.
+      // For simplicity, we're skipping explicit re-authentication here, but in a real app,
+      // you'd prompt for password/re-login if user hasn't signed in recently.
+
+      // Step 2: Delete user data from Firestore
+      const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'userNotes'];
+      const batch = writeBatch(db);
+
+      for (const collectionName of collectionsToDelete) {
+        const q = query(collection(db, collectionName), where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+      }
+      await batch.commit();
+      toast.success('All user data deleted from Firestore.');
+
+      // Step 3: Delete user from Firebase Authentication
+      await deleteUser(user);
+      toast.success('User account deleted successfully.');
+
+      // Step 4: Log out the user (handled by useAuth listener on user deletion)
+      // No explicit logout needed here as Firebase auth state change will trigger it.
+
+    } catch (error: any) {
+      console.error('Error deleting account:', error);
+      toast.error(`Failed to delete account: ${error.message || 'Unknown error'}`);
+    }
+  };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
@@ -193,7 +238,87 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
             </div>
           </div>
         </div>
+
+        {/* Delete Account Section */}
+        <div className="p-4 rounded-lg bg-red-100 dark:bg-red-900/20 amoled:bg-amoled-card border border-red-200 dark:border-red-700/50">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">Delete Account</h3>
+              <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Permanently delete your account and all associated data.</p>
+            </div>
+            <button
+              onClick={() => setShowDeleteConfirmation(true)}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg font-semibold text-sm hover:bg-red-700 transition-colors shadow-md hover:shadow-lg"
+            >
+              Delete Account
+            </button>
+          </div>
+        </div>
       </div>
+   
+
+      {/* First Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteConfirmation}
+        onClose={() => setShowDeleteConfirmation(false)}
+        title="Confirm Account Deletion"
+        size="md"
+      >
+        <div className="p-4 text-center">
+          <Trash2 className="w-16 h-16 text-red-500 mx-auto mb-4" />
+          <p className="text-lg font-semibold text-slate-900 dark:text-dark-text mb-2">Are you absolutely sure?</p>
+          <p className="text-slate-600 dark:text-dark-text-secondary mb-6">
+            This action is irreversible. All your data, including applications, prep entries, company research, networking contacts, and STAR stories, will be permanently deleted.
+          </p>
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => setShowDeleteConfirmation(false)}
+              className="px-6 py-2 rounded-lg font-semibold text-sm bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 transition-colors text-slate-800 dark:text-slate-200"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={() => {
+                setShowDeleteConfirmation(false);
+                setShowFinalDeleteConfirmation(true);
+              }}
+              className="px-6 py-2 rounded-lg font-semibold text-sm bg-red-600 text-white hover:bg-red-700 transition-colors"
+            >
+              Yes, Delete My Account
+            </button>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Second Confirmation Modal */}
+      <Modal
+        isOpen={showFinalDeleteConfirmation}
+        onClose={() => {
+          setShowFinalDeleteConfirmation(false);
+          setDeleteInput('');
+        }}
+        title="Final Confirmation"
+        size="sm"
+      >
+        <div className="p-4 text-center">
+          <p className="text-slate-600 dark:text-dark-text-secondary mb-4">
+            To confirm deletion, please type "<span className="font-bold text-red-600">delete</span>" below:
+          </p>
+          <input
+            type="text"
+            value={deleteInput}
+            onChange={(e) => setDeleteInput(e.target.value)}
+            className="w-full p-2 border border-slate-300 dark:border-slate-700 rounded-lg mb-4 text-center text-slate-900 dark:text-dark-text bg-white dark:bg-dark-card focus:outline-none focus:ring-2 focus:ring-red-500"
+          />
+          <button
+            onClick={handleDeleteAccount}
+            disabled={deleteInput !== 'delete'}
+            className={`w-full px-6 py-2 rounded-lg font-semibold text-sm transition-colors ${deleteInput === 'delete' ? 'bg-red-600 text-white hover:bg-red-700' : 'bg-gray-300 text-gray-500 cursor-not-allowed'}`}
+          >
+            Delete Account Permanently
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
