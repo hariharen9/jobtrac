@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil } from 'lucide-react';
+import { ExternalLink, Trash2, Pencil, FileText } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 
@@ -8,9 +8,10 @@ interface ApplicationRowProps {
   app: Application;
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
+  onViewJD: (application: Application) => void;
 }
 
-const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication, onDeleteApplication }) => {
+const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication, onDeleteApplication, onViewJD }) => {
   return (
     <>
       <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</td>
@@ -24,6 +25,17 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
           {app.role}
           <ExternalLink className="w-3 h-3" />
         </a>
+      </td>
+      <td className="px-6 py-6">
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onViewJD(app)}
+          className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-semibold text-xs hover:bg-indigo-200 transition-colors flex items-center gap-1"
+        >
+          <FileText className="w-3 h-3" />
+          {app.jobDescription ? 'View JD' : 'Add JD'}
+        </motion.button>
       </td>
       <td className="px-6 py-6">{app.date}</td>
       <td className="px-6 py-6">

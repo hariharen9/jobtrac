@@ -36,6 +36,8 @@ const MemoizedActivityCalendar = React.memo(ActivityCalendar);
 const MemoizedKanbanBoard = React.memo(KanbanBoard);
 const MemoizedNotes = React.memo(Notes);
 
+import JobDescriptionModal from './features/applications/components/JobDescriptionModal';
+
 function App() {
   const { user, loading: authLoading } = useAuth();
   useTheme();
@@ -48,6 +50,9 @@ function App() {
   const [modalType, setModalType] = useState<TabType>('applications');
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isJdModalOpen, setIsJdModalOpen] = useState(false);
+  const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+
 
   const { 
     data: applications, 
@@ -144,6 +149,20 @@ function App() {
     }
   }, [updateApplication]);
 
+  const handleViewJD = (application: Application) => {
+    setSelectedApplication(application);
+    setIsJdModalOpen(true);
+  };
+
+  const handleSaveJD = async (applicationId: string, jobDescription: string) => {
+    try {
+      await updateApplication(applicationId, { jobDescription });
+      setIsJdModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save job description:', error);
+    }
+  };
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'applications':
@@ -153,6 +172,7 @@ function App() {
             onAddApplication={() => openModal('applications')} 
             onEditApplication={(item) => openModal('applications', item)}
             onDeleteApplication={deleteApplication}
+            onViewJD={handleViewJD}
             loading={applicationsLoading}
           />
         );
@@ -369,6 +389,13 @@ function App() {
         >
           <HelpPage onClose={() => setIsHelpOpen(false)} />
         </Modal>
+
+        <JobDescriptionModal
+          isOpen={isJdModalOpen}
+          onClose={() => setIsJdModalOpen(false)}
+          application={selectedApplication}
+          onSave={handleSaveJD}
+        />
       </>
     )
   }
@@ -537,6 +564,13 @@ function App() {
         >
           <HelpPage onClose={() => setIsHelpOpen(false)} />
         </Modal>
+
+        <JobDescriptionModal
+          isOpen={isJdModalOpen}
+          onClose={() => setIsJdModalOpen(false)}
+          application={selectedApplication}
+          onSave={handleSaveJD}
+        />
       </div>
       
       {/* Notes Component */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil } from 'lucide-react';
+import { ExternalLink, Trash2, Pencil, FileText } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 
@@ -8,9 +8,10 @@ interface ApplicationCardProps {
   app: Application;
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
+  onViewJD: (application: Application) => void;
 }
 
-const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication }) => {
+const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication, onViewJD }) => {
   return (
     <motion.div 
       className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 space-y-4"
@@ -68,6 +69,15 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
         <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap ${statusColors[app.status]}`}>
           {app.status}
         </span>
+        <motion.button
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => onViewJD(app)}
+          className="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full font-semibold text-xs hover:bg-indigo-200 transition-colors flex items-center gap-1"
+        >
+          <FileText className="w-3 h-3" />
+          {app.jobDescription ? 'View JD' : 'Add JD'}
+        </motion.button>
       </div>
       
       {app.nextStep && (
