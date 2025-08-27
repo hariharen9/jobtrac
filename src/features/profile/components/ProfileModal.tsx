@@ -4,7 +4,7 @@ import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
 import { CheckCircle, Link, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
-import { auth, db } from '../../../lib/firebase';
+import { db } from '../../../lib/firebase';
 import { deleteUser } from 'firebase/auth';
 import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
@@ -77,9 +77,13 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
       // Step 4: Log out the user (handled by useAuth listener on user deletion)
       // No explicit logout needed here as Firebase auth state change will trigger it.
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting account:', error);
-      toast.error(`Failed to delete account: ${error.message || 'Unknown error'}`);
+      if (error instanceof Error) {
+ toast.error(`Failed to delete account: ${error.message || 'Unknown error'}`);
+      } else {
+        toast.error('Failed to delete account: An unknown error occurred.');
+      }
     }
   };
 
