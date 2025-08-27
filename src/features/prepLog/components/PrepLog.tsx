@@ -99,14 +99,14 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
-            <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-700/50 amoled:bg-amoled-card">
+            <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-700/50 amoled:bg-white amoled:text-black">
               <tr>
-                <th scope="col" className="px-6 py-3">Date</th>
-                <th scope="col" className="px-6 py-3">Topic</th>
-                <th scope="col" className="px-6 py-3">Problems Solved</th>
-                <th scope="col" className="px-6 py-3">Time (Hrs)</th>
-                <th scope="col" className="px-6 py-3">Confidence (1-5)</th>
-                <th scope="col" className="px-6 py-3">Key Takeaways</th>
+                <th scope="col" className="px-6 py-3 text-center">Date</th>
+                <th scope="col" className="px-6 py-3 text-center">Topic</th>
+                <th scope="col" className="px-6 py-3 text-center">Problems Solved</th>
+                <th scope="col" className="px-6 py-3 text-center">Time (Hrs)</th>
+                <th scope="col" className="px-6 py-3 text-center">Confidence (1-5)</th>
+                <th scope="col" className="px-6 py-3 text-center">Key Takeaways</th>
                 <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>
