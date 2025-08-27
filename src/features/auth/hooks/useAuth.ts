@@ -63,6 +63,14 @@ export function useAuth() {
 
   const logout = async () => {
     try {
+      if (auth.currentUser && auth.currentUser.isAnonymous) {
+        const confirmation = window.confirm(
+          'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
+        );
+        if (!confirmation) {
+          return;
+        }
+      }
       await signOut(auth);
     } catch (error) {
       console.error('Error signing out:', error);
