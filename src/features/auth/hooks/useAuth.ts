@@ -9,7 +9,9 @@ import {
   signInWithEmailAndPassword,
   deleteUser
 } from 'firebase/auth';
-import { auth, googleProvider } from '../../../lib/firebase';
+import { auth, googleProvider, db } from '../../../lib/firebase';
+import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
@@ -71,7 +73,22 @@ export function useAuth() {
         if (!confirmation) {
           return;
         }
+
+        const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'userNotes'];
+        const batch = writeBatch(db);
+  
+        for (const collectionName of collectionsToDelete) {
+          const q = query(collection(db, collectionName), where('userId', '==', auth.currentUser.uid));
+          const querySnapshot = await getDocs(q);
+          querySnapshot.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+        }
+        await batch.commit();
+        toast.success('All user data deleted from Firestore.');
+
         await deleteUser(auth.currentUser);
+        toast.success('Guest user account deleted successfully.');
       }
       await signOut(auth);
     } catch (error) {

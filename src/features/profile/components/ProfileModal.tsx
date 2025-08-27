@@ -4,9 +4,6 @@ import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
 import { CheckCircle, Link, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
-import { db } from '../../../lib/firebase';
-import { deleteUser } from 'firebase/auth';
-import { collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import GoalSetting from './GoalSetting';
@@ -49,38 +46,13 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
 
   const handleDeleteAccount = async () => {
     if (!user) return;
-
     try {
-      // Step 1: Re-authenticate user if necessary (e.g., for email/password users)
-      // Firebase security rules might require recent login for sensitive operations.
-      // For simplicity, we're skipping explicit re-authentication here, but in a real app,
-      // you'd prompt for password/re-login if user hasn't signed in recently.
-
-      // Step 2: Delete user data from Firestore
-      const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'userNotes'];
-      const batch = writeBatch(db);
-
-      for (const collectionName of collectionsToDelete) {
-        const q = query(collection(db, collectionName), where('userId', '==', user.uid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((doc) => {
-          batch.delete(doc.ref);
-        });
-      }
-      await batch.commit();
-      toast.success('All user data deleted from Firestore.');
-
-      // Step 3: Delete user from Firebase Authentication
-      await deleteUser(user);
+      await logout();
       toast.success('User account deleted successfully.');
-
-      // Step 4: Log out the user (handled by useAuth listener on user deletion)
-      // No explicit logout needed here as Firebase auth state change will trigger it.
-
     } catch (error: unknown) {
       console.error('Error deleting account:', error);
       if (error instanceof Error) {
- toast.error(`Failed to delete account: ${error.message || 'Unknown error'}`);
+        toast.error(`Failed to delete account: ${error.message || 'Unknown error'}`);
       } else {
         toast.error('Failed to delete account: An unknown error occurred.');
       }
