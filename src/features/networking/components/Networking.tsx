@@ -101,12 +101,12 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
           <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
             <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-700/50 amoled:bg-white amoled:text-black">
               <tr>
-                <th scope="col" className="px-6 py-3 text-center">Name</th>
-                <th scope="col" className="px-6 py-3 text-center">Company & Role</th>
-                <th scope="col" className="px-6 py-3 text-center">Date Contacted</th>
-                <th scope="col" className="px-6 py-3 text-center">Status</th>
-                <th scope="col" className="px-6 py-3 text-center">Referral?</th>
-                <th scope="col" className="px-6 py-3 text-center">Notes</th>
+                <th scope="col" className="px-6 py-3">Name</th>
+                <th scope="col" className="px-6 py-3">Company & Role</th>
+                <th scope="col" className="px-6 py-3">Date Contacted</th>
+                <th scope="col" className="px-6 py-3">Status</th>
+                <th scope="col" className="px-6 py-3">Referral?</th>
+                <th scope="col" className="px-6 py-3">Notes</th>
                 <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
               </tr>
             </thead>

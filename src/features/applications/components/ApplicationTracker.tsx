@@ -109,14 +109,14 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
         <table className="w-full text-sm text-left text-slate-500 dark:text-slate-400">
           <thead className="text-xs text-slate-700 dark:text-slate-300 uppercase bg-slate-50 dark:bg-slate-700/50 amoled:bg-white amoled:text-black">
             <tr>
-              <th scope="col" className="px-6 py-3 text-center">Company</th>
-              <th scope="col" className="px-6 py-3 text-center">Role</th>
-              <th scope="col" className="px-6 py-3 text-center">JD</th>
-              <th scope="col" className="px-6 py-3 text-center">Date Applied</th>
-              <th scope="col" className="px-6 py-3 text-center">Status</th>
-              <th scope="col" className="px-6 py-3 text-center">Next Step</th>
-              <th scope="col" className="px-6 py-3 text-center">Location</th>
-              <th scope="col" className="px-6 py-3 text-center">Notes</th>
+              <th scope="col" className="px-6 py-3">Company</th>
+              <th scope="col" className="px-6 py-3">Role</th>
+              <th scope="col" className="px-6 py-3">JD</th>
+              <th scope="col" className="px-6 py-3">Date Applied</th>
+              <th scope="col" className="px-6 py-3">Status</th>
+              <th scope="col" className="px-6 py-3">Next Step</th>
+              <th scope="col" className="px-6 py-3">Location</th>
+              <th scope="col" className="px-6 py-3">Notes</th>
               <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
             </tr>
           </thead>
