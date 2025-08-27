@@ -73,8 +73,8 @@ export interface NotePage {
   id: string;
   title: string;
   content: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
   color: string;
   tags: string[];
   pinned: boolean;
@@ -82,7 +82,6 @@ export interface NotePage {
 
 export interface UserNotes {
   id: string;
-  userId: string;
   pages: NotePage[];
   settings: {
     defaultColor: string;
