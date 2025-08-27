@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import { 
   collection, 
   doc, 
@@ -141,11 +142,13 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
       };
       const docRef = await addDoc(collection(db, collectionName), newItem);
       console.log(`Added item to ${collectionName} with ID:`, docRef.id);
+      toast.success('Item added successfully!');
       return docRef.id;
 
     } catch (err) {
       console.error(`Error adding item to ${collectionName}:`, err);
       setError(err instanceof Error ? err.message : 'Failed to add item');
+      toast.error('Failed to add item.');
       throw err;
     }
   }, [collectionName, userId]);
@@ -162,9 +165,11 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
     try {
       await updateDoc(docRef, updatedData);
       console.log(`Updated item in ${collectionName} with ID:`, id);
+      toast.success('Item updated successfully!');
     } catch (err) {
       console.error(`Error updating item in ${collectionName}:`, err);
       setError(err instanceof Error ? err.message : 'Failed to update item');
+      toast.error('Failed to update item.');
       throw err;
     }
   }, [collectionName, userId]);
@@ -176,9 +181,11 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
     try {
       await deleteDoc(docRef);
       console.log(`Deleted item from ${collectionName} with ID:`, id);
+      toast.success('Item deleted successfully!');
     } catch (err) {
       console.error(`Error deleting item from ${collectionName}:`, err);
       setError(err instanceof Error ? err.message : 'Failed to delete item');
+      toast.error('Failed to delete item.');
       throw err;
     }
   }, [collectionName, userId]);

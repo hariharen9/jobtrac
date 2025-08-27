@@ -37,6 +37,7 @@ const MemoizedKanbanBoard = React.memo(KanbanBoard);
 const MemoizedNotes = React.memo(Notes);
 
 import JobDescriptionModal from './features/applications/components/JobDescriptionModal';
+import { Toaster, toast } from 'react-hot-toast';
 
 function App() {
   const { user, loading: authLoading } = useAuth();
@@ -143,9 +144,10 @@ function App() {
   const handleApplicationStatusUpdate = useCallback(async (id: string, newStatus: ApplicationStatus) => {
     try {
       await updateApplication(id, { status: newStatus });
-      console.log(`Updated application ${id} status to ${newStatus}`);
+      toast.success(`Application status updated to ${newStatus}!`);
     } catch (error) {
       console.error('Failed to update application status:', error);
+      toast.error('Failed to update application status.');
     }
   }, [updateApplication]);
 
@@ -158,8 +160,10 @@ function App() {
     try {
       await updateApplication(applicationId, { jobDescription });
       setIsJdModalOpen(false);
+      toast.success('Job description saved successfully!');
     } catch (error) {
       console.error('Failed to save job description:', error);
+      toast.error('Failed to save job description.');
     }
   };
 
@@ -402,6 +406,7 @@ function App() {
 
   return (
     <div className="min-h-screen dark:bg-dark-bg amoled:bg-amoled-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <Toaster />
       <div className="container p-4 mx-auto sm:p-6 lg:p-8">
         <motion.header 
           initial={{ opacity: 0, y: -20 }}

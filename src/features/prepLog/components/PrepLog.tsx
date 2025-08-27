@@ -5,6 +5,7 @@ import { PrepEntry } from '../../../types';
 import PrepLogRow from './PrepLogRow';
 import PrepLogCard from './PrepLogCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
+import EmptyState from '../../../components/shared/EmptyState';
 
 interface PrepLogProps {
   prepEntries: PrepEntry[];
@@ -86,9 +87,13 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
             ))}
           </AnimatePresence>
           {prepEntries.length === 0 && (
-            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-              No prep entries yet. Click "Add Prep Entry" to start tracking your preparation!
-            </div>
+            <EmptyState
+              title="No Prep Entries Yet"
+              message="Start tracking your interview preparation by adding your first prep entry. Consistency is key!"
+              buttonText="Add Prep Entry"
+              onButtonClick={onAddPrepEntry}
+              icon={<BookOpen className="w-8 h-8 text-indigo-600" />}
+            />
           )}
         </motion.div>
       ) : (
@@ -128,7 +133,13 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
               {prepEntries.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                    No prep entries yet. Click "Add Prep Entry" to start tracking your preparation!
+                    <EmptyState
+                      title="No Prep Entries Yet"
+                      message="Start tracking your interview preparation by adding your first prep entry. Consistency is key!"
+                      buttonText="Add Prep Entry"
+                      onButtonClick={onAddPrepEntry}
+                      icon={<BookOpen className="w-8 h-8 text-indigo-600" />}
+                    />
                   </td>
                 </tr>
               )}
