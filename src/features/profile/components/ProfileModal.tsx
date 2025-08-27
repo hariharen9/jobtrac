@@ -185,11 +185,11 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
               </div>
 
               {/* Footer Message */}
-              <div className="text-center pt-4 border-t border-slate-200/50 dark:border-slate-600/50 w-full">
+              {/* <div className="text-center pt-4 border-t border-slate-200/50 dark:border-slate-600/50 w-full">
                 <p className="text-sm text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary italic">
                   🌟 "Building scalable & resilient systems in the cloud" - Hariharen 🌟
                 </p>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
