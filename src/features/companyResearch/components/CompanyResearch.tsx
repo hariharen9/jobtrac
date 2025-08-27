@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Building, Plus } from 'lucide-react';
 import { CompanyResearch } from '../../../types';
 import CompanyCard from './CompanyCard';
+import EmptyState from '../../../components/shared/EmptyState';
 
 interface CompanyResearchProps {
   companies: CompanyResearch[];
@@ -87,9 +88,13 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
           ))}
         </AnimatePresence>
         {companies.length === 0 && (
-          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-            No company research yet. Click "Add Company" to start researching potential employers!
-          </div>
+          <EmptyState
+            title="No Company Research Yet"
+            message="Start researching potential employers by adding your first company. Knowledge is power!"
+            buttonText="Add Company"
+            onButtonClick={onAddCompany}
+            icon={<Building className="w-8 h-8 text-indigo-600" />}
+          />
         )}
       </motion.div>
     </div>

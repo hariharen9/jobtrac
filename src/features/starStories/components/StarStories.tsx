@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Plus } from 'lucide-react';
 import { StarStory } from '../../../types';
 import StarStoryCard from './StarStoryCard';
+import EmptyState from '../../../components/shared/EmptyState';
 
 interface StarStoriesProps {
   stories: StarStory[];
@@ -81,9 +82,13 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
           ))}
         </AnimatePresence>
         {stories.length === 0 && (
-          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-            No behavioral stories yet. Click "Add Story" to start building your STAR method story bank!
-          </div>
+          <EmptyState
+            title="No Behavioral Stories Yet"
+            message="Start building your STAR method story bank by adding your first story. Be prepared for any interview question!"
+            buttonText="Add Story"
+            onButtonClick={onAddStory}
+            icon={<Star className="w-8 h-8 text-indigo-600" />}
+          />
         )}
       </motion.div>
     </div>

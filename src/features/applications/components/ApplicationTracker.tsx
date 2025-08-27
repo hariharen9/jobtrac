@@ -4,6 +4,7 @@ import { Briefcase, Plus } from 'lucide-react';
 import { Application } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
+import EmptyState from '../../../components/shared/EmptyState';
 
 interface ApplicationTrackerProps {
   applications: Application[];
@@ -93,9 +94,13 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           ))}
         </AnimatePresence>
         {applications.length === 0 && (
-          <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-            No applications yet. Click "Add Application" to get started!
-          </div>
+          <EmptyState
+            title="No Applications Yet"
+            message="Start tracking your job search by adding your first application. It's quick and easy!"
+            buttonText="Add Application"
+            onButtonClick={onAddApplication}
+            icon={<Briefcase className="w-8 h-8 text-indigo-600" />}
+          />
         )}
       </motion.div>
 
@@ -138,8 +143,14 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
             ))}
             {applications.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                  No applications yet. Click "Add Application" to get started!
+                <td colSpan={9} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
+                  <EmptyState
+                    title="No Applications Yet"
+                    message="Start tracking your job search by adding your first application. It's quick and easy!"
+                    buttonText="Add Application"
+                    onButtonClick={onAddApplication}
+                    icon={<Briefcase className="w-8 h-8 text-indigo-600" />}
+                  />
                 </td>
               </tr>
             )}

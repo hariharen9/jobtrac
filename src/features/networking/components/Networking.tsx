@@ -5,6 +5,7 @@ import { NetworkingContact } from '../../../types';
 import NetworkingRow from './NetworkingRow';
 import NetworkingCard from './NetworkingCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
+import EmptyState from '../../../components/shared/EmptyState';
 
 interface NetworkingProps {
   contacts: NetworkingContact[];
@@ -86,9 +87,13 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
             ))}
           </AnimatePresence>
           {contacts.length === 0 && (
-            <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-              No networking contacts yet. Click "Add Contact" to start building your network!
-            </div>
+            <EmptyState
+              title="No Networking Contacts Yet"
+              message="Start building your professional network by adding your first contact. Every connection counts!"
+              buttonText="Add Contact"
+              onButtonClick={onAddContact}
+              icon={<Users className="w-8 h-8 text-indigo-600" />}
+            />
           )}
         </motion.div>
       ) : (
@@ -128,7 +133,13 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
               {contacts.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center text-slate-500 dark:text-slate-400">
-                    No networking contacts yet. Click "Add Contact" to start building your network!
+                    <EmptyState
+                      title="No Networking Contacts Yet"
+                      message="Start building your professional network by adding your first contact. Every connection counts!"
+                      buttonText="Add Contact"
+                      onButtonClick={onAddContact}
+                      icon={<Users className="w-8 h-8 text-indigo-600" />}
+                    />
                   </td>
                 </tr>
               )}

@@ -207,8 +207,7 @@ export default function Notes({ userId }: NotesProps) {
 
             <div className="flex flex-1 overflow-hidden">
               <aside className="w-40 border-r border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border flex flex-col bg-slate-50/50 dark:bg-dark-bg/20 amoled:bg-amoled-bg/20 amoled:bg-amoled-bg/20">
-                <div className="p-2 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border">
-                  <h4 className="text-xs font-semibold uppercase text-slate-500 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary flex items-center gap-2">
+                <div className="p-2 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border amoled:border-amoled-border">                  <h4 className="text-xs font-semibold uppercase text-slate-500 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary flex items-center gap-2">
                     <Book className="w-3 h-3"/>
                     My Notes
                   </h4>
@@ -278,9 +277,9 @@ export default function Notes({ userId }: NotesProps) {
                     onBlur={handleSaveContent}
                   />
                 ) : (
-                  <div className="flex-1 flex items-center justify-center text-slate-500 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary">
+                  <div className="flex-1 flex items-center justify-center text-slate-500 dark:text-slate-400 amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary">
                     <div className="text-center">
-                      <StickyNote className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary" />
+                      <StickyNote className="w-12 h-12 mx-auto mb-3 text-slate-300 dark:text-slate-400 amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary" />
                       <p className="text-sm">
                         Click the <Plus className="inline w-3 h-3"/> button to create your first note.
                       </p>
