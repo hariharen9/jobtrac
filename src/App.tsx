@@ -39,6 +39,8 @@ const MemoizedNotes = React.memo(Notes);
 import JobDescriptionModal from './features/applications/components/JobDescriptionModal';
 import { Toaster, toast } from 'react-hot-toast';
 
+import './features/auth/components/SignInBackground.css';
+
 function App() {
   const { user, loading: authLoading } = useAuth();
   useTheme();
@@ -303,29 +305,31 @@ function App() {
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-        <div className="w-full max-w-md mx-4">
-          <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
-            <div className="mb-6">
-              <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
-              <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-                JobTrac
-              </h1>
-              <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-                Sign in to start tracking your job search journey
-              </p>
-            </div>
-            <AuthButton />
-            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
-              <div className="flex items-center justify-center gap-4">
-                <ThemeToggle />
-                <button
-                  onClick={() => setIsHelpOpen(true)}
-                  className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  How it works
-                </button>
+      <div className="relative login-background min-h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg">
+        <div className="relative z-10 flex items-center justify-center min-h-screen" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          <div className="w-full max-w-md mx-4">
+            <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
+              <div className="mb-6">
+                <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
+                <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                  JobTrac
+                </h1>
+                <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                  Sign in to start tracking your job search journey
+                </p>
+              </div>
+              <AuthButton />
+              <div className="pt-6 mt-6 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+                <div className="flex items-center justify-center gap-4">
+                  <ThemeToggle />
+                  <button
+                    onClick={() => setIsHelpOpen(true)}
+                    className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text"
+                  >
+                    <HelpCircle className="w-4 h-4" />
+                    How it works
+                  </button>
+                </div>
               </div>
             </div>
           </div>
