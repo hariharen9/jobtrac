@@ -31,7 +31,7 @@ const AnalyticsDashboard = ({ applications }: { applications: Application[] }) =
   }, [] as { name: string; value: number }[]);
 
   return (
-    <div>
+    <div className="p-4 border-2 border-dashed rounded-lg border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
       <h4 className="mb-2 text-center text-md text-slate-800 dark:text-dark-text amoled:text-amoled-text">Applications by Status</h4>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={data}>

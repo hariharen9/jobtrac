@@ -99,7 +99,7 @@ const GoalSetting = ({ applications, contacts, prepEntries }: { applications: Ap
   );
 
   return (
-    <div className="p-4 border-2 border-dashed rounded-lg border-slate-300 dark:border-slate-600">
+    <div className="p-4 border-2 border-dashed rounded-lg border-slate-300 dark:border-slate-600 amoled:border-amoled-foreground">
       {showConfetti && <Confetti />}
       <form onSubmit={handleSubmit}>
         <div className="flex items-center mb-4">
