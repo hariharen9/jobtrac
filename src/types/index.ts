@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase/firestore';
+
 export interface Application {
   id: string;
   company: string;
@@ -11,6 +13,8 @@ export interface Application {
   location: string;
   notes: string;
   jobDescription?: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface PrepEntry {
@@ -21,6 +25,8 @@ export interface PrepEntry {
   time: number;
   confidence: number;
   notes: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface CompanyResearch {
@@ -43,6 +49,8 @@ export interface NetworkingContact {
   status: string;
   referral: 'Y' | 'N';
   notes: string;
+  createdAt?: Timestamp;
+  updatedAt?: Timestamp;
 }
 
 export interface StarStory {
@@ -53,6 +61,7 @@ export interface StarStory {
   action: string;
   result: string;
   createdAt: string;
+  updatedAt?: Timestamp;
 }
 
 export type ApplicationStatus = 
@@ -100,3 +109,43 @@ export interface Goal {
   networking: number;
   prep: number;
 }
+
+export interface OnboardingStep {
+  id: string;
+  title: string;
+  description: string;
+  component?: string;
+  completed: boolean;
+}
+
+export interface QuickStartTask {
+  id: string;
+  title: string;
+  description: string;
+  actionText: string;
+  completed: boolean;
+  feature: TabType;
+  icon: string;
+}
+
+export interface UserOnboarding {
+  hasCompletedWelcome: boolean;
+  hasSeenTooltips: boolean;
+  completedSteps: string[];
+  quickStartTasks: QuickStartTask[];
+  demoMode: boolean;
+  createdAt: string;
+  lastActiveStep?: string;
+}
+
+export interface TooltipConfig {
+  id: string;
+  targetSelector: string;
+  title: string;
+  content: string;
+  placement: 'top' | 'bottom' | 'left' | 'right';
+  feature: TabType;
+  priority: number;
+}
+
+export type OnboardingStatus = 'not-started' | 'in-progress' | 'completed';

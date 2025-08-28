@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link, Trash2 } from 'lucide-react';
+import { CheckCircle, Link, Trash2, RotateCcw, Target } from 'lucide-react';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
 import { toast } from 'react-hot-toast';
@@ -19,8 +19,20 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const ProfileModal = ({ applications, contacts, prepEntries }: { applications: Application[], contacts: NetworkingContact[], prepEntries: PrepEntry[] }) => {
-  const { user } = useAuth();
+const ProfileModal = ({ 
+  applications, 
+  contacts, 
+  prepEntries, 
+  onRestartTour, 
+  quickStartProgress 
+}: { 
+  applications: Application[], 
+  contacts: NetworkingContact[], 
+  prepEntries: PrepEntry[], 
+  onRestartTour?: () => void,
+  quickStartProgress?: number 
+}) => {
+  const { user, logout } = useAuth();
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showFinalDeleteConfirmation, setShowFinalDeleteConfirmation] = useState(false);
   const [deleteInput, setDeleteInput] = useState('');
@@ -122,6 +134,37 @@ const ProfileModal = ({ applications, contacts, prepEntries }: { applications: A
             <h3 className="mb-4 text-lg font-semibold">Goal Setting</h3>
             <GoalSetting applications={applications} contacts={contacts} prepEntries={prepEntries} />
           </div>
+
+          {/* Restart Onboarding Tour Section */}
+          {onRestartTour && (
+            <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-blue-200 dark:border-blue-700/50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 amoled:bg-blue-900/30 rounded-lg">
+                    <Target className="w-5 h-5 text-blue-600 dark:text-blue-400 amoled:text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                      Quick Start Tour
+                    </h3>
+                    <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                      {quickStartProgress === 100 
+                        ? '✅ Completed! Want to restart the tour?' 
+                        : `📝 Progress: ${quickStartProgress}% complete - Restart anytime`
+                      }
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={onRestartTour}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                  Restart Tour
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Thanks Section */}
           <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 amoled:from-amoled-card amoled:via-amoled-card amoled:to-amoled-card border-2 border-gradient-to-r from-indigo-200 to-purple-200 dark:border-indigo-700/50">
