@@ -1,13 +1,15 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link, Trash2, RotateCcw, Target } from 'lucide-react';
+import { CheckCircle, Link, Trash2, RotateCcw, Target, Database } from 'lucide-react';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
 import { toast } from 'react-hot-toast';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import GoalSetting from './GoalSetting';
-import { Application, NetworkingContact, PrepEntry } from '../../../types';
+import { Application, NetworkingContact, PrepEntry, StarStory, CompanyResearch } from '../../../types';
+import DataImportExportModal from '../../../components/shared/DataImportExportModal';
+import { useDataImportExport } from '../../../hooks/useDataImportExport';
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -22,19 +24,25 @@ const GoogleIcon = () => (
 const ProfileModal = ({ 
   applications, 
   contacts, 
-  prepEntries, 
+  prepEntries,
+  stories,
+  companies,
   onRestartTour, 
   quickStartProgress 
 }: { 
   applications: Application[], 
   contacts: NetworkingContact[], 
-  prepEntries: PrepEntry[], 
+  prepEntries: PrepEntry[],
+  stories: StarStory[],
+  companies: CompanyResearch[],
   onRestartTour?: () => void,
   quickStartProgress?: number 
 }) => {
   const { user, logout } = useAuth();
+  const { importData } = useDataImportExport(user?.uid);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showFinalDeleteConfirmation, setShowFinalDeleteConfirmation] = useState(false);
+  const [showImportExportModal, setShowImportExportModal] = useState(false);
   const [deleteInput, setDeleteInput] = useState('');
 
   const handleConnectGoogle = async () => {
@@ -165,6 +173,35 @@ const ProfileModal = ({
               </div>
             </div>
           )}
+
+          {/* Data Import/Export Section */}
+          <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-purple-200 dark:border-purple-700/50">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 amoled:bg-purple-900/30 rounded-lg">
+                  <Database className="w-5 h-5 text-purple-600 dark:text-purple-400 amoled:text-purple-400" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                    Data Import/Export
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                    📁 Import from spreadsheets or export for backup & peace of mind
+                  </p>
+                  <div className="mt-1 text-xs text-purple-600 dark:text-purple-400 amoled:text-purple-400">
+                    💾 {applications.length + prepEntries.length + stories.length + companies.length + contacts.length} items ready to export
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowImportExportModal(true)}
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg"
+              >
+                <Database className="w-4 h-4" />
+                Import/Export
+              </button>
+            </div>
+          </div>
 
           {/* Thanks Section */}
           <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 amoled:from-amoled-card amoled:via-amoled-card amoled:to-amoled-card border-2 border-gradient-to-r from-indigo-200 to-purple-200 dark:border-indigo-700/50">
@@ -338,6 +375,18 @@ const ProfileModal = ({
           </button>
         </div>
       </Modal>
+    
+      {/* Data Import/Export Modal */}
+      <DataImportExportModal
+        isOpen={showImportExportModal}
+        onClose={() => setShowImportExportModal(false)}
+        applications={applications}
+        prepEntries={prepEntries}
+        stories={stories}
+        companies={companies}
+        contacts={contacts}
+        onImportData={importData}
+      />
     </div>
   );
 };
