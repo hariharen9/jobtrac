@@ -153,8 +153,6 @@
 
 ---
 
-### **🎯 Instant Value**
-
 **New User Experience:**
 - 🎉 **Welcome Wizard** - Interactive feature tour
 - 📊 **Demo Mode** - Explore with realistic sample data
@@ -275,7 +273,7 @@ git push origin feature/AmazingFeature
 
 ---
 
-## 🏆 **Awards & Recognition ( To ACHIEVE 😉🤞🏻 )**
+## 🏆 **Goals 🤞🏻**
 
 <div align="center">
 
@@ -325,4 +323,7 @@ git push origin feature/AmazingFeature
   <em>"Empowering careers, one application at a time."</em>
 </p>
 
+<p align="center">
+  <img src="https://raw.githubusercontent.com/trinib/trinib/82213791fa9ff58d3ca768ddd6de2489ec23ffca/images/footer.svg" width="100%">
+</p>
 </div>
