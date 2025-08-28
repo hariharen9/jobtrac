@@ -769,6 +769,8 @@ function App() {
             applications={applications} 
             contacts={contacts} 
             prepEntries={prepEntries}
+            stories={stories}
+            companies={companies}
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
           />
