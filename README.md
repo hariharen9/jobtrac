@@ -67,6 +67,19 @@ While many tools can help you track job applications, JobTrac is engineered to b
 
 ---
 
+## 🎯 New User Experience
+
+JobTrac includes a comprehensive onboarding system to help new users get started quickly:
+
+- **Welcome Wizard**: Interactive introduction to JobTrac's features
+- **Demo Mode**: Explore with realistic sample data
+- **Quick Start Guide**: Step-by-step tasks to get familiar with key features
+- **Interactive Tooltips**: Contextual help throughout the application
+
+New users can choose to start with sample data to see immediate value, or begin fresh with a clean slate.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Briefcase, 
   BookOpen, 
@@ -8,20 +8,32 @@ import {
   Target,
   TrendingUp,
   CheckCircle,
-  ArrowRight
+  ArrowRight,
+  Rocket
 } from 'lucide-react';
+import OnboardingDemo from './OnboardingDemo';
 
 interface HelpPageProps {
   onClose: () => void;
 }
 
 const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
+  const [showOnboardingDemo, setShowOnboardingDemo] = useState(false);
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-4">
-          JobTrac Guide
-        </h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            JobTrac Guide
+          </h1>
+          <button
+            onClick={() => setShowOnboardingDemo(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+          >
+            <Rocket className="w-4 h-4" />
+            Try Onboarding Demo
+          </button>
+        </div>
         <p className="text-lg text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
           Master your job search with this comprehensive tracking system. Here's how to use each feature effectively.
         </p>
@@ -292,6 +304,12 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
           Got it! Let's start tracking
         </button>
       </div>
+      
+      {/* Onboarding Demo Modal */}
+      <OnboardingDemo 
+        isOpen={showOnboardingDemo}
+        onClose={() => setShowOnboardingDemo(false)}
+      />
     </div>
   );
 };

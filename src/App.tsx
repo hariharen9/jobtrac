@@ -1,11 +1,12 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
 import { useFirestore } from './hooks/useFirestore';
+import { useOnboarding } from './hooks/useOnboarding';
 import ApplicationTracker from './features/applications/components/ApplicationTracker';
 import ApplicationForm from './features/applications/components/ApplicationForm';
 import ActivityCalendar from './features/applications/components/ActivityCalendar';
@@ -14,6 +15,7 @@ import PrepLog from './features/prepLog/components/PrepLog';
 import PrepForm from './features/prepLog/components/PrepForm';
 import CompanyResearch from './features/companyResearch/components/CompanyResearch';
 import CompanyForm from './features/companyResearch/components/CompanyForm';
+import { CompanyResearch as CompanyResearchType } from './types';
 import Networking from './features/networking/components/Networking';
 import NetworkingForm from './features/networking/components/NetworkingForm';
 import StarStories from './features/starStories/components/StarStories';
@@ -21,6 +23,7 @@ import StarForm from './features/starStories/components/StarForm';
 import Modal from './components/shared/Modal';
 import ThemeToggle from './components/shared/ThemeToggle';
 import HelpPage from './components/shared/HelpPage';
+import { WelcomeWizard, QuickStartChecklist, TooltipManager } from './components/shared';
 import Notes from './features/notes/components/Notes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
@@ -46,6 +49,19 @@ function App() {
   useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
   
+  // Onboarding state
+  const {
+    onboarding,
+    loading: onboardingLoading,
+    needsOnboarding,
+    completeWelcome,
+    completeQuickStartTask,
+    enableDemoMode,
+    markTooltipsAsSeen,
+    resetOnboarding,
+    getProgressPercentage
+  } = useOnboarding(user?.uid);
+  
   const [activeTab, setActiveTab] = useState<TabType>('applications');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -55,6 +71,13 @@ function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isJdModalOpen, setIsJdModalOpen] = useState(false);
   const [selectedApplication, setSelectedApplication] = useState<Application | null>(null);
+  
+  // Onboarding UI state
+  const [showWelcomeWizard, setShowWelcomeWizard] = useState(false);
+  const [showQuickStart, setShowQuickStart] = useState(false);
+  const [showTooltipTour, setShowTooltipTour] = useState(false);
+  // Track whether Quick Start has been shown to prevent infinite loops
+  const hasShownQuickStartRef = React.useRef(false);
 
 
   const { 
@@ -79,7 +102,7 @@ function App() {
     addItem: addCompany,
     updateItem: updateCompany,
     deleteItem: deleteCompany
-  } = useFirestore<CompanyResearch>('companies', user?.uid);
+  } = useFirestore<CompanyResearchType>('companies', user?.uid);
   
   const { 
     data: contacts, 
@@ -117,8 +140,39 @@ function App() {
     setEditingItem(null);
   }, []);
 
+  // Auto-complete Quick Start tasks based on user actions
+  const autoCompleteQuickStartTask = useCallback(async () => {
+    if (!onboarding.hasCompletedWelcome) return;
+    
+    const taskMap: Record<TabType, string> = {
+      'applications': 'add-first-application',
+      'prep': 'add-prep-session', 
+      'star': 'create-star-story',
+      'research': 'add-company-research',
+      'networking': 'add-networking-contact'
+    };
+    
+    const taskId = taskMap[modalType];
+    if (taskId) {
+      const task = onboarding.quickStartTasks.find(t => t.id === taskId);
+      if (task && !task.completed) {
+        await completeQuickStartTask(taskId);
+      }
+    }
+  }, [modalType, onboarding, completeQuickStartTask]);
+
   const openProfileModal = () => setProfileModalOpen(true);
-  const closeProfileModal = () => setProfileModalOpen(false);
+  
+  // Auto-complete goal setting task when profile modal is closed after editing
+  const handleProfileModalClose = useCallback(async () => {
+    setProfileModalOpen(false);
+    
+    // Check if user has set goals and auto-complete the task
+    const goalTask = onboarding.quickStartTasks.find(t => t.id === 'set-weekly-goal');
+    if (goalTask && !goalTask.completed && onboarding.hasCompletedWelcome) {
+      await completeQuickStartTask('set-weekly-goal');
+    }
+  }, [onboarding, completeQuickStartTask]);
 
   const handleFormSubmit = useCallback(async <T,>(
     handler: (data: T) => Promise<void>,
@@ -128,6 +182,9 @@ function App() {
       setIsSubmitting(true);
       await handler(data);
       closeModal();
+      
+      // Auto-complete Quick Start tasks based on the action performed
+      await autoCompleteQuickStartTask();
     } catch (error) {
       console.error(`Failed to submit ${modalType}:`, error);
     } finally {
@@ -168,6 +225,139 @@ function App() {
       toast.error('Failed to save job description.');
     }
   };
+
+  // Onboarding handlers
+  const handleWelcomeComplete = async () => {
+    try {
+      await completeWelcome();
+      setShowWelcomeWizard(false);
+      // Mark as completed persistently
+      if (user?.uid) {
+        localStorage.setItem(`welcome-completed-${user.uid}`, 'true');
+      }
+      setShowQuickStart(true);
+    } catch (error) {
+      console.error('Failed to complete welcome:', error);
+      setShowWelcomeWizard(false);
+    }
+  };
+
+  const handleWelcomeClose = () => {
+    setShowWelcomeWizard(false);
+    // Set persistent flag to prevent reopening
+    if (user?.uid) {
+      localStorage.setItem(`welcome-completed-${user.uid}`, 'true');
+    }
+  };
+
+  const handleEnableDemoMode = async () => {
+    await enableDemoMode();
+  };
+
+  const handleQuickStartTaskClick = (taskId: string, feature: TabType) => {
+    setActiveTab(feature);
+    setShowQuickStart(false);
+    
+    // Open appropriate modal based on task
+    switch (taskId) {
+      case 'add-first-application':
+        openModal('applications');
+        break;
+      case 'add-prep-session':
+        openModal('prep');
+        break;
+      case 'create-star-story':
+        openModal('star');
+        break;
+      case 'add-company-research':
+        openModal('research');
+        break;
+      case 'add-networking-contact':
+        openModal('networking');
+        break;
+      case 'set-weekly-goal':
+        openProfileModal();
+        break;
+    }
+  };
+
+  const handleQuickStartComplete = async (taskId: string) => {
+    await completeQuickStartTask(taskId);
+  };
+
+  const handleStartTooltipTour = () => {
+    setShowQuickStart(false);
+    setShowTooltipTour(true);
+  };
+
+  const handleTooltipTourComplete = async () => {
+    await markTooltipsAsSeen();
+    setShowTooltipTour(false);
+  };
+
+  const handleRestartTour = useCallback(async () => {
+    if (!user?.uid) return;
+    
+    try {
+      // Clear localStorage flag
+      localStorage.removeItem(`welcome-completed-${user.uid}`);
+      
+      // Reset onboarding state in Firebase
+      await resetOnboarding();
+      
+      // Reset UI state
+      setShowWelcomeWizard(false);
+      setShowQuickStart(false);
+      setShowTooltipTour(false);
+      
+      // Close profile modal
+      setProfileModalOpen(false);
+      
+      // Show welcome wizard after a short delay
+      setTimeout(() => {
+        setShowWelcomeWizard(true);
+      }, 500);
+      
+      toast.success('Welcome tour restarted!');
+    } catch (error) {
+      console.error('Failed to restart tour:', error);
+      toast.error('Failed to restart tour');
+    }
+  }, [user, resetOnboarding]);
+
+  // Show welcome wizard for new users (only if never completed)
+  React.useEffect(() => {
+    if (!user?.uid || onboardingLoading) return;
+    
+    const persistentKey = `welcome-completed-${user.uid}`;
+    const hasCompletedBefore = localStorage.getItem(persistentKey);
+    
+    // Only show if user has never completed welcome AND Firebase confirms needsOnboarding
+    if (needsOnboarding && !hasCompletedBefore) {
+      setShowWelcomeWizard(true);
+    }
+  }, [onboardingLoading, needsOnboarding, user]);
+
+  // Reset onboarding UI state when user changes
+  React.useEffect(() => {
+    if (!user) {
+      hasShownQuickStartRef.current = false;
+      setShowWelcomeWizard(false);
+      setShowQuickStart(false);
+      setShowTooltipTour(false);
+    }
+  }, [user]);
+
+  // Show quick start checklist when appropriate
+  React.useEffect(() => {
+    if (!onboardingLoading && onboarding.hasCompletedWelcome && !onboarding.hasSeenTooltips && !hasShownQuickStartRef.current) {
+      const incompleteTasks = onboarding.quickStartTasks.filter(task => !task.completed);
+      if (incompleteTasks.length > 0 && !showWelcomeWizard) {
+        hasShownQuickStartRef.current = true;
+        setTimeout(() => setShowQuickStart(true), 1000);
+      }
+    }
+  }, [onboardingLoading, onboarding, showWelcomeWizard]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -258,8 +448,8 @@ function App() {
         return (
           <CompanyForm
             onSubmit={editingItem
-              ? (data: Partial<CompanyResearch>) => handleUpdate(updateCompany, { ...editingItem, ...data })
-              : (data: Omit<CompanyResearch, 'id'>) => handleFormSubmit(addCompany, data)
+              ? (data: Partial<CompanyResearchType>) => handleUpdate(updateCompany, { ...editingItem, ...data })
+              : (data: Omit<CompanyResearchType, 'id'>) => handleFormSubmit(addCompany, data)
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -383,7 +573,7 @@ function App() {
         </Modal>
         <Modal
           isOpen={isProfileModalOpen}
-          onClose={closeProfileModal}
+          onClose={handleProfileModalClose}
           title="Profile"
           size="lg"
         >
@@ -437,6 +627,20 @@ function App() {
                 <HelpCircle className="w-4 h-4" />
                 <span className="hidden sm:inline">Help</span>
               </motion.button>
+              
+              {/* Quick Start Button */}
+              {onboarding.hasCompletedWelcome && getProgressPercentage() < 100 && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowQuickStart(true)}
+                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-blue-50 border border-blue-200 rounded-md sm:gap-2 sm:px-3 sm:text-sm text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                >
+                  <Target className="w-4 h-4" />
+                  <span className="hidden sm:inline">Quick Start</span>
+                </motion.button>
+              )}
+              
               <ThemeToggle />
               <motion.button 
                 whileHover={{ scale: 1.05 }}
@@ -518,7 +722,7 @@ function App() {
         </div>
 
         {/* Kanban Board */}
-        <div className="mt-8">
+        <div className="mt-8" data-tooltip="kanban-board">
           <MemoizedKanbanBoard
             applications={applications}
             onAddApplication={() => openModal('applications')}
@@ -557,11 +761,17 @@ function App() {
         {/* Profile Modal */}
         <Modal
           isOpen={isProfileModalOpen}
-          onClose={closeProfileModal}
+          onClose={handleProfileModalClose}
           title="Profile"
           size="lg"
         >
-          <ProfileModal applications={applications} contacts={contacts} prepEntries={prepEntries} />
+          <ProfileModal 
+            applications={applications} 
+            contacts={contacts} 
+            prepEntries={prepEntries}
+            onRestartTour={handleRestartTour}
+            quickStartProgress={getProgressPercentage()}
+          />
         </Modal>
 
         {/* Help Modal */}
@@ -584,6 +794,32 @@ function App() {
       
       {/* Notes Component */}
       <MemoizedNotes userId={user?.uid} />
+      
+      {/* Onboarding Components */}
+      {showWelcomeWizard && (
+        <WelcomeWizard
+          onComplete={handleWelcomeComplete}
+          onEnableDemoMode={handleEnableDemoMode}
+          onClose={handleWelcomeClose}
+        />
+      )}
+      
+      <QuickStartChecklist
+        tasks={onboarding.quickStartTasks}
+        onTaskClick={handleQuickStartTaskClick}
+        onComplete={handleQuickStartComplete}
+        onClose={() => setShowQuickStart(false)}
+        isOpen={showQuickStart}
+        progressPercentage={getProgressPercentage()}
+        demoMode={onboarding.demoMode}
+      />
+      
+      <TooltipManager
+        activeTab={activeTab}
+        isActive={showTooltipTour}
+        onComplete={handleTooltipTourComplete}
+        onSkip={handleTooltipTourComplete}
+      />
     </div>
   );
 }
