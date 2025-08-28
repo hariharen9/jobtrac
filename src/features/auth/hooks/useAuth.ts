@@ -112,16 +112,14 @@ export function useAuth() {
   const logout = async () => {
     try {
       if (auth.currentUser) {
-        const confirmation = window.confirm(
-          auth.currentUser.isAnonymous
-            ? 'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
-            : 'Are you sure you want to log out? All your data will be permanently deleted.'
-        );
-        if (!confirmation) {
-          return;
-        }
-
         if (auth.currentUser.isAnonymous) {
+          const confirmation = window.confirm(
+            'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
+          );
+          if (!confirmation) {
+            return;
+          }
+
           try {
             // Re-authenticate anonymous user to refresh token before deletion
             await signInAnonymously(auth);
@@ -131,25 +129,25 @@ export function useAuth() {
             toast.error('Failed to re-authenticate guest user. Please try again.');
             return; // Stop if re-authentication fails
           }
-        }
 
-        try {
-          await deleteUserData(auth.currentUser.uid);
-          console.log('User data deleted from Firestore.');
-        } catch (dataDeleteError) {
-          console.error('Error deleting user data:', dataDeleteError);
-          toast.error('Failed to delete user data. Please try again.');
-          return; // Stop if data deletion fails
-        }
+          try {
+            await deleteUserData(auth.currentUser.uid);
+            console.log('User data deleted from Firestore.');
+          } catch (dataDeleteError) {
+            console.error('Error deleting user data:', dataDeleteError);
+            toast.error('Failed to delete user data. Please try again.');
+            return; // Stop if data deletion fails
+          }
 
-        try {
-          await deleteUser(auth.currentUser);
-          toast.success('User account deleted successfully.');
-          console.log('User account deleted from Firebase Auth.');
-        } catch (authDeleteError) {
-          console.error('Error deleting user account from Auth:', authDeleteError);
-          toast.error('Failed to delete user account. Please try again.');
-          return; // Stop if auth deletion fails
+          try {
+            await deleteUser(auth.currentUser);
+            toast.success('User account deleted successfully.');
+            console.log('User account deleted from Firebase Auth.');
+          } catch (authDeleteError) {
+            console.error('Error deleting user account from Auth:', authDeleteError);
+            toast.error('Failed to delete user account. Please try again.');
+            return; // Stop if auth deletion fails
+          }
         }
       }
       await signOut(auth);
