@@ -146,16 +146,16 @@ const ProfileModal = ({
           {/* Restart Onboarding Tour Section */}
           {onRestartTour && (
             <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-blue-200 dark:border-blue-700/50">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 amoled:bg-blue-900/30 rounded-lg">
+                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 amoled:bg-blue-900/30 rounded-lg flex-shrink-0">
                     <Target className="w-5 h-5 text-blue-600 dark:text-blue-400 amoled:text-blue-400" />
                   </div>
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                       Quick Start Tour
                     </h3>
-                    <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                    <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
                       {quickStartProgress === 100 
                         ? '✅ Completed! Want to restart the tour?' 
                         : `📝 Progress: ${quickStartProgress}% complete - Restart anytime`
@@ -165,10 +165,10 @@ const ProfileModal = ({
                 </div>
                 <button
                   onClick={onRestartTour}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold text-sm hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg flex-shrink-0 self-start sm:self-center"
                 >
                   <RotateCcw className="w-4 h-4" />
-                  Restart Tour
+                  <span className="whitespace-nowrap">Restart Tour</span>
                 </button>
               </div>
             </div>
@@ -176,29 +176,29 @@ const ProfileModal = ({
 
           {/* Data Import/Export Section */}
           <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-purple-200 dark:border-purple-700/50">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 amoled:bg-purple-900/30 rounded-lg">
+                <div className="p-2 bg-purple-100 dark:bg-purple-900/30 amoled:bg-purple-900/30 rounded-lg flex-shrink-0">
                   <Database className="w-5 h-5 text-purple-600 dark:text-purple-400 amoled:text-purple-400" />
                 </div>
-                <div>
+                <div className="min-w-0 flex-1">
                   <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                     Data Import/Export
                   </h3>
-                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
                     📁 Import from spreadsheets or export for backup & peace of mind
                   </p>
-                  <div className="mt-1 text-xs text-purple-600 dark:text-purple-400 amoled:text-purple-400">
+                  <div className="mt-2 text-xs text-purple-600 dark:text-purple-400 amoled:text-purple-400">
                     💾 {(applications?.length || 0) + (prepEntries?.length || 0) + (stories?.length || 0) + (companies?.length || 0) + (contacts?.length || 0)} items ready to export
                   </div>
                 </div>
               </div>
               <button
                 onClick={() => setShowImportExportModal(true)}
-                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg"
+                className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold text-sm hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg flex-shrink-0 self-start sm:self-center"
               >
                 <Database className="w-4 h-4" />
-                Import/Export
+                <span className="whitespace-nowrap">Import/Export</span>
               </button>
             </div>
           </div>
