@@ -121,6 +121,101 @@
 
 ---
 
+## ⌨️ **Keyboard Shortcuts & Command Palette**
+
+<div align="center">
+
+### **Power User Navigation**
+
+*Master JobTrac with lightning-fast keyboard shortcuts designed for productivity*
+
+</div>
+
+<details>
+<summary><strong>🔥 Complete Keyboard Shortcuts Reference</strong></summary>
+<br>
+
+### **🚀 Command Palette**
+
+| **Shortcut** | **Action** | **Description** |
+|:------------:|:----------:|:---------------:|
+| `Cmd/Ctrl + K` | Open Command Palette | Universal search and quick actions |
+| `↑` `↓` | Navigate Commands | Move up and down in command list |
+| `Enter` | Execute Command | Run the selected command |
+| `Escape` | Close Palette | Exit command palette |
+
+---
+
+### **📍 Tab Navigation**
+
+| **Shortcut** | **Tab** | **Feature** |
+|:------------:|:-------:|:-----------:|
+| `Cmd/Ctrl + 1` | Applications | Job application tracker with Kanban board |
+| `Cmd/Ctrl + 2` | Prep Log | Interview preparation and study sessions |
+| `Cmd/Ctrl + 3` | Research | Company intelligence and insights |
+| `Cmd/Ctrl + 4` | Networking | Professional contacts and referrals |
+| `Cmd/Ctrl + 5` | STAR Stories | Behavioral interview preparation |
+
+---
+
+### **🔧 Utility Commands**
+
+| **Shortcut** | **Action** | **Description** |
+|:------------:|:----------:|:---------------:|
+| `Cmd/Ctrl + H` | Help & Guide | Open comprehensive help documentation |
+| `Cmd/Ctrl + P` | Profile & Analytics | View profile, goals, and success metrics |
+| `Cmd+Option+T` / `Ctrl+Shift+T` | Toggle Theme | Switch between light, dark, and amoled themes |
+| `Cmd+Option+N` / `Ctrl+Shift+N` | Toggle Notes | Show or hide the notes panel |
+
+---
+
+### **⚡ Quick Actions (via Command Palette)**
+
+| **Command** | **Shortcut** | **Action** |
+|:-----------:|:------------:|:----------:|
+| "Add New Application" | `Cmd/Ctrl + K` → Type "add app" | Create new job application entry |
+| "Add Prep Session" | `Cmd/Ctrl + K` → Type "add prep" | Log interview preparation session |
+| "Add Company Research" | `Cmd/Ctrl + K` → Type "add company" | Create company research entry |
+| "Add Contact" | `Cmd/Ctrl + K` → Type "add contact" | Add networking contact |
+| "Add STAR Story" | `Cmd/Ctrl + K` → Type "add story" | Create behavioral interview story |
+
+---
+
+### **📝 Smart Search Features**
+
+**Search by Keywords:**
+- Type `applications`, `jobs`, `tracker` → Navigate to Applications
+- Type `interview`, `prep`, `study` → Navigate to Prep Log  
+- Type `company`, `research` → Navigate to Company Research
+- Type `networking`, `contacts` → Navigate to Networking
+- Type `behavioral`, `star` → Navigate to STAR Stories
+
+**Edit Items in Current Tab:**
+- Command palette shows up to 5 recent items from your active tab
+- Type item names to quickly edit (e.g., company names, story titles)
+- Navigate with `↑` `↓` arrows and press `Enter` to open editor
+
+---
+
+### **🎯 Pro Tips**
+
+> **💡 Master these workflows for maximum productivity:**
+
+1. **Quick Application Entry:** `Cmd/Ctrl + K` → "add app" → `Enter`
+2. **Switch & Add:** `Cmd/Ctrl + 2` → `Cmd/Ctrl + K` → "add prep" → `Enter`
+3. **Search Everything:** `Cmd/Ctrl + K` → Type any keyword for instant results
+4. **Edit Recent Items:** In any tab, `Cmd/Ctrl + K` shows your latest entries for quick editing
+
+**🚀 Why These Shortcuts Matter:**
+- **3x Faster Navigation** - No more clicking through menus
+- **Reduced Context Switching** - Stay in your flow state
+- **Professional Efficiency** - Power user experience for serious job seekers
+- **Muscle Memory** - Common shortcuts (`Cmd/Ctrl + K`) align with other tools
+
+</details>
+
+---
+
 ## 🔧 **Built with Modern Excellence**
 
 <div align="center">
