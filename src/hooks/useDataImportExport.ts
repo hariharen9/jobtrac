@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { toast } from 'react-hot-toast';
 import { useFirestore } from './useFirestore';
-import { Application, PrepEntry, StarStory, CompanyResearch, NetworkingContact } from '../types';
 
 export function useDataImportExport(userId?: string | null) {
   // Use any to bypass type constraints for import operations

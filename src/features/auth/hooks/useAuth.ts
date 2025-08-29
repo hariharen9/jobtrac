@@ -10,7 +10,7 @@ import {
   deleteUser
 } from 'firebase/auth';
 import { auth, googleProvider, db } from '../../../lib/firebase';
-import { collection, query, where, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, query, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 
 export function useAuth() {

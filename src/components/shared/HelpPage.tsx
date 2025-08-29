@@ -9,7 +9,7 @@ import {
   TrendingUp,
   CheckCircle,
   ArrowRight,
-  Rocket
+  // Rocket
 } from 'lucide-react';
 import OnboardingDemo from './OnboardingDemo';
 
