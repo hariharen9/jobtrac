@@ -1067,7 +1067,7 @@ const FooterSection = () => {
                 <Github className="w-4 h-4 sm:w-5 sm:h-5" />
               </motion.a>
               <motion.a
-                href="https://jobtrac.site"
+                href="https://hariharen9.site"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
