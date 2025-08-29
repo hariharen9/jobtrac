@@ -8,7 +8,7 @@
   </p>
   
   <p>
-    <a href="https://jobtrac.netlify.app/" target="_blank">
+    <a href="https://jobtrac.site/" target="_blank">
       <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Now-success?style=for-the-badge" alt="Live Demo">
     </a>
     <a href="#quick-start">
@@ -304,7 +304,7 @@ git push origin feature/AmazingFeature
 ### **Ready to Transform Your Career Journey?**
 
 <p>
-  <a href="https://jobtrac.netlify.app/" target="_blank">
+  <a href="https://jobtrac.site/" target="_blank">
     <img src="https://img.shields.io/badge/🚀%20Start%20Your%20Success%20Story-Try%20JobTrac%20Now-success?style=for-the-badge&logo=rocket" alt="Try JobTrac">
   </a>
 </p>
