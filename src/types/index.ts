@@ -13,8 +13,8 @@ export interface Application {
   location: string;
   notes: string;
   jobDescription?: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface PrepEntry {
@@ -25,8 +25,8 @@ export interface PrepEntry {
   time: number;
   confidence: number;
   notes: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface CompanyResearch {
@@ -37,7 +37,8 @@ export interface CompanyResearch {
   why: string;
   questions: string;
   news: string;
-  createdAt: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface NetworkingContact {
@@ -49,8 +50,8 @@ export interface NetworkingContact {
   status: string;
   referral: 'Y' | 'N';
   notes: string;
-  createdAt?: Timestamp;
-  updatedAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export interface StarStory {
@@ -60,8 +61,8 @@ export interface StarStory {
   task: string;
   action: string;
   result: string;
-  createdAt: string;
-  updatedAt?: Timestamp;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
 }
 
 export type ApplicationStatus = 

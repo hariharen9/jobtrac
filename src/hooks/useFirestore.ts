@@ -7,6 +7,7 @@ import {
   updateDoc, 
   deleteDoc, 
   onSnapshot,
+  getDocs,
   query,
   orderBy,
   Timestamp
@@ -20,7 +21,9 @@ interface FirestoreDocument {
 
 export function useFirestore<T extends { id: string } & FirestoreDocument>(
   collectionName: string,
-  userId?: string | null
+  userId?: string | null,
+  usePolling: boolean = false,
+  pollingInterval: number = 60000 // 1 minute default
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,32 +50,62 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
     try {
       const q = query(collectionRef, orderBy('createdAt', 'desc'));
 
-      const unsubscribe = onSnapshot(
-        q,
-        (snapshot) => {
-          console.log(`Fetched ${snapshot.docs.length} items from ${collectionName} for user ${userId}`);
-          const items = snapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          } as T));
-          
-          setData(items);
-          setLoading(false);
-        },
-        (err) => {
-          console.error(`Error fetching ${collectionName}:`, err);
-          setError(err.message);
-          setLoading(false);
-        }
-      );
+      if (usePolling) {
+        // Polling mode: fetch data at intervals
+        const fetchData = async () => {
+          try {
+            const snapshot = await getDocs(q);
+            console.log(`Fetched ${snapshot.docs.length} items from ${collectionName} for user ${userId} (polling)`);
+            const items = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            } as T));
+            
+            setData(items);
+            setLoading(false);
+          } catch (err: any) {
+            console.error(`Error fetching ${collectionName} (polling):`, err);
+            setError(err.message);
+            setLoading(false);
+          }
+        };
 
-      return () => unsubscribe();
+        // Initial fetch
+        fetchData();
+
+        // Set up polling interval
+        const intervalId = setInterval(fetchData, pollingInterval);
+
+        return () => clearInterval(intervalId);
+      } else {
+        // Real-time mode: use onSnapshot listener
+        const unsubscribe = onSnapshot(
+          q,
+          (snapshot) => {
+            console.log(`Fetched ${snapshot.docs.length} items from ${collectionName} for user ${userId} (real-time)`);
+            const items = snapshot.docs.map(doc => ({
+              id: doc.id,
+              ...doc.data()
+            } as T));
+            
+            setData(items);
+            setLoading(false);
+          },
+          (err) => {
+            console.error(`Error fetching ${collectionName} (real-time):`, err);
+            setError(err.message);
+            setLoading(false);
+          }
+        );
+
+        return () => unsubscribe();
+      }
     } catch (err) {
       console.error(`Error setting up listener for ${collectionName}:`, err);
       setError('Failed to set up data listener');
       setLoading(false);
     }
-  }, [collectionName, userId, getCollectionRef]);
+  }, [collectionName, userId, getCollectionRef, usePolling, pollingInterval]);
 
   const addItem = useCallback(async (item: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
     if (!userId) throw new Error('User must be authenticated to add an item.');
