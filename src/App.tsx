@@ -618,8 +618,20 @@ function App() {
         >
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex-1">
-              <h1 className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl animated-gradient-text">
-                JobTrac - Your Job Switch Command Center
+              <h1 className="text-xl font-bold leading-tight sm:text-2xl md:text-3xl animated-gradient-text flex flex-wrap items-center gap-2">
+                <div className="flex items-center justify-center flex-shrink-0">
+                  <img 
+                    src="/assets/jtrac-black-cropped.png" 
+                    alt="JobTrac Logo" 
+                    className="h-6 sm:h-8 md:h-10 w-auto object-contain dark:hidden amoled:hidden"
+                  />
+                  <img 
+                    src="/assets/jtrac-white-cropped.png" 
+                    alt="JobTrac Logo" 
+                    className="h-6 sm:h-8 md:h-10 w-auto object-contain hidden dark:block amoled:block"
+                  />
+                </div>
+                <span className="flex-shrink-0" style={{ fontFamily: 'Orbitron, Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
               </h1>
               <p className="mt-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base">
                 A comprehensive dashboard to manage preparation, applications, and interviews.
