@@ -496,25 +496,25 @@ function App() {
   if (!user) {
     return (
       <div className="relative login-background min-h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg">
-        <div className="relative z-10 flex items-center justify-center min-h-screen" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-          <div className="w-full max-w-md mx-4">
-            <div className="p-8 text-center bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
-              <div className="mb-6">
-                <Briefcase className="w-16 h-16 mx-auto mb-4 text-indigo-600" />
-                <h1 className="mb-2 text-2xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+        <div className="relative z-10 flex items-center justify-center min-h-screen px-4" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+          <div className="w-full max-w-xs mx-auto" style={{ maxHeight: '85vh', maxWidth: '500px', minWidth: '280px' }}>
+            <div className="p-6 text-center bg-white/80 backdrop-blur-sm rounded-xl shadow-xl dark:bg-dark-card/80 amoled:bg-amoled-card/80 border border-gray-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50">
+              <div className="mb-4">
+                <Briefcase className="w-12 h-12 mx-auto mb-3 text-indigo-600" />
+                <h1 className="mb-2 text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                   JobTrac
                 </h1>
-                <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                   Sign in to start tracking your job search journey
                 </p>
               </div>
               <AuthButton />
-              <div className="pt-6 mt-6 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+              <div className="pt-4 mt-4 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
                 <div className="flex items-center justify-center gap-4">
                   <ThemeToggle />
                   <button
                     onClick={() => setIsHelpOpen(true)}
-                    className="flex items-center gap-2 text-sm transition-colors text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text"
+                    className="flex items-center gap-2 text-xs transition-colors text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text"
                   >
                     <HelpCircle className="w-4 h-4" />
                     How it works
