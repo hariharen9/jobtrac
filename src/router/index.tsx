@@ -5,6 +5,7 @@ import AuthPage from "../features/auth/components/AuthPage";
 import LandingPage from "../pages/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ErrorBoundary from "../components/shared/ErrorBoundary";
+import LicensePage from "../pages/LicensePage";
 
 export const router = createBrowserRouter([
     {
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
     {
         path: "/auth",
         element: <AuthPage />,
+    },
+    {
+        path: "/license",
+        element: <LicensePage />,
     },
     {
         path: "/app",
