@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
 import { useFirestore } from './hooks/useFirestore';
 import { useOnboarding } from './hooks/useOnboarding';
+import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
 import ApplicationTracker from './features/applications/components/ApplicationTracker';
 import ApplicationForm from './features/applications/components/ApplicationForm';
 import ActivityCalendar from './features/applications/components/ActivityCalendar';
@@ -23,6 +24,7 @@ import StarForm from './features/starStories/components/StarForm';
 import Modal from './components/shared/Modal';
 import ThemeToggle from './components/shared/ThemeToggle';
 import HelpPage from './components/shared/HelpPage';
+import CommandPalette from './components/shared/CommandPalette';
 import { WelcomeWizard, QuickStartChecklist, TooltipManager } from './components/shared';
 import Notes from './features/notes/components/Notes';
 import './animations.css';
@@ -66,6 +68,8 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isProfileModalOpen, setProfileModalOpen] = useState(false);
+  const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+  const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const [modalType, setModalType] = useState<TabType>('applications');
   const [editingItem, setEditingItem] = useState<EditableItem | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,6 +82,24 @@ function App() {
   const [showTooltipTour, setShowTooltipTour] = useState(false);
   // Track whether Quick Start has been shown to prevent infinite loops
   const hasShownQuickStartRef = React.useRef(false);
+
+  const openProfileModal = () => setProfileModalOpen(true);
+  
+  // Theme and notes toggle functions
+  const { toggleTheme } = useTheme();
+  const toggleNotes = () => setIsNotesExpanded(prev => !prev);
+  
+  // Initialize keyboard shortcuts
+  useKeyboardShortcuts({
+    setActiveTab,
+    openCommandPalette: () => setIsCommandPaletteOpen(true),
+    openHelp: () => setIsHelpOpen(true),
+    openProfile: openProfileModal,
+    toggleTheme,
+    toggleNotes,
+    isModalOpen: isModalOpen || isJdModalOpen || isHelpOpen || isProfileModalOpen,
+    isCommandPaletteOpen
+  });
 
 
   const { 
@@ -160,8 +182,6 @@ function App() {
       }
     }
   }, [modalType, onboarding, completeQuickStartTask]);
-
-  const openProfileModal = () => setProfileModalOpen(true);
   
   // Auto-complete goal setting task when profile modal is closed after editing
   const handleProfileModalClose = useCallback(async () => {
@@ -649,6 +669,24 @@ function App() {
           onComplete={handleTooltipTourComplete}
           onSkip={handleTooltipTourComplete}
         />
+        
+        {/* Command Palette */}
+        <CommandPalette
+          isOpen={isCommandPaletteOpen}
+          onClose={() => setIsCommandPaletteOpen(false)}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          applications={applications}
+          prepEntries={prepEntries}
+          companies={companies}
+          contacts={contacts}
+          stories={stories}
+          onOpenModal={openModal}
+          onOpenHelp={() => setIsHelpOpen(true)}
+          onOpenProfile={openProfileModal}
+          onToggleTheme={toggleTheme}
+          onToggleNotes={toggleNotes}
+        />
       </>
     )
   }
@@ -678,13 +716,23 @@ function App() {
                     className="h-6 sm:h-8 md:h-10 w-auto object-contain hidden dark:block amoled:block"
                   />
                 </div>
-                <span className="flex-shrink-0" style={{ fontFamily: 'Orbitron, Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
+                <span className="flex-shrink-0" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
               </h1>
               <p className="mt-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base">
                 A comprehensive dashboard to manage preparation, applications, and interviews.
               </p>
             </div>
             <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setIsCommandPaletteOpen(true)}
+                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
+              >
+                <Search className="w-4 h-4" />
+                <span className="hidden sm:inline">Command</span>
+                <kbd className="hidden sm:inline text-xs px-1 py-0.5 bg-gray-100 dark:bg-gray-700 amoled:bg-gray-700 rounded">⌘K</kbd>
+              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -862,7 +910,7 @@ function App() {
       </div>
       
       {/* Notes Component */}
-      <MemoizedNotes userId={user?.uid} />
+      <MemoizedNotes userId={user?.uid} isExpanded={isNotesExpanded} onToggle={toggleNotes} />
       
       {/* Onboarding Components */}
       {showWelcomeWizard && (
@@ -888,6 +936,24 @@ function App() {
         isActive={showTooltipTour}
         onComplete={handleTooltipTourComplete}
         onSkip={handleTooltipTourComplete}
+      />
+      
+      {/* Command Palette */}
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={() => setIsCommandPaletteOpen(false)}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        applications={applications}
+        prepEntries={prepEntries}
+        companies={companies}
+        contacts={contacts}
+        stories={stories}
+        onOpenModal={openModal}
+        onOpenHelp={() => setIsHelpOpen(true)}
+        onOpenProfile={openProfileModal}
+        onToggleTheme={toggleTheme}
+        onToggleNotes={toggleNotes}
       />
     </div>
   );

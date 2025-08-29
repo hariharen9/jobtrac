@@ -17,9 +17,18 @@ import './Notes.css';
 
 interface NotesProps {
   userId: string | undefined;
+  isExpanded?: boolean;
+  onToggle?: () => void;
 }
 
-const MotionButton = ({ children, onClick, title, className = '' }) => (
+interface MotionButtonProps {
+  children: React.ReactNode;
+  onClick: () => void;
+  title: string;
+  className?: string;
+}
+
+const MotionButton: React.FC<MotionButtonProps> = ({ children, onClick, title, className = '' }) => (
   <motion.button
     onClick={onClick}
     className={`p-1.5 text-slate-600 dark:text-dark-text amoled:text-amoled-text-secondary amoled:text-amoled-text-secondary hover:text-slate-900 dark:hover:text-dark-text amoled:hover:text-amoled-text hover:bg-slate-200 dark:hover:bg-dark-card amoled:hover:bg-amoled-card rounded-lg transition-colors ${className}`}
@@ -32,7 +41,7 @@ const MotionButton = ({ children, onClick, title, className = '' }) => (
 );
 
 
-export default function Notes({ userId }: NotesProps) {
+export default function Notes({ userId, isExpanded: controlledExpanded, onToggle }: NotesProps) {
   const {
     notes,
     settings,
@@ -45,6 +54,10 @@ export default function Notes({ userId }: NotesProps) {
   } = useNotes(userId);
 
   const [isExpanded, setIsExpanded] = useState(false);
+  // Use controlled state if provided, otherwise use internal state
+  const isNotesExpanded = controlledExpanded !== undefined ? controlledExpanded : isExpanded;
+  const handleToggle = onToggle || (() => setIsExpanded(prev => !prev));
+
   const [isMaximized, setIsMaximized] = useState(false);
   const [activePageId, setActivePageId] = useState<string | null>(null);
   const [editingTitle, setEditingTitle] = useState<string | null>(null);
@@ -154,13 +167,13 @@ export default function Notes({ userId }: NotesProps) {
         transition={{ type: 'spring', stiffness: 260, damping: 20 }}
       >
         <motion.button
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={handleToggle}
           className="w-12 h-12 bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center group"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
           <motion.div
-            animate={{ rotate: isExpanded ? 45 : 0 }}
+            animate={{ rotate: isNotesExpanded ? 45 : 0 }}
             transition={{ duration: 0.2 }}
           >
             <StickyNote className="w-6 h-6" />
@@ -169,7 +182,7 @@ export default function Notes({ userId }: NotesProps) {
       </motion.div>
 
       <AnimatePresence>
-        {isExpanded && (
+        {isNotesExpanded && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8, x: 50, y: 50 }}
             animate={{ opacity: 1, scale: 1, x: 0, y: 0 }}
@@ -200,7 +213,7 @@ export default function Notes({ userId }: NotesProps) {
                 <MotionButton onClick={() => setIsMaximized(!isMaximized)} title={isMaximized ? 'Minimize' : 'Expand'}>
                   {isMaximized ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
                 </MotionButton>
-                <MotionButton onClick={() => setIsExpanded(false)} title="Close" className="hover:text-red-500">
+                <MotionButton onClick={handleToggle} title="Close" className="hover:text-red-500">
                   <X className="w-4 h-4" />
                 </MotionButton>
               </div>
