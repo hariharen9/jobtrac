@@ -202,7 +202,7 @@ const Pricing = () => {
                 <Crown className="w-6 h-6 text-white" />
               </motion.div>
               <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">
-                JobTrac Cloud
+                Jobtrac Pro
               </h3>
               <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary text-lg mb-4">
                 Advanced features for power users

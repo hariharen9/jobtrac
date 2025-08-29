@@ -120,7 +120,7 @@ SOFTWARE.`}</pre>
 
       <h2 style={styles.h2}>Commercial Cloud Service Components</h2>
       <p style={styles.p}>
-        The following features are proprietary and available only through <strong style={styles.strong}>JobTrac Cloud</strong> (jobtrac.site):
+        The following features are proprietary and available only through <strong style={styles.strong}>Jobtrac Pro</strong> (jobtrac.site):
       </p>
 
       <h3 style={styles.h3}>Premium Cloud Features (Proprietary)</h3>
@@ -140,7 +140,7 @@ SOFTWARE.`}</pre>
       <h3 style={styles.h3}>Terms for Commercial Use</h3>
         <ol style={{...styles.ul, listStyleType: 'decimal'}}>
             <li style={styles.li}><strong style={styles.strong}>Personal Use</strong>: Free to use JobTrac core features for personal job searching</li>
-            <li style={styles.li}><strong style={styles.strong}>Commercial Use</strong>: Organizations using JobTrac for commercial purposes (career coaching, recruitment agencies, educational institutions with &gt;100 students) must use JobTrac Cloud or obtain a commercial license</li>
+            <li style={styles.li}><strong style={styles.strong}>Commercial Use</strong>: Organizations using JobTrac for commercial purposes (career coaching, recruitment agencies, educational institutions with &gt;100 students) must use Jobtrac Pro or obtain a commercial license</li>
             <li style={styles.li}><strong style={styles.strong}>Self-Hosting</strong>: Permitted for personal use and small organizations (&lt;100 users)</li>
             <li style={styles.li}><strong style={styles.strong}>Modification</strong>: You may modify the open source components under MIT license terms</li>
             <li style={styles.li}><strong style={styles.strong}>Distribution</strong>: You may distribute the open source components, but not the proprietary cloud features</li>
@@ -168,7 +168,7 @@ SOFTWARE.`}</pre>
         <h3 style={styles.h3}>Commercial Self-Hosting Requirements</h3>
         <p style={styles.p}>For organizations using JobTrac commercially, you must either:</p>
         <ul style={styles.ul}>
-            <li style={styles.li}>Use JobTrac Cloud (jobtrac.site)</li>
+            <li style={styles.li}>Use Jobtrac Pro (jobtrac.site)</li>
             <li style={styles.li}>Purchase a Commercial Self-Hosting License</li>
             <li style={styles.li}>Contribute back to the open source project (minimum 40 hours development time annually)</li>
         </ul>
@@ -189,7 +189,7 @@ SOFTWARE.`}</pre>
         <h3 style={styles.h3}>Contributor Recognition</h3>
         <ul style={styles.ul}>
             <li style={styles.li}>All contributors are recognized in CONTRIBUTORS.md</li>
-            <li style={styles.li}>Significant contributors receive free JobTrac Cloud Pro accounts</li>
+            <li style={styles.li}>Significant contributors receive free Jobtrac Pro Pro accounts</li>
             <li style={styles.li}>Major feature contributors may receive revenue sharing opportunities</li>
         </ul>
 
@@ -204,7 +204,7 @@ SOFTWARE.`}</pre>
             <li style={styles.li}>Documentation wiki</li>
         </ul>
 
-        <h3 style={styles.h3}>Premium Support (JobTrac Cloud)</h3>
+        <h3 style={styles.h3}>Premium Support (Jobtrac Pro)</h3>
         <ul style={styles.ul}>
             <li style={styles.li}>Email support with SLA</li>
             <li style={styles.li}>Video call support for enterprise customers</li>
@@ -219,7 +219,7 @@ SOFTWARE.`}</pre>
         <ul style={styles.ul}>
             <li style={styles.li}>JobTrac complies with GDPR and CCPA</li>
             <li style={styles.li}>Self-hosted versions: You are responsible for data compliance</li>
-            <li style={styles.li}>JobTrac Cloud: We handle compliance for you</li>
+            <li style={styles.li}>Jobtrac Pro: We handle compliance for you</li>
         </ul>
 
         <h3 style={styles.h3}>Third-Party Components</h3>
