@@ -121,13 +121,13 @@ const LandingPage = () => {
 
       {/* Navigation */}
       <motion.nav
-        className="relative z-50 flex items-center justify-between p-6 backdrop-blur-md bg-white/70 dark:bg-dark-card/70 amoled:bg-amoled-card/70 border-b border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30"
+        className="relative z-50 flex items-center justify-between p-4 sm:p-6 backdrop-blur-md bg-white/70 dark:bg-dark-card/70 amoled:bg-amoled-card/70 border-b border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <motion.div
-          className="flex items-center"
+          className="flex items-center flex-shrink-0"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
@@ -135,37 +135,41 @@ const LandingPage = () => {
             <img 
               src="/assets/jtrac-black-cropped.png" 
               alt="JobTrac Logo" 
-              className="h-10 w-auto object-contain dark:hidden amoled:hidden"
+              className="h-6 sm:h-10 w-auto object-contain dark:hidden amoled:hidden"
             />
             <img 
               src="/assets/jtrac-white-cropped.png" 
               alt="JobTrac Logo" 
-              className="h-10 w-auto object-contain hidden dark:block amoled:block"
+              className="h-6 sm:h-10 w-auto object-contain hidden dark:block amoled:block"
             />
           </div>
         </motion.div>
         
-        <div className="flex items-center space-x-4">
-          <ThemeToggle />
+        <div className="flex items-center space-x-1 sm:space-x-4">
+          <div className="flex items-center">
+            <ThemeToggle />
+          </div>
           <motion.a
             href="https://github.com/hariharen9/jobtrac"
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 rounded-lg bg-white/50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 backdrop-blur-sm border border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30 hover:bg-white/70 dark:hover:bg-dark-card/70 amoled:hover:bg-amoled-card/70 transition-all duration-300"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 backdrop-blur-sm border border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30 hover:bg-white/70 dark:hover:bg-dark-card/70 amoled:hover:bg-amoled-card/70 transition-all duration-300 flex items-center justify-center"
             whileHover={{ scale: 1.1, rotate: 5 }}
             whileTap={{ scale: 0.9 }}
           >
-            <Github className="w-5 h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+            <Github className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
           </motion.a>
           <motion.div
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            className="flex-shrink-0"
           >
             <Link
               to="/auth"
-              className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm"
+              className="px-2 py-1.5 sm:px-6 sm:py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg sm:rounded-xl font-semibold text-xs sm:text-base shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
             >
-              Get Started
+              <span className="sm:hidden">Start</span>
+              <span className="hidden sm:inline">Get Started</span>
             </Link>
           </motion.div>
         </div>
