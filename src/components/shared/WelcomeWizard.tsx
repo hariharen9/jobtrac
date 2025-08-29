@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Briefcase, 
@@ -16,6 +16,8 @@ import {
   Database,
   Play
 } from 'lucide-react';
+import { AnalyticsService } from '../../services/analyticsService';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 interface WelcomeWizardProps {
   onComplete: () => void;
@@ -30,6 +32,14 @@ const WelcomeWizard: React.FC<WelcomeWizardProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [selectedMode, setSelectedMode] = useState<'demo' | 'fresh' | null>(null);
+  const { user } = useAuth();
+
+  // Track onboarding started when component mounts
+  useEffect(() => {
+    if (user?.uid) {
+      AnalyticsService.trackEvent('onboarding_started', user.uid);
+    }
+  }, [user]);
 
   const steps = [
     {
@@ -248,6 +258,11 @@ const WelcomeWizard: React.FC<WelcomeWizardProps> = ({
 
   const handleNext = () => {
     if (currentStep < steps.length - 1) {
+      // Track step completion
+      if (user?.uid) {
+        const stepName = steps[currentStep].id;
+        AnalyticsService.trackEvent('onboarding_step_completed', user.uid, { step_name: stepName });
+      }
       setCurrentStep(currentStep + 1);
     }
   };
@@ -259,8 +274,15 @@ const WelcomeWizard: React.FC<WelcomeWizardProps> = ({
   };
 
   const handleFinish = () => {
-    if (selectedMode === 'demo') {
-      onEnableDemoMode();
+    if (user?.uid) {
+      // Track welcome wizard completion
+      AnalyticsService.trackEvent('onboarding_step_completed', user.uid, { step_name: 'welcome_wizard_finished' });
+      
+      if (selectedMode === 'demo') {
+        // Track demo mode enablement
+        AnalyticsService.trackEvent('demo_mode_enabled', user.uid);
+        onEnableDemoMode();
+      }
     }
     onComplete();
   };

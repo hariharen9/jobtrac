@@ -29,6 +29,8 @@ import {
 } from 'lucide-react';
 import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem } from '../../types';
 import { useMediaQuery } from '../../hooks/shared/useMediaQuery';
+import { AnalyticsService } from '../../services/analyticsService';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -81,6 +83,37 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const { user } = useAuth();
+
+  // Track command palette opened when component becomes visible
+  useEffect(() => {
+    if (isOpen && user?.uid) {
+      AnalyticsService.trackEvent('command_palette_opened', user.uid);
+    }
+  }, [isOpen, user]);
+
+  // Function to track command execution
+  const trackCommandExecution = useCallback((command: Command) => {
+    if (!user?.uid) return;
+    
+    let actionType = 'unknown';
+    
+    if (command.category === 'navigation') {
+      actionType = 'navigation';
+    } else if (command.category === 'actions') {
+      actionType = 'create_item';
+    } else if (command.category === 'search-results' || command.category === 'items') {
+      actionType = 'search';
+    }
+    
+    AnalyticsService.trackEvent('command_palette_action', user.uid, { action_type: actionType });
+  }, [user]);
+
+  // Wrapper to execute command with tracking
+  const executeCommand = useCallback((command: Command) => {
+    trackCommandExecution(command);
+    command.action();
+  }, [trackCommandExecution]);
 
   const commands: Command[] = useMemo(() => [
     // Navigation Commands
@@ -469,7 +502,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       case 'Enter':
         e.preventDefault();
         if (filteredCommands[selectedIndex]) {
-          filteredCommands[selectedIndex].action();
+          executeCommand(filteredCommands[selectedIndex]);
         }
         break;
       case 'Escape':
@@ -477,7 +510,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         onClose();
         break;
     }
-  }, [isOpen, filteredCommands, selectedIndex, onClose]);
+  }, [isOpen, filteredCommands, selectedIndex, onClose, executeCommand]);
 
   useEffect(() => {
     document.addEventListener('keydown', handleKeyDown);
@@ -607,7 +640,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                                   ? 'bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 amoled:text-indigo-300'
                                   : 'text-gray-700 dark:text-dark-text amoled:text-amoled-text hover:bg-gray-50 dark:hover:bg-dark-bg/50 amoled:hover:bg-amoled-bg/50'
                               }`}
-                              onClick={command.action}
+                              onClick={() => executeCommand(command)}
                               whileHover={{ scale: 1.01 }}
                               whileTap={{ scale: 0.99 }}
                             >

@@ -14,6 +14,7 @@ import {
   initialCompanyResearch,
   initialNetworkingContacts
 } from '../data/initialData';
+import { AnalyticsService } from '../services/analyticsService';
 
 export function useOnboarding(userId?: string | null) {
   const [onboarding, setOnboarding] = useState<UserOnboarding>(defaultOnboarding);
@@ -99,9 +100,15 @@ export function useOnboarding(userId?: string | null) {
     
     const completedTask = onboarding.quickStartTasks.find(task => task.id === taskId);
     if (completedTask) {
+      // Track quick start task completion
+      if (userId) {
+        AnalyticsService.trackEvent('onboarding_step_completed', userId, { 
+          step_name: `quick_start_${taskId}` 
+        });
+      }
       toast.success(`✓ ${completedTask.title} completed!`);
     }
-  }, [saveOnboardingState, onboarding.quickStartTasks]);
+  }, [saveOnboardingState, onboarding.quickStartTasks, userId]);
 
   // Enable demo mode and populate with sample data
   const enableDemoMode = useCallback(async () => {
@@ -171,8 +178,14 @@ export function useOnboarding(userId?: string | null) {
 
   // Mark tooltips as seen
   const markTooltipsAsSeen = useCallback(async () => {
+    if (userId) {
+      // Track tooltip tour completion
+      AnalyticsService.trackEvent('onboarding_step_completed', userId, { 
+        step_name: 'tooltip_tour_started' 
+      });
+    }
     await saveOnboardingState({ hasSeenTooltips: true });
-  }, [saveOnboardingState]);
+  }, [saveOnboardingState, userId]);
 
   // Check if user needs onboarding
   const needsOnboarding = !onboarding.hasCompletedWelcome;

@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Application, PrepEntry, StarStory, CompanyResearch, NetworkingContact } from '../../types';
+import { AnalyticsService } from '../../services/analyticsService';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 interface DataImportExportModalProps {
   isOpen: boolean;
@@ -43,6 +45,7 @@ const DataImportExportModal: React.FC<DataImportExportModalProps> = ({
   const [importFile, setImportFile] = useState<File | null>(null);
   const [importPreview, setImportPreview] = useState<any[]>([]);
   const [importType, setImportType] = useState<string>('applications');
+  const { user } = useAuth();
   const [showAIPrompt, setShowAIPrompt] = useState(false);
 
   // CSV format templates
@@ -143,6 +146,11 @@ const DataImportExportModal: React.FC<DataImportExportModalProps> = ({
   const handleExport = useCallback(async () => {
     setIsProcessing(true);
     try {
+      // Track data export event
+      if (user?.uid) {
+        AnalyticsService.trackEvent('data_exported', user.uid);
+      }
+      
       const exportData = {
         applications: applications.map(app => ({
           company: app.company,
@@ -230,7 +238,7 @@ const DataImportExportModal: React.FC<DataImportExportModalProps> = ({
     } finally {
       setIsProcessing(false);
     }
-  }, [applications, prepEntries, stories, companies, contacts]);
+  }, [applications, prepEntries, stories, companies, contacts, user]);
 
   const copyAIPrompt = useCallback(() => {
     const format = csvFormats[importType as keyof typeof csvFormats];
