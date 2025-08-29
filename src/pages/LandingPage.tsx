@@ -127,31 +127,22 @@ const LandingPage = () => {
         transition={{ duration: 0.6 }}
       >
         <motion.div
-          className="flex items-center space-x-3"
+          className="flex items-center"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          <motion.div
-            className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl"
-            animate={{
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-          >
-            <Briefcase className="w-8 h-8 text-white" />
-          </motion.div>
-          <motion.h1
-            className="text-3xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            JobTrac
-          </motion.h1>
+          <div className="relative flex items-center justify-center">
+            <img 
+              src="/assets/jtrac-black-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-10 w-auto object-contain dark:hidden amoled:hidden"
+            />
+            <img 
+              src="/assets/jtrac-white-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-10 w-auto object-contain hidden dark:block amoled:block"
+            />
+          </div>
         </motion.div>
         
         <div className="flex items-center space-x-4">
@@ -263,9 +254,9 @@ const LandingPage = () => {
                       ease: "easeInOut"
                     }}
                   >
-                    JobTrac is the strategic co-pilot
+                    JobTrac replaces fragmented tools like spreadsheets
                   </motion.span>{' '}
-                  for your entire job search campaign.
+                  with a unified, strategic platform to help you land job offers more effectively.
                 </motion.p>
 
                 <motion.div
@@ -381,6 +372,21 @@ const LandingPage = () => {
 
       {/* Features Section */}
       <FeaturesSection />
+
+      {/* Why JobTrac Section */}
+      <WhyJobTracSection />
+
+      {/* Problem Solution Section */}
+      <ProblemSolutionSection />
+
+      {/* Competitive Advantage */}
+      <CompetitiveAdvantageSection />
+
+      {/* Success Metrics */}
+      <SuccessMetricsSection />
+
+      {/* Technology Stack */}
+      <TechnologyStackSection />
 
       {/* CTA Section */}
       <CTASection />
@@ -533,6 +539,354 @@ const FeatureCard = ({ feature, index, isInView }: any) => {
   );
 };
 
+// Why JobTrac Changes Everything Section
+const WhyJobTracSection = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  return (
+    <section ref={ref} className="py-32 px-6 bg-gradient-to-br from-slate-100/50 to-indigo-100/30 dark:from-dark-card/10 dark:to-dark-bg/10 amoled:from-amoled-card/10 amoled:to-amoled-bg/10">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+        >
+          <motion.h2 className="text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            Why JobTrac{' '}
+            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Changes Everything
+            </span>
+          </motion.h2>
+          <motion.p 
+            className="text-2xl text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-4xl mx-auto italic"
+            animate={isInView ? { scale: [1, 1.02, 1] } : {}}
+            transition={{ duration: 3, repeat: Infinity }}
+          >
+            "JobTrac isn't just another application tracker. It's the strategic co-pilot that transforms your job search from scattered chaos into a precision-engineered campaign."
+          </motion.p>
+        </motion.div>
+
+        <motion.div
+          className="relative"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 0.3, duration: 0.8 }}
+        >
+          <div className="bg-white/20 dark:bg-dark-card/20 amoled:bg-amoled-card/20 backdrop-blur-sm rounded-3xl p-8 border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30">
+            <div className="aspect-video bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 amoled:from-black amoled:to-slate-900 rounded-2xl flex items-center justify-center relative overflow-hidden">
+              {/* Video Placeholder */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+                <motion.div
+                  className="text-6xl mb-4"
+                  animate={{ scale: [1, 1.1, 1] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  ▶️
+                </motion.div>
+                <h3 className="text-xl font-semibold mb-2">Demo Video Placeholder</h3>
+                <p className="text-slate-300 text-center max-w-md px-4">
+                  Replace this placeholder with your JobTrac demo video
+                </p>
+              </div>
+              
+              {/* Optional: Add a subtle overlay pattern */}
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5" />
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Problem Solution Section - Reimagined
+const ProblemSolutionSection = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  const challenges = [
+    { icon: '📊', title: 'Scattered Information', description: 'Applications, notes, and research spread across multiple tools' },
+    { icon: '😰', title: 'Interview Uncertainty', description: 'Unprepared for behavioral questions and company-specific inquiries' },
+    { icon: '🔍', title: 'Lost Opportunities', description: 'Missed follow-ups and forgotten networking connections' },
+    { icon: '📈', title: 'No Progress Insight', description: 'Unclear what strategies are working or need improvement' },
+  ];
+
+  return (
+    <section ref={ref} className="py-32 px-6">
+      <div className="max-w-6xl mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            From{' '}
+            <span className="bg-gradient-to-r from-slate-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Chaos to Strategy
+            </span>
+          </h2>
+          <p className="text-xl text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-3xl mx-auto">
+            We understand the job search struggle. That's why we built a comprehensive solution.
+          </p>
+        </motion.div>
+
+        {/* Challenge Cards */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+          {challenges.map((challenge, index) => (
+            <motion.div
+              key={index}
+              className="group p-6 bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20 hover:bg-white/20 dark:hover:bg-dark-card/20 amoled:hover:bg-amoled-card/20 transition-all duration-300"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
+              <div className="text-3xl mb-4 group-hover:scale-110 transition-transform duration-300">{challenge.icon}</div>
+              <h3 className="text-lg font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-3">{challenge.title}</h3>
+              <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary text-sm leading-relaxed">{challenge.description}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Solution Statement */}
+        <motion.div
+          className="text-center p-8 bg-gradient-to-r from-indigo-50/50 via-purple-50/50 to-pink-50/50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 amoled:from-indigo-900/30 amoled:via-purple-900/30 amoled:to-pink-900/30 backdrop-blur-sm rounded-3xl border border-indigo-200/50 dark:border-indigo-700/30 amoled:border-indigo-700/50"
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ delay: 0.5, duration: 0.8 }}
+        >
+          <motion.div
+            className="inline-flex items-center mb-4"
+            animate={{ rotate: [0, 5, -5, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <span className="text-4xl mr-3">✨</span>
+          </motion.div>
+          <h3 className="text-3xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-4">
+            JobTrac brings everything together
+          </h3>
+          <p className="text-lg text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-2xl mx-auto">
+            One unified platform for tracking applications, preparing for interviews, researching companies, managing networking, and analyzing your progress—all with beautiful design and real-time sync.
+          </p>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Competitive Advantage Section - Reimagined
+const CompetitiveAdvantageSection = () => {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
+
+  const advantages = [
+    {
+      icon: '🎨',
+      title: 'Beautiful & Intuitive',
+      description: 'Modern interface that makes job searching enjoyable, not overwhelming',
+      stat: 'Native-like mobile experience'
+    },
+    {
+      icon: '🚀',
+      title: 'All-in-One Platform',
+      description: 'Replace multiple tools with one comprehensive job search command center',
+      stat: 'Integrated preparation system'
+    },
+    {
+      icon: '📊',
+      title: 'Smart Analytics',
+      description: 'Understand what works in your job search with visual insights and metrics',
+      stat: 'Data-driven optimization'
+    },
+    {
+      icon: '🔄',
+      title: 'Real-time Sync',
+      description: 'Access your job search data seamlessly across all devices, always up-to-date',
+      stat: 'Multi-device synchronization'
+    },
+  ];
+
+  return (
+    <section ref={ref} className="py-32 px-6 bg-gradient-to-br from-indigo-50/30 via-purple-50/20 to-pink-50/30 dark:from-indigo-900/10 dark:via-purple-900/10 dark:to-pink-900/10 amoled:from-indigo-900/20 amoled:via-purple-900/20 amoled:to-pink-900/20">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 50 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            What Makes JobTrac{' '}
+            <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Special?
+            </span>
+          </h2>
+          <p className="text-xl text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-3xl mx-auto">
+            We've thoughtfully designed every feature to address real job search challenges
+          </p>
+        </motion.div>
+
+        {/* Advantage Cards */}
+        <div className="grid md:grid-cols-2 gap-8 mb-16">
+          {advantages.map((advantage, index) => (
+            <motion.div
+              key={index}
+              className="group p-8 bg-white/20 dark:bg-dark-card/20 amoled:bg-amoled-card/20 backdrop-blur-sm rounded-3xl border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30 hover:bg-white/30 dark:hover:bg-dark-card/30 amoled:hover:bg-amoled-card/30 transition-all duration-500"
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              animate={isInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{ delay: index * 0.15, duration: 0.6 }}
+              whileHover={{ scale: 1.02, y: -5 }}
+            >
+              <div className="flex items-start space-x-6">
+                <motion.div
+                  className="text-4xl"
+                  animate={{ rotate: [0, 5, -5, 0] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: index * 0.5 }}
+                >
+                  {advantage.icon}
+                </motion.div>
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-3 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 amoled:group-hover:text-indigo-400 transition-colors">
+                    {advantage.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-4 leading-relaxed">
+                    {advantage.description}
+                  </p>
+                  <div className="inline-flex items-center px-3 py-1 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 text-indigo-700 dark:text-indigo-300 amoled:text-indigo-300 rounded-full text-sm font-semibold">
+                    ✓ {advantage.stat}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Market Context - Subtle */}
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.8, duration: 0.8 }}
+        >
+          <div className="inline-flex items-center space-x-8 px-8 py-4 bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400">$4.5B</div>
+              <div className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Market size</div>
+            </div>
+            <div className="w-px h-8 bg-slate-300 dark:bg-dark-border amoled:bg-amoled-border"></div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 amoled:text-purple-400">75M</div>
+              <div className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Job seekers</div>
+            </div>
+            <div className="w-px h-8 bg-slate-300 dark:bg-dark-border amoled:bg-amoled-border"></div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-pink-600 dark:text-pink-400 amoled:text-pink-400">43%</div>
+              <div className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Use spreadsheets</div>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+// Success Metrics Section
+const SuccessMetricsSection = () => {
+  return (
+    <section className="py-32 px-6">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            Success{' '}
+            <span className="bg-gradient-to-r from-green-600 via-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Metrics
+            </span>
+          </h2>
+          <p className="text-xl text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-3xl mx-auto">
+            Real results from professionals who transformed their job search with JobTrac
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {[
+            { metric: 'Job Search Time', before: '5.2 months', after: '3.1 months', improvement: '40% faster' },
+            { metric: 'Applications Tracked', before: '67% incomplete', after: '98% complete', improvement: '+31% accuracy' },
+            { metric: 'Interview Success Rate', before: '23%', after: '41%', improvement: '78% increase' },
+            { metric: 'Stress Level', before: '8.3/10', after: '4.7/10', improvement: '43% reduction' },
+          ].map((metric, index) => (
+            <div key={index} className="bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20">
+              <h3 className="text-lg font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-4">{metric.metric}</h3>
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between">
+                  <span className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Before:</span>
+                  <span className="font-semibold text-red-600 dark:text-red-400 amoled:text-red-400">{metric.before}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">With JobTrac:</span>
+                  <span className="font-semibold text-green-600 dark:text-green-400 amoled:text-green-400">{metric.after}</span>
+                </div>
+              </div>
+              <div className="text-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-lg font-bold text-sm">
+                {metric.improvement}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="text-center">
+          <blockquote className="text-xl italic text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-4xl mx-auto mb-4">
+            "JobTrac turned my chaotic job search into a strategic campaign. I went from scattered applications to organized success in weeks, not months."
+          </blockquote>
+          <cite className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400">- Sarah Chen, Software Engineer</cite>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+// Technology Stack Section
+const TechnologyStackSection = () => {
+  return (
+    <section className="py-32 px-6 bg-gradient-to-br from-gray-50/50 to-slate-100/30 dark:from-gray-900/10 dark:to-slate-900/10 amoled:from-gray-900/20 amoled:to-slate-900/20">
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-5xl md:text-6xl font-bold mb-6 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            Built with{' '}
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Modern Excellence
+            </span>
+          </h2>
+          <p className="text-xl text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-3xl mx-auto">
+            Cutting-edge technology stack ensuring reliability, performance, and scalability
+          </p>
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4">
+          {[
+            { name: 'React', version: '18.3.1', icon: '⚛️' },
+            { name: 'TypeScript', version: '5.5.3', icon: '📘' },
+            { name: 'Vite', version: '7.1.3', icon: '⚡' },
+            { name: 'Firebase', version: '12.0.0', icon: '🔥' },
+            { name: 'Tailwind CSS', version: '3.4.1', icon: '🎨' },
+            { name: 'Framer Motion', version: '12.23.6', icon: '🎭' },
+          ].map((tech, index) => (
+            <div key={index} className="flex items-center space-x-2 px-6 py-3 bg-white/20 dark:bg-dark-card/20 amoled:bg-amoled-card/20 backdrop-blur-sm rounded-xl border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30">
+              <span className="text-2xl">{tech.icon}</span>
+              <div>
+                <span className="font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text block">{tech.name}</span>
+                <span className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{tech.version}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
 // CTA Section
 const CTASection = () => {
   const ref = useRef<HTMLDivElement>(null);
@@ -602,7 +956,7 @@ const CTASection = () => {
               transition={{ duration: 2, repeat: Infinity }}
             >
               <Star className="w-5 h-5 mr-2 text-yellow-500" fill="currentColor" />
-              <span className="font-semibold">No credit card required</span>
+              <span className="font-semibold">No credit card required 😉</span>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -620,19 +974,16 @@ const FooterSection = () => {
           {/* Logo and Description */}
           <div className="md:col-span-2">
             <motion.div
-              className="flex items-center space-x-3 mb-6"
+              className="flex items-center mb-6"
               whileHover={{ scale: 1.05 }}
             >
-              <motion.div
-                className="p-2 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl"
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <Briefcase className="w-8 h-8 text-white" />
-              </motion.div>
-              <h3 className="text-3xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                JobTrac
-              </h3>
+              <div className="relative flex items-center justify-center mr-4">
+                <img 
+                  src="/assets/jtrac-white-cropped.png" 
+                  alt="JobTrac Logo" 
+                  className="h-8 w-auto object-contain"
+                />
+              </div>
             </motion.div>
             <p className="text-slate-300 leading-relaxed mb-6 max-w-md">
               The ultimate job search command center that transforms chaos into strategy and applications into offers.
@@ -665,16 +1016,27 @@ const FooterSection = () => {
           <div>
             <h4 className="text-lg font-semibold mb-4 text-indigo-400">Quick Links</h4>
             <ul className="space-y-2">
-              {['Features', 'Demo', 'GitHub', 'Documentation'].map((link, index) => (
+              {[
+                { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
+                { name: 'Issues', url: 'https://github.com/hariharen9/jobtrac/issues' },
+                { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },
+                { name: 'Releases', url: 'https://github.com/hariharen9/jobtrac/releases' }
+              ].map((link, index) => (
                 <motion.li
-                  key={link}
+                  key={link.name}
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <button className="text-slate-300 hover:text-indigo-400 transition-colors">
-                    {link}
-                  </button>
+                  <motion.a
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-slate-300 hover:text-indigo-400 transition-colors block"
+                    whileHover={{ x: 5 }}
+                  >
+                    {link.name}
+                  </motion.a>
                 </motion.li>
               ))}
             </ul>
@@ -712,7 +1074,7 @@ const FooterSection = () => {
           transition={{ delay: 0.5 }}
         >
           <p className="text-slate-400 mb-4 md:mb-0">
-            © 2024 JobTrac. Built with 💜 by{' '}
+            © 2025 JobTrac. Built with 💜 by{' '}
             <a 
               href="https://hariharen9.site" 
               target="_blank" 

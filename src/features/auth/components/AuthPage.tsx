@@ -4,7 +4,7 @@ import { useAuth } from '../hooks/useAuth';
 import AuthButton from './AuthButton';
 import { useTheme } from '../../../hooks/shared/useTheme';
 import ThemeToggle from '../../../components/shared/ThemeToggle';
-import { Briefcase, HelpCircle } from 'lucide-react';
+import { HelpCircle } from 'lucide-react';
 import './SignInBackground.css';
 
 const AuthPage: React.FC = () => {
@@ -35,10 +35,18 @@ const AuthPage: React.FC = () => {
         <div className="w-full max-w-xs mx-auto" style={{ maxHeight: '85vh', maxWidth: '500px', minWidth: '280px' }}>
           <div className="p-6 text-center bg-white/80 backdrop-blur-sm rounded-xl shadow-xl dark:bg-dark-card/80 amoled:bg-amoled-card/80 border border-gray-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50">
             <div className="mb-4">
-              <Briefcase className="w-12 h-12 mx-auto mb-3 text-indigo-600" />
-              <h1 className="mb-2 text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-                JobTrac
-              </h1>
+              <div className="flex items-center justify-center mb-3">
+                <img 
+                  src="/assets/jtrac-black-cropped.png" 
+                  alt="JobTrac Logo" 
+                  className="h-12 w-auto object-contain dark:hidden amoled:hidden"
+                />
+                <img 
+                  src="/assets/jtrac-white-cropped.png" 
+                  alt="JobTrac Logo" 
+                  className="h-12 w-auto object-contain hidden dark:block amoled:block"
+                />
+              </div>
               <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                 Sign in to start tracking your job search journey
               </p>
