@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link, Trash2, RotateCcw, Target, Database } from 'lucide-react';
+import { CheckCircle, Link, Trash2, RotateCcw, Target, Database, MessageCircle } from 'lucide-react';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
 import { toast } from 'react-hot-toast';
@@ -173,6 +173,34 @@ const ProfileModal = ({
               </div>
             </div>
           )}
+
+          {/* Feedback Section */}
+          <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-green-200 dark:border-green-700/50">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-green-100 dark:bg-green-900/30 amoled:bg-green-900/30 rounded-lg flex-shrink-0">
+                  <MessageCircle className="w-5 h-5 text-green-600 dark:text-green-400 amoled:text-green-400" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                    Share Feedback
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
+                    💬 Help improve JobTrac! Discussions, feature requests, or general feedback
+                  </p>
+                </div>
+              </div>
+              <a
+                href="https://github.com/hariharen9/jobtrac/discussions/categories/user-feedback"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold text-sm hover:bg-green-700 transition-colors shadow-md hover:shadow-lg flex-shrink-0 self-start sm:self-center"
+              >
+                <MessageCircle className="w-4 h-4" />
+                <span className="whitespace-nowrap">Give Feedback</span>
+              </a>
+            </div>
+          </div>
 
           {/* Data Import/Export Section */}
           <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-purple-200 dark:border-purple-700/50">
