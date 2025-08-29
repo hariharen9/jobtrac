@@ -178,23 +178,6 @@
 | "Add Company Research" | `Cmd/Ctrl + K` → Type "add company" | Create company research entry |
 | "Add Contact" | `Cmd/Ctrl + K` → Type "add contact" | Add networking contact |
 | "Add STAR Story" | `Cmd/Ctrl + K` → Type "add story" | Create behavioral interview story |
-
----
-
-### **🔍 Global Search Power**
-
-**Search Everything, Find Instantly:**
-- **Universal Search**: Type 2+ characters to search across ALL your data
-- **Smart Results**: Company names, roles, topics, contacts, notes - everything indexed
-- **Quick Navigation**: Click any result to jump directly to that item for editing
-- **Visual Indicators**: Color-coded badges show data type (applications, prep, companies, etc.)
-- **Real-time Results**: Instant search with result counter
-
-**Example Searches:**
-- `"Google"` → Shows applications, research, contacts, and notes about Google
-- `"React"` → Finds prep sessions, stories, and notes mentioning React
-- `"John Smith"` → Locates networking contact and related information
-
 ---
 
 ### **📝 Smart Search Features**
@@ -284,6 +267,24 @@
 - ✅ **Quick Start Checklist** - Get productive in 5 minutes
 - 💡 **Smart Tooltips** - Contextual help throughout
 ---
+
+
+### **🔍 Global Search Power**
+
+**Search Everything, Find Instantly:**
+- **Universal Search**: Type 2+ characters to search across ALL your data
+- **Smart Results**: Company names, roles, topics, contacts, notes - everything indexed
+- **Quick Navigation**: Click any result to jump directly to that item for editing
+- **Visual Indicators**: Color-coded badges show data type (applications, prep, companies, etc.)
+- **Real-time Results**: Instant search with result counter
+
+**Example Searches:**
+- `"Google"` → Shows applications, research, contacts, and notes about Google
+- `"React"` → Finds prep sessions, stories, and notes mentioning React
+- `"John Smith"` → Locates networking contact and related information
+
+---
+
 ## 📈 **Market Opportunity & Impact**
 
 <div align="center">
