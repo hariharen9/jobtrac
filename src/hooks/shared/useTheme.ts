@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { AnalyticsService } from '../../services/analyticsService';
+import { useAuth } from '../../features/auth/hooks/useAuth';
 
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -6,6 +8,8 @@ export function useTheme() {
     if (saved) return saved;
     return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   });
+  
+  const { user } = useAuth();
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -16,9 +20,14 @@ export function useTheme() {
 
   const toggleTheme = () => {
     setTheme(prevTheme => {
-      if (prevTheme === 'light') return 'dark';
-      if (prevTheme === 'dark') return 'amoled';
-      return 'light';
+      const newTheme = prevTheme === 'light' ? 'dark' : prevTheme === 'dark' ? 'amoled' : 'light';
+      
+      // Track theme change event
+      if (user?.uid) {
+        AnalyticsService.trackEvent('theme_changed', user.uid, { theme_name: newTheme });
+      }
+      
+      return newTheme;
     });
   };
 

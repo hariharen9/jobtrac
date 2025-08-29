@@ -8,6 +8,7 @@ import { useTheme } from './hooks/shared/useTheme';
 import { useFirestore } from './hooks/useFirestore';
 import { useOnboarding } from './hooks/useOnboarding';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { AnalyticsService } from './services/analyticsService';
 import ApplicationTracker from './features/applications/components/ApplicationTracker';
 import ApplicationForm from './features/applications/components/ApplicationForm';
 import ActivityCalendar from './features/applications/components/ActivityCalendar';
@@ -98,7 +99,12 @@ function App() {
   // Initialize keyboard shortcuts
   useKeyboardShortcuts({
     setActiveTab,
-    openCommandPalette: () => setIsCommandPaletteOpen(true),
+    openCommandPalette: () => {
+      if (user?.uid) {
+        AnalyticsService.trackEvent('command_palette_opened', user.uid);
+      }
+      setIsCommandPaletteOpen(true);
+    },
     openHelp: () => setIsHelpOpen(true),
     openProfile: openProfileModal,
     toggleTheme,
@@ -199,9 +205,13 @@ function App() {
     // Check if user has set goals and auto-complete the task
     const goalTask = onboarding.quickStartTasks.find(t => t.id === 'set-weekly-goal');
     if (goalTask && !goalTask.completed && onboarding.hasCompletedWelcome) {
+      // Track goal setting
+      if (user?.uid) {
+        AnalyticsService.trackEvent('goal_set', user.uid);
+      }
       await completeQuickStartTask('set-weekly-goal');
     }
-  }, [onboarding, completeQuickStartTask]);
+  }, [onboarding, completeQuickStartTask, user]);
 
   const handleFormSubmit = useCallback(async <T,>(
     handler: (data: T) => Promise<void>,
@@ -210,6 +220,28 @@ function App() {
     try {
       setIsSubmitting(true);
       await handler(data);
+      
+      // Track events based on the modal type
+      if (user?.uid && !editingItem) { // Only track creation, not updates
+        switch (modalType) {
+          case 'applications':
+            AnalyticsService.trackEvent('application_created', user.uid);
+            break;
+          case 'prep':
+            AnalyticsService.trackEvent('prep_entry_created', user.uid);
+            break;
+          case 'star':
+            AnalyticsService.trackEvent('star_story_created', user.uid);
+            break;
+          case 'research':
+            AnalyticsService.trackEvent('company_research_created', user.uid);
+            break;
+          case 'networking':
+            AnalyticsService.trackEvent('networking_contact_created', user.uid);
+            break;
+        }
+      }
+      
       closeModal();
       
       // Auto-complete Quick Start tasks based on the action performed
@@ -219,7 +251,7 @@ function App() {
     } finally {
       setIsSubmitting(false);
     }
-  }, [closeModal, modalType]);
+  }, [closeModal, modalType, user, editingItem, autoCompleteQuickStartTask]);
   
   const handleUpdate = useCallback(async <T extends { id: string }>(
     updater: (id: string, data: Partial<T>) => Promise<void>,
@@ -232,12 +264,23 @@ function App() {
   const handleApplicationStatusUpdate = useCallback(async (id: string, newStatus: ApplicationStatus) => {
     try {
       await updateApplication(id, { status: newStatus });
+      
+      // Track application status change
+      if (user?.uid) {
+        AnalyticsService.trackEvent('application_status_changed', user.uid, { new_status: newStatus });
+        
+        // Track special success metrics
+        if (newStatus === 'Offer') {
+          AnalyticsService.trackEvent('application_offer_received', user.uid);
+        }
+      }
+      
       toast.success(`Application status updated to ${newStatus}!`);
     } catch (error) {
       console.error('Failed to update application status:', error);
       toast.error('Failed to update application status.');
     }
-  }, [updateApplication]);
+  }, [updateApplication, user]);
 
   const handleViewJD = (application: Application) => {
     setSelectedApplication(application);
@@ -247,6 +290,12 @@ function App() {
   const handleSaveJD = async (applicationId: string, jobDescription: string) => {
     try {
       await updateApplication(applicationId, { jobDescription });
+      
+      // Track JD save event
+      if (user?.uid) {
+        AnalyticsService.trackEvent('jd_saved', user.uid);
+      }
+      
       setIsJdModalOpen(false);
       toast.success('Job description saved successfully!');
     } catch (error) {

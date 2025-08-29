@@ -1,11 +1,156 @@
 import { doc, setDoc, getDoc, updateDoc, increment, serverTimestamp, runTransaction } from 'firebase/firestore';
 import { db } from '../lib/firebase';
-import { UserProfile, AnalyticsOverview, AnalyticsDemographics } from '../types';
+import { UserProfile, AnalyticsOverview, AnalyticsDemographics, AnalyticsEvents, EventType, AnalyticsEvent } from '../types';
 
 export class AnalyticsService {
   private static readonly ANALYTICS_COLLECTION = 'analytics';
   private static readonly OVERVIEW_DOC = 'overview';
   private static readonly DEMOGRAPHICS_DOC = 'demographics';
+  private static readonly EVENTS_DOC = 'events';
+
+  /**
+   * Track a user event for analytics
+   * Cost-optimized: Uses batching and efficient updates
+   */
+  static async trackEvent(eventType: EventType, userId?: string, parameters?: Record<string, string | number>): Promise<void> {
+    try {
+      console.log('📊 Tracking event:', eventType, 'User:', userId, 'Params:', parameters);
+      
+      // Update events analytics document
+      const eventsRef = doc(db, this.ANALYTICS_COLLECTION, this.EVENTS_DOC);
+      const eventsSnap = await getDoc(eventsRef);
+      
+      if (!eventsSnap.exists()) {
+        // Initialize events document with default structure
+        const initialEvents: AnalyticsEvents = {
+          // User Lifecycle & Onboarding
+          signUps: 0,
+          logins: 0,
+          onboardingStarted: 0,
+          onboardingStepsCompleted: {},
+          demoModeEnabled: 0,
+          
+          // Core Feature Engagement
+          applicationsCreated: 0,
+          applicationStatusChanges: {},
+          jobDescriptionsSaved: 0,
+          prepEntriesCreated: 0,
+          starStoriesCreated: 0,
+          companyResearchCreated: 0,
+          networkingContactsCreated: 0,
+          
+          // Productivity & QOL Features
+          commandPaletteOpened: 0,
+          commandPaletteActions: {},
+          themeChanges: {},
+          keyboardShortcutsUsed: {},
+          
+          // User Outcomes & Success Metrics
+          goalsSet: 0,
+          applicationOffersReceived: 0,
+          dataExported: 0,
+          
+          lastUpdated: serverTimestamp() as any
+        };
+        
+        await setDoc(eventsRef, initialEvents);
+      }
+      
+      // Prepare updates based on event type
+      const updates: any = {
+        lastUpdated: serverTimestamp()
+      };
+      
+      switch (eventType) {
+        // User Lifecycle Events
+        case 'sign_up':
+          updates.signUps = increment(1);
+          break;
+        case 'login':
+          updates.logins = increment(1);
+          break;
+        case 'onboarding_started':
+          updates.onboardingStarted = increment(1);
+          break;
+        case 'onboarding_step_completed':
+          if (parameters?.step_name) {
+            updates[`onboardingStepsCompleted.${parameters.step_name}`] = increment(1);
+          }
+          break;
+        case 'demo_mode_enabled':
+          updates.demoModeEnabled = increment(1);
+          break;
+          
+        // Core Feature Events
+        case 'application_created':
+          updates.applicationsCreated = increment(1);
+          break;
+        case 'application_status_changed':
+          if (parameters?.new_status) {
+            updates[`applicationStatusChanges.${parameters.new_status}`] = increment(1);
+          }
+          break;
+        case 'jd_saved':
+          updates.jobDescriptionsSaved = increment(1);
+          break;
+        case 'prep_entry_created':
+          updates.prepEntriesCreated = increment(1);
+          break;
+        case 'star_story_created':
+          updates.starStoriesCreated = increment(1);
+          break;
+        case 'company_research_created':
+          updates.companyResearchCreated = increment(1);
+          break;
+        case 'networking_contact_created':
+          updates.networkingContactsCreated = increment(1);
+          break;
+          
+        // Productivity Events
+        case 'command_palette_opened':
+          updates.commandPaletteOpened = increment(1);
+          break;
+        case 'command_palette_action':
+          if (parameters?.action_type) {
+            updates[`commandPaletteActions.${parameters.action_type}`] = increment(1);
+          }
+          break;
+        case 'theme_changed':
+          if (parameters?.theme_name) {
+            updates[`themeChanges.${parameters.theme_name}`] = increment(1);
+          }
+          break;
+        case 'keyboard_shortcut_used':
+          if (parameters?.shortcut_name) {
+            updates[`keyboardShortcutsUsed.${parameters.shortcut_name}`] = increment(1);
+          }
+          break;
+          
+        // Success Metrics
+        case 'goal_set':
+          updates.goalsSet = increment(1);
+          break;
+        case 'application_offer_received':
+          updates.applicationOffersReceived = increment(1);
+          break;
+        case 'data_exported':
+          updates.dataExported = increment(1);
+          break;
+          
+        default:
+          console.warn('Unknown event type:', eventType);
+          return;
+      }
+      
+      // Apply updates
+      await updateDoc(eventsRef, updates);
+      console.log('✅ Event tracked successfully:', eventType);
+      
+    } catch (error) {
+      console.error('❌ Error tracking event:', eventType, error);
+      // Don't throw to avoid breaking user flow
+    }
+  }
 
   /**
    * Save user profile data and update analytics
@@ -40,6 +185,9 @@ export class AnalyticsService {
       
       // Update analytics in a separate operation to avoid transaction complexity
       await this.updateAnalyticsSeparately(profileData);
+      
+      // Track sign_up event for new user profile completion
+      await this.trackEvent('sign_up', userId);
       
       console.log('User profile and analytics updated successfully');
     } catch (error) {
@@ -293,6 +441,25 @@ export class AnalyticsService {
       return demographicsSnap.data() as AnalyticsDemographics;
     } catch (error) {
       console.error('Error fetching analytics demographics:', error);
+      return null;
+    }
+  }
+
+  /**
+   * Get analytics events data
+   */
+  static async getAnalyticsEvents(): Promise<AnalyticsEvents | null> {
+    try {
+      const eventsRef = doc(db, this.ANALYTICS_COLLECTION, this.EVENTS_DOC);
+      const eventsSnap = await getDoc(eventsRef);
+      
+      if (!eventsSnap.exists()) {
+        return null;
+      }
+
+      return eventsSnap.data() as AnalyticsEvents;
+    } catch (error) {
+      console.error('Error fetching analytics events:', error);
       return null;
     }
   }

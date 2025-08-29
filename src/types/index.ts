@@ -184,3 +184,68 @@ export interface AnalyticsDemographics {
   countries: Record<string, number>;
   lastUpdated: Timestamp;
 }
+
+// Enhanced Analytics - Event Tracking
+export interface AnalyticsEvents {
+  // User Lifecycle & Onboarding
+  signUps: number;
+  logins: number;
+  onboardingStarted: number;
+  onboardingStepsCompleted: Record<string, number>; // step_name -> count
+  demoModeEnabled: number;
+  
+  // Core Feature Engagement
+  applicationsCreated: number;
+  applicationStatusChanges: Record<string, number>; // status -> count
+  jobDescriptionsSaved: number;
+  prepEntriesCreated: number;
+  starStoriesCreated: number;
+  companyResearchCreated: number;
+  networkingContactsCreated: number;
+  
+  // Productivity & QOL Features
+  commandPaletteOpened: number;
+  commandPaletteActions: Record<string, number>; // action_type -> count
+  themeChanges: Record<string, number>; // theme_name -> count
+  keyboardShortcutsUsed: Record<string, number>; // shortcut_name -> count
+  
+  // User Outcomes & Success Metrics
+  goalsSet: number;
+  applicationOffersReceived: number;
+  dataExported: number;
+  
+  lastUpdated: Timestamp;
+}
+
+// Event tracking interfaces for type safety
+export interface AnalyticsEvent {
+  eventType: string;
+  userId?: string;
+  parameters?: Record<string, string | number>;
+  timestamp: Timestamp;
+}
+
+export type EventType = 
+  // User Lifecycle
+  | 'sign_up'
+  | 'login' 
+  | 'onboarding_started'
+  | 'onboarding_step_completed'
+  | 'demo_mode_enabled'
+  // Core Features
+  | 'application_created'
+  | 'application_status_changed'
+  | 'jd_saved'
+  | 'prep_entry_created'
+  | 'star_story_created'
+  | 'company_research_created'
+  | 'networking_contact_created'
+  // Productivity
+  | 'command_palette_opened'
+  | 'command_palette_action'
+  | 'theme_changed'
+  | 'keyboard_shortcut_used'
+  // Success Metrics
+  | 'goal_set'
+  | 'application_offer_received'
+  | 'data_exported';

@@ -26,6 +26,9 @@ export function useAuth() {
       setLoading(false);
 
       if (user) {
+        // Track login event
+        await AnalyticsService.trackEvent('login', user.uid);
+        
         const userDocRef = doc(db, 'users', user.uid);
         const userDocSnap = await getDoc(userDocRef);
 
