@@ -27,6 +27,7 @@ import HelpPage from './components/shared/HelpPage';
 import CommandPalette from './components/shared/CommandPalette';
 import { WelcomeWizard, QuickStartChecklist, TooltipManager } from './components/shared';
 import Notes from './features/notes/components/Notes';
+import { useNotes } from './features/notes/hooks/useNotes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
@@ -141,6 +142,9 @@ function App() {
     updateItem: updateStory,
     deleteItem: deleteStory
   } = useFirestore<StarStory>('stories', user?.uid);
+
+  // Notes data for global search
+  const { notes } = useNotes(user?.uid);
 
 
   const tabs = useMemo(() => [
@@ -586,6 +590,7 @@ function App() {
           renderTabContent={renderTabContent}
           openHelpModal={() => setIsHelpOpen(true)}
           openProfileModal={openProfileModal}
+          openCommandPalette={() => setIsCommandPaletteOpen(true)}
           onShowQuickStart={() => setShowQuickStart(true)}
           showQuickStartButton={onboarding.hasCompletedWelcome && getProgressPercentage() < 100}
           activityCalendar={<MemoizedActivityCalendar 
@@ -681,6 +686,7 @@ function App() {
           companies={companies}
           contacts={contacts}
           stories={stories}
+          notes={notes}
           onOpenModal={openModal}
           onOpenHelp={() => setIsHelpOpen(true)}
           onOpenProfile={openProfileModal}
@@ -949,6 +955,7 @@ function App() {
         companies={companies}
         contacts={contacts}
         stories={stories}
+        notes={notes}
         onOpenModal={openModal}
         onOpenHelp={() => setIsHelpOpen(true)}
         onOpenProfile={openProfileModal}
