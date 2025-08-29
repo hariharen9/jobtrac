@@ -32,6 +32,7 @@ import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
 import { ProfileModal } from './features/profile';
+import UserProfileModal from './features/auth/components/UserProfileModal';
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -48,9 +49,13 @@ import { Toaster, toast } from 'react-hot-toast';
 import './features/auth/components/SignInBackground.css';
 
 function App() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, loading: authLoading, needsProfileSetup, saveUserProfile, skipProfileSetup } = useAuth();
   useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  
+  // User profile setup modal state
+  const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
+  const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
   
   // Onboarding state
   const {
@@ -349,9 +354,36 @@ function App() {
     }
   }, [user, resetOnboarding]);
 
-  // Show welcome wizard for new users (only if never completed)
+  // Handle user profile setup
+  const handleProfileComplete = async (profileData: Omit<import('./types').UserProfile, 'profileCompleted' | 'profileCompletedAt'>) => {
+    setIsSubmittingProfile(true);
+    try {
+      await saveUserProfile(profileData);
+      setIsUserProfileModalOpen(false);
+    } catch (error) {
+      console.error('Failed to save profile:', error);
+    } finally {
+      setIsSubmittingProfile(false);
+    }
+  };
+
+  const handleProfileSkip = () => {
+    skipProfileSetup();
+    setIsUserProfileModalOpen(false);
+  };
+
+  // Show profile modal when user needs profile setup
   React.useEffect(() => {
-    if (!user?.uid || onboardingLoading) return;
+    if (needsProfileSetup && user && !user.isAnonymous) {
+      setIsUserProfileModalOpen(true);
+    } else {
+      setIsUserProfileModalOpen(false);
+    }
+  }, [needsProfileSetup, user]);
+
+  // Show welcome wizard for new users (only if never completed and profile is done)
+  React.useEffect(() => {
+    if (!user?.uid || onboardingLoading || needsProfileSetup) return;
     
     const persistentKey = `welcome-completed-${user.uid}`;
     const hasCompletedBefore = localStorage.getItem(persistentKey);
@@ -361,7 +393,8 @@ function App() {
       isMobile,
       needsOnboarding,
       hasCompletedBefore,
-      userUid: user.uid
+      userUid: user.uid,
+      needsProfileSetup
     });
     
     // Only show if user has never completed welcome AND Firebase confirms needsOnboarding
@@ -369,7 +402,7 @@ function App() {
       console.log('🎉 Showing Welcome Wizard');
       setShowWelcomeWizard(true);
     }
-  }, [onboardingLoading, needsOnboarding, user, isMobile]);
+  }, [onboardingLoading, needsOnboarding, user, isMobile, needsProfileSetup]);
 
   // Reset onboarding UI state when user changes
   React.useEffect(() => {
@@ -961,6 +994,14 @@ function App() {
         onOpenProfile={openProfileModal}
         onToggleTheme={toggleTheme}
         onToggleNotes={toggleNotes}
+      />
+
+      {/* User Profile Setup Modal */}
+      <UserProfileModal
+        isOpen={isUserProfileModalOpen}
+        onComplete={handleProfileComplete}
+        onSkip={handleProfileSkip}
+        isSubmitting={isSubmittingProfile}
       />
     </div>
   );
