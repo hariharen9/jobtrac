@@ -26,13 +26,13 @@ const HelpPage: React.FC<HelpPageProps> = ({ onClose }) => {
           <h1 className="text-3xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
             JobTrac Guide
           </h1>
-          <button
+          {/* <button
             onClick={() => setShowOnboardingDemo(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
           >
             <Rocket className="w-4 h-4" />
             Try Onboarding Demo
-          </button>
+          </button> */}
         </div>
         <p className="text-lg text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
           Master your job search with this comprehensive tracking system. Here's how to use each feature effectively.

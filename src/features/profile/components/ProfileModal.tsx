@@ -22,19 +22,19 @@ const GoogleIcon = () => (
 );
 
 const ProfileModal = ({ 
-  applications, 
-  contacts, 
-  prepEntries,
-  stories,
-  companies,
+  applications = [], 
+  contacts = [], 
+  prepEntries = [],
+  stories = [],
+  companies = [],
   onRestartTour, 
   quickStartProgress 
 }: { 
-  applications: Application[], 
-  contacts: NetworkingContact[], 
-  prepEntries: PrepEntry[],
-  stories: StarStory[],
-  companies: CompanyResearch[],
+  applications?: Application[], 
+  contacts?: NetworkingContact[], 
+  prepEntries?: PrepEntry[],
+  stories?: StarStory[],
+  companies?: CompanyResearch[],
   onRestartTour?: () => void,
   quickStartProgress?: number 
 }) => {
@@ -189,7 +189,7 @@ const ProfileModal = ({
                     📁 Import from spreadsheets or export for backup & peace of mind
                   </p>
                   <div className="mt-1 text-xs text-purple-600 dark:text-purple-400 amoled:text-purple-400">
-                    💾 {applications.length + prepEntries.length + stories.length + companies.length + contacts.length} items ready to export
+                    💾 {(applications?.length || 0) + (prepEntries?.length || 0) + (stories?.length || 0) + (companies?.length || 0) + (contacts?.length || 0)} items ready to export
                   </div>
                 </div>
               </div>

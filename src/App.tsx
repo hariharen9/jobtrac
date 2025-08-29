@@ -577,7 +577,15 @@ function App() {
           title="Profile"
           size="lg"
         >
-          <ProfileModal applications={applications} contacts={contacts} prepEntries={prepEntries} />
+          <ProfileModal 
+            applications={applications} 
+            contacts={contacts} 
+            prepEntries={prepEntries}
+            stories={stories}
+            companies={companies}
+            onRestartTour={handleRestartTour}
+            quickStartProgress={getProgressPercentage()}
+          />
         </Modal>
         <Modal
           isOpen={isHelpOpen}
