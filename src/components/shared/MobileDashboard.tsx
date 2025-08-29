@@ -32,9 +32,19 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
         transition={{ duration: 0.5, ease: 'easeOut' }}
         className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border"
       >
-        <div className="flex items-center gap-2">
-          <Briefcase className="w-6 h-6 text-indigo-600" />
-          <h1 className="text-lg font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">JobTrac</h1>
+        <div className="flex items-center">
+          <div className="flex items-center justify-center">
+            <img 
+              src="/assets/jtrac-black-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-6 w-auto object-contain dark:hidden amoled:hidden"
+            />
+            <img 
+              src="/assets/jtrac-white-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-6 w-auto object-contain hidden dark:block amoled:block"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           <motion.button
