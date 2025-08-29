@@ -14,6 +14,23 @@ interface UserProfileModalProps {
 const AGE_RANGES = ['18-25', '26-35', '36-45', '46-55', '56+'] as const;
 const GENDER_OPTIONS = ['Male', 'Female', 'Other', 'Prefer not to say'] as const;
 
+// Comprehensive list of countries for consistent data collection
+const COUNTRIES = [
+  'United States', 'Canada', 'United Kingdom', 'Germany', 'France', 'Netherlands', 
+  'Sweden', 'Norway', 'Denmark', 'Finland', 'Switzerland', 'Austria', 'Belgium',
+  'Australia', 'New Zealand', 'Ireland', 'Israel', 'Singapore', 'Japan', 'South Korea',
+  'India', 'China', 'Brazil', 'Mexico', 'Argentina', 'Chile', 'Colombia', 'Peru',
+  'South Africa', 'Nigeria', 'Egypt', 'Kenya', 'Morocco', 'Ghana', 'Italy', 'Spain',
+  'Portugal', 'Poland', 'Czech Republic', 'Hungary', 'Romania', 'Bulgaria', 'Croatia',
+  'Slovenia', 'Slovakia', 'Estonia', 'Latvia', 'Lithuania', 'Russia', 'Ukraine',
+  'Turkey', 'Greece', 'Cyprus', 'Malta', 'Luxembourg', 'Iceland', 'UAE', 'Saudi Arabia',
+  'Qatar', 'Kuwait', 'Bahrain', 'Oman', 'Jordan', 'Lebanon', 'Pakistan', 'Bangladesh',
+  'Sri Lanka', 'Nepal', 'Thailand', 'Vietnam', 'Philippines', 'Indonesia', 'Malaysia',
+  'Hong Kong', 'Taiwan', 'Macau', 'Myanmar', 'Cambodia', 'Laos', 'Brunei', 'Mongolia',
+  'Kazakhstan', 'Uzbekistan', 'Kyrgyzstan', 'Tajikistan', 'Turkmenistan', 'Afghanistan',
+  'Iran', 'Iraq', 'Syria', 'Yemen', 'Other'
+] as const;
+
 const UserProfileModal: React.FC<UserProfileModalProps> = ({ 
   isOpen, 
   onComplete, 
@@ -241,14 +258,17 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
             </label>
             <div className="relative">
               <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
+              <select
                 value={formData.country}
                 onChange={(e) => handleInputChange('country', e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-500 dark:placeholder-dark-text-secondary amoled:placeholder-amoled-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
-                placeholder="Enter your country"
+                className="w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
                 disabled={isSubmitting}
-              />
+              >
+                <option value="">Select your country</option>
+                {COUNTRIES.map(country => (
+                  <option key={country} value={country}>{country}</option>
+                ))}
+              </select>
             </div>
           </div>
 
