@@ -332,11 +332,20 @@ function App() {
     const persistentKey = `welcome-completed-${user.uid}`;
     const hasCompletedBefore = localStorage.getItem(persistentKey);
     
+    // Debug logging for mobile
+    console.log('🔍 Onboarding Debug:', {
+      isMobile,
+      needsOnboarding,
+      hasCompletedBefore,
+      userUid: user.uid
+    });
+    
     // Only show if user has never completed welcome AND Firebase confirms needsOnboarding
     if (needsOnboarding && !hasCompletedBefore) {
+      console.log('🎉 Showing Welcome Wizard');
       setShowWelcomeWizard(true);
     }
-  }, [onboardingLoading, needsOnboarding, user]);
+  }, [onboardingLoading, needsOnboarding, user, isMobile]);
 
   // Reset onboarding UI state when user changes
   React.useEffect(() => {
@@ -352,12 +361,22 @@ function App() {
   React.useEffect(() => {
     if (!onboardingLoading && onboarding.hasCompletedWelcome && !onboarding.hasSeenTooltips && !hasShownQuickStartRef.current) {
       const incompleteTasks = onboarding.quickStartTasks.filter(task => !task.completed);
+      
+      console.log('🎯 QuickStart Debug:', {
+        isMobile,
+        hasCompletedWelcome: onboarding.hasCompletedWelcome,
+        hasSeenTooltips: onboarding.hasSeenTooltips,
+        incompleteTasks: incompleteTasks.length,
+        showWelcomeWizard
+      });
+      
       if (incompleteTasks.length > 0 && !showWelcomeWizard) {
+        console.log('🎆 Showing Quick Start Checklist');
         hasShownQuickStartRef.current = true;
         setTimeout(() => setShowQuickStart(true), 1000);
       }
     }
-  }, [onboardingLoading, onboarding, showWelcomeWizard]);
+  }, [onboardingLoading, onboarding, showWelcomeWizard, isMobile]);
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -547,6 +566,8 @@ function App() {
           renderTabContent={renderTabContent}
           openHelpModal={() => setIsHelpOpen(true)}
           openProfileModal={openProfileModal}
+          onShowQuickStart={() => setShowQuickStart(true)}
+          showQuickStartButton={onboarding.hasCompletedWelcome && getProgressPercentage() < 100}
           activityCalendar={<MemoizedActivityCalendar 
             applications={applications}
             prepEntries={prepEntries}
@@ -601,6 +622,32 @@ function App() {
           onClose={() => setIsJdModalOpen(false)}
           application={selectedApplication}
           onSave={handleSaveJD}
+        />
+
+        {/* Onboarding Components */}
+        {showWelcomeWizard && (
+          <WelcomeWizard
+            onComplete={handleWelcomeComplete}
+            onEnableDemoMode={handleEnableDemoMode}
+            onClose={handleWelcomeClose}
+          />
+        )}
+        
+        <QuickStartChecklist
+          tasks={onboarding.quickStartTasks}
+          onTaskClick={handleQuickStartTaskClick}
+          onComplete={handleQuickStartComplete}
+          onClose={() => setShowQuickStart(false)}
+          isOpen={showQuickStart}
+          progressPercentage={getProgressPercentage()}
+          demoMode={onboarding.demoMode}
+        />
+        
+        <TooltipManager
+          activeTab={activeTab}
+          isActive={showTooltipTour}
+          onComplete={handleTooltipTourComplete}
+          onSkip={handleTooltipTourComplete}
         />
       </>
     )
