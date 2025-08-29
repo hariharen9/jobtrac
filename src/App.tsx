@@ -114,7 +114,7 @@ function App() {
     addItem: addApplication,
     updateItem: updateApplication,
     deleteItem: deleteApplication
-  } = useFirestore<Application>('applications', user?.uid);
+  } = useFirestore<Application>('applications', user?.uid); // Real-time
   
   const { 
     data: prepEntries, 
@@ -122,7 +122,7 @@ function App() {
     addItem: addPrepEntry,
     updateItem: updatePrepEntry,
     deleteItem: deletePrepEntry
-  } = useFirestore<PrepEntry>('prepEntries', user?.uid);
+  } = useFirestore<PrepEntry>('prepEntries', user?.uid, true); // Polling
   
   const { 
     data: companies, 
@@ -130,7 +130,7 @@ function App() {
     addItem: addCompany,
     updateItem: updateCompany,
     deleteItem: deleteCompany
-  } = useFirestore<CompanyResearchType>('companies', user?.uid);
+  } = useFirestore<CompanyResearchType>('companies', user?.uid, true); // Polling
   
   const { 
     data: contacts, 
@@ -138,7 +138,7 @@ function App() {
     addItem: addContact,
     updateItem: updateContact,
     deleteItem: deleteContact
-  } = useFirestore<NetworkingContact>('contacts', user?.uid);
+  } = useFirestore<NetworkingContact>('contacts', user?.uid, true); // Polling
   
   const { 
     data: stories, 
@@ -146,7 +146,7 @@ function App() {
     addItem: addStory,
     updateItem: updateStory,
     deleteItem: deleteStory
-  } = useFirestore<StarStory>('stories', user?.uid);
+  } = useFirestore<StarStory>('stories', user?.uid, true); // Polling
 
   // Notes data for global search
   const { notes } = useNotes(user?.uid);

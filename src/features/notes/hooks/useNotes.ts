@@ -6,6 +6,8 @@ import {
   updateDoc, 
   deleteDoc, 
   onSnapshot,
+  getDocs,
+  getDoc,
   query,
   orderBy,
   Timestamp,
@@ -30,7 +32,7 @@ const DEFAULT_PAGE: Omit<NotePage, 'id'> = {
   pinned: false,
 };
 
-export const useNotes = (userId: string | undefined) => {
+export const useNotes = (userId: string | undefined, usePolling: boolean = true, pollingInterval: number = 60000) => {
   const [notes, setNotes] = useState<NotePage[]>([]);
   const [settings, setSettings] = useState<UserNotes['settings']>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
@@ -48,43 +50,81 @@ export const useNotes = (userId: string | undefined) => {
     setError(null);
 
     const notesCollectionRef = collection(db, 'users', userId, 'notesCollection');
-    const settingsDocRef = doc(db, 'users', userId, 'settings', 'notesSettings'); // Separate document for settings
+    const settingsDocRef = doc(db, 'users', userId, 'settings', 'notesSettings');
 
-    const unsubscribeNotes = onSnapshot(
-      query(notesCollectionRef, orderBy('createdAt', 'asc')), // Order by createdAt for consistent display
-      (snapshot) => {
-        const fetchedNotes: NotePage[] = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data() as Omit<NotePage, 'id'>
-        }));
-        setNotes(fetchedNotes);
-        setLoading(false);
-      },
-      (err) => {
-        console.error('Error fetching notes:', err);
-        setError(err.message);
-        setLoading(false);
-      }
-    );
-
-    const unsubscribeSettings = onSnapshot(
-      settingsDocRef,
-      (docSnap) => {
-        if (docSnap.exists()) {
-          setSettings(docSnap.data().settings || DEFAULT_SETTINGS);
+    if (usePolling) {
+      // Polling mode for notes
+      const fetchData = async () => {
+        try {
+          const [notesSnapshot, settingsSnap] = await Promise.all([
+            getDocs(query(notesCollectionRef, orderBy('createdAt', 'asc'))),
+            getDoc(settingsDocRef)
+          ]);
+          
+          const fetchedNotes: NotePage[] = notesSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data() as Omit<NotePage, 'id'>
+          }));
+          
+          setNotes(fetchedNotes);
+          
+          if (settingsSnap.exists()) {
+            setSettings(settingsSnap.data().settings || DEFAULT_SETTINGS);
+          }
+          
+          setLoading(false);
+        } catch (err: any) {
+          console.error('Error fetching notes (polling):', err);
+          setError(err.message);
+          setLoading(false);
         }
-      },
-      (err) => {
-        console.error('Error fetching settings:', err);
-        setError(err.message);
-      }
-    );
+      };
 
-    return () => {
-      unsubscribeNotes();
-      unsubscribeSettings();
-    };
-  }, [userId]);
+      // Initial fetch
+      fetchData();
+      
+      // Set up polling interval
+      const intervalId = setInterval(fetchData, pollingInterval);
+      
+      return () => clearInterval(intervalId);
+    } else {
+      // Real-time mode for notes
+      const unsubscribeNotes = onSnapshot(
+        query(notesCollectionRef, orderBy('createdAt', 'asc')),
+        (snapshot) => {
+          const fetchedNotes: NotePage[] = snapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data() as Omit<NotePage, 'id'>
+          }));
+          setNotes(fetchedNotes);
+          setLoading(false);
+        },
+        (err) => {
+          console.error('Error fetching notes (real-time):', err);
+          setError(err.message);
+          setLoading(false);
+        }
+      );
+
+      const unsubscribeSettings = onSnapshot(
+        settingsDocRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            setSettings(docSnap.data().settings || DEFAULT_SETTINGS);
+          }
+        },
+        (err) => {
+          console.error('Error fetching settings (real-time):', err);
+          setError(err.message);
+        }
+      );
+
+      return () => {
+        unsubscribeNotes();
+        unsubscribeSettings();
+      };
+    }
+  }, [userId, usePolling, pollingInterval]);
 
   const addPage = useCallback(async (title: string = 'New Note', color: string = settings.defaultColor) => {
     if (!userId) return null;
