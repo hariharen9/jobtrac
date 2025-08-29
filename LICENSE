@@ -48,7 +48,7 @@ SOFTWARE.
 
 ## Commercial Cloud Service Components
 
-The following features are proprietary and available only through **JobTrac Cloud** (jobtrac.site):
+The following features are proprietary and available only through **Jobtrac Pro** (jobtrac.site):
 
 ### Premium Cloud Features (Proprietary)
 - Advanced analytics with AI-powered insights
@@ -65,7 +65,7 @@ The following features are proprietary and available only through **JobTrac Clou
 ### Terms for Commercial Use
 
 1. **Personal Use**: Free to use JobTrac core features for personal job searching
-2. **Commercial Use**: Organizations using JobTrac for commercial purposes (career coaching, recruitment agencies, educational institutions with >100 students) must use JobTrac Cloud or obtain a commercial license
+2. **Commercial Use**: Organizations using JobTrac for commercial purposes (career coaching, recruitment agencies, educational institutions with >100 students) must use Jobtrac Pro or obtain a commercial license
 3. **Self-Hosting**: Permitted for personal use and small organizations (<100 users)
 4. **Modification**: You may modify the open source components under MIT license terms
 5. **Distribution**: You may distribute the open source components, but not the proprietary cloud features
@@ -89,7 +89,7 @@ The following features are proprietary and available only through **JobTrac Clou
 
 ### Commercial Self-Hosting Requirements
 For organizations using JobTrac commercially, you must either:
-- Use JobTrac Cloud (jobtrac.site)
+- Use Jobtrac Pro (jobtrac.site)
 - Purchase a Commercial Self-Hosting License
 - Contribute back to the open source project (minimum 40 hours development time annually)
 
@@ -108,7 +108,7 @@ By contributing, you agree that:
 
 ### Contributor Recognition
 - All contributors are recognized in CONTRIBUTORS.md
-- Significant contributors receive free JobTrac Cloud Pro accounts
+- Significant contributors receive free Jobtrac Pro Pro accounts
 - Major feature contributors may receive revenue sharing opportunities
 
 ---
@@ -121,7 +121,7 @@ By contributing, you agree that:
 - Community Discord server
 - Documentation wiki
 
-### Premium Support (JobTrac Cloud)
+### Premium Support (Jobtrac Pro)
 - Email support with SLA
 - Video call support for enterprise customers
 - Custom feature development
@@ -134,7 +134,7 @@ By contributing, you agree that:
 ### Data Privacy
 - JobTrac complies with GDPR and CCPA
 - Self-hosted versions: You are responsible for data compliance
-- JobTrac Cloud: We handle compliance for you
+- Jobtrac Pro: We handle compliance for you
 
 ### Third-Party Components
 JobTrac includes third-party open source components, each under their respective licenses:
