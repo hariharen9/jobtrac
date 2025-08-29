@@ -248,27 +248,32 @@
   <img src="https://img.shields.io/badge/Tailwind%20CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/Framer%20Motion-12.23.6-0055FF?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion">
   <img src="https://img.shields.io/badge/Recharts-3.1.2-FF6B6B?style=flat-square" alt="Recharts">
+  <img src="https://img.shields.io/badge/Lucide%20React-0.344.0-444444?style=flat-square" alt="Lucide React">
 </p>
 
 </div>
 
 **Key Technical Achievements:**
-- 🌐 **Landing Page** - Beautiful, detailed & optimized homepage at [jobtrac.site](https://jobtrac.site)
-- 🏗️ **Feature-Based Architecture** - Scalable, maintainable code organization
-- 🔄 **Real-Time Synchronization** - Firebase-powered live updates
-- 📱 **Mobile-First Design** - Responsive across all devices
-- 🎨 **Theme System** - Light, Dark, and AMOLED modes
-- ♿ **Accessibility** - WCAG-compliant, keyboard navigation
-- 🚀 **Performance** - Memoized components, lazy loading
+- 🌐 **Beautiful Landing Page**: A detailed and optimized landing page to attract and inform users.
+- 🌐 **Comprehensive UI**: A rich and intuitive user interface built with React and Tailwind CSS.
+- 🏗️ **Scalable Architecture**: A feature-based architecture that is easy to maintain and scale.
+- 🔄 **Real-Time Data Sync**: Real-time data synchronization powered by Firebase Firestore.
+- 📱 **Responsive Design**: A fully responsive design that works seamlessly on desktop and mobile devices.
+- 🎨 **Advanced Theming**: A robust theming system with support for light, dark, and AMOLED modes.
+- ♿ **Accessibility**: A focus on accessibility with support for keyboard navigation and screen readers.
+- 🚀 **Optimized Performance**: A fast and responsive application with memoized components and lazy loading.
+- ✨ **Engaging UX**: A modern and engaging user experience with smooth animations powered by Framer Motion.
 
 ---
 
-**New User Experience:**
+**Onboarding & User Experience:**
 
-- 🎉 **Welcome Wizard** - Interactive feature tour
-- 📊 **Demo Mode** - Explore with realistic sample data
-- ✅ **Quick Start Checklist** - Get productive in 5 minutes
-- 💡 **Smart Tooltips** - Contextual help throughout
+- 🎉 **Interactive Welcome Wizard**: A step-by-step interactive tour to introduce the core features and value proposition of the application.
+- 📊 **Demo Mode**: Allows new users to explore the application with realistic sample data without having to sign up.
+- ✅ **Quick Start Checklist**: A guided checklist that helps new users to perform key actions and get productive within minutes.
+- 💡 **Contextual Tooltips**: A guided tour of the UI elements to help users understand the interface in context.
+- 🎨 **Theming**: Light, Dark, and AMOLED modes to cater to user preferences and reduce eye strain.
+- 📱 **Responsive Design**: A fully responsive interface that works seamlessly on both desktop and mobile devices.
 ---
 
 

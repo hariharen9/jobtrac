@@ -1086,6 +1086,7 @@ const FooterSection = () => {
               {[
                 { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
                 { name: 'Issues', url: 'https://github.com/hariharen9/jobtrac/issues' },
+                { name: 'Discussions', url: 'https://github.com/hariharen9/jobtrac/discussions' },
                 { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },
                 { name: 'Releases', url: 'https://github.com/hariharen9/jobtrac/releases' }
               ].map((link, index) => (
