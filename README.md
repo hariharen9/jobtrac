@@ -1,6 +1,5 @@
 <div align="center">
-  <!-- <img src="https://img.shields.io/badge/JobTrac-Your%20Career%20Command%20Center-4F46E5?style=for-the-badge&logo=briefcase&logoColor=white" alt="JobTrac Badge"> -->
-  
+
   <h1>🎯 JobTrac</h1>
   
   <p>
