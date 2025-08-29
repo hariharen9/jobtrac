@@ -12,10 +12,13 @@ import {
 import { auth, googleProvider, db } from '../../../lib/firebase';
 import { collection, query, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
+import { AnalyticsService } from '../../../services/analyticsService';
+import { UserProfile } from '../../../types';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [needsProfileSetup, setNeedsProfileSetup] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -35,13 +38,30 @@ export function useAuth() {
             lastLoginAt: user.metadata.lastSignInTime,
           }, { merge: true });
           console.log('User document created/updated with metadata.');
+          
+          // New user needs profile setup (unless anonymous)
+          if (!user.isAnonymous) {
+            setNeedsProfileSetup(true);
+          }
         } else {
           // Update last login time if document exists
           await updateDoc(userDocRef, {
             lastLoginAt: user.metadata.lastSignInTime,
           });
           console.log('User lastLoginAt updated.');
+          
+          // Check if existing user needs profile setup
+          const userData = userDocSnap.data();
+          const hasCompletedProfile = userData?.profile?.profileCompleted === true;
+          
+          if (!hasCompletedProfile && !user.isAnonymous) {
+            setNeedsProfileSetup(true);
+          } else {
+            setNeedsProfileSetup(false);
+          }
         }
+      } else {
+        setNeedsProfileSetup(false);
       }
     });
 
@@ -66,7 +86,7 @@ export function useAuth() {
     }
   };
 
-  const signUpWithEmail = async (email, password) => {
+  const signUpWithEmail = async (email: string, password: string) => {
     console.log('Attempting to sign up with email:', email);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
@@ -76,7 +96,7 @@ export function useAuth() {
     }
   };
 
-  const signInWithEmail = async (email, password) => {
+  const signInWithEmail = async (email: string, password: string) => {
     console.log('Attempting to sign in with email:', email);
     try {
       await signInWithEmailAndPassword(auth, email, password);
@@ -157,13 +177,38 @@ export function useAuth() {
     }
   };
 
+  const saveUserProfile = async (profileData: Omit<UserProfile, 'profileCompleted' | 'profileCompletedAt'>) => {
+    if (!user) {
+      throw new Error('No authenticated user');
+    }
+
+    console.log('💾 Saving user profile for user:', user.uid, profileData);
+
+    try {
+      await AnalyticsService.saveUserProfile(user.uid, profileData);
+      console.log('✅ User profile saved successfully');
+      setNeedsProfileSetup(false);
+      toast.success('Profile completed successfully! 🎉');
+    } catch (error) {
+      console.error('❌ Error saving user profile:', error);
+      throw error;
+    }
+  };
+
+  const skipProfileSetup = () => {
+    setNeedsProfileSetup(false);
+  };
+
   return {
     user,
     loading,
+    needsProfileSetup,
     signInWithGoogle,
     signInAnonymous,
     signUpWithEmail,
     signInWithEmail,
-    logout
+    logout,
+    saveUserProfile,
+    skipProfileSetup
   };
 }

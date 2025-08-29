@@ -149,3 +149,37 @@ export interface TooltipConfig {
 }
 
 export type OnboardingStatus = 'not-started' | 'in-progress' | 'completed';
+
+// User Profile Data Collection
+export interface UserProfile {
+  name: string;
+  ageRange: '18-25' | '26-35' | '36-45' | '46-55' | '56+';
+  gender: 'Male' | 'Female' | 'Other' | 'Prefer not to say';
+  country?: string;
+  profileCompleted: boolean;
+  profileCompletedAt?: Timestamp;
+}
+
+// Analytics Data Structures
+export interface AnalyticsOverview {
+  totalUsers: number;
+  lastUpdated: Timestamp;
+}
+
+export interface AnalyticsDemographics {
+  gender: {
+    male: number;
+    female: number;
+    other: number;
+    preferNotToSay: number;
+  };
+  ageRanges: {
+    '18-25': number;
+    '26-35': number;
+    '36-45': number;
+    '46-55': number;
+    '56+': number;
+  };
+  countries: Record<string, number>;
+  lastUpdated: Timestamp;
+}
