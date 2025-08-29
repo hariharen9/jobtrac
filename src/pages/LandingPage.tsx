@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'fra
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { useTheme } from '../hooks/shared/useTheme';
 import ThemeToggle from '../components/shared/ThemeToggle';
+import Pricing from '../components/landing/Pricing';
 import {
   Briefcase,
   Target,
@@ -146,6 +147,24 @@ const LandingPage = () => {
         </motion.div>
         
         <div className="flex items-center space-x-1 sm:space-x-4">
+          <div className="hidden sm:flex items-center space-x-6 mr-4">
+            <button
+              onClick={() => {
+                document.getElementById('features-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors font-medium"
+            >
+              Features
+            </button>
+            <button
+              onClick={() => {
+                document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors font-medium"
+            >
+              Pricing
+            </button>
+          </div>
           <div className="flex items-center">
             <ThemeToggle />
           </div>
@@ -310,6 +329,28 @@ const LandingPage = () => {
                       </motion.div>
                     </button>
                   </motion.div>
+
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <button
+                      onClick={() => {
+                        document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="group px-8 py-4 bg-green-50/20 dark:bg-green-900/20 amoled:bg-green-900/20 backdrop-blur-sm text-green-700 dark:text-green-300 amoled:text-green-300 rounded-2xl font-semibold text-lg border border-green-200/50 dark:border-green-700/50 amoled:border-green-700/50 hover:bg-green-50/30 dark:hover:bg-green-900/30 amoled:hover:bg-green-900/30 transition-all duration-300 flex items-center"
+                    >
+                      <Heart className="w-5 h-5 mr-2" />
+                      100% Free
+                      <motion.div
+                        className="ml-2"
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 2, repeat: Infinity }}
+                      >
+                        <Sparkles className="w-5 h-5" />
+                      </motion.div>
+                    </button>
+                  </motion.div>
                 </motion.div>
 
                 {/* Stats */}
@@ -391,6 +432,9 @@ const LandingPage = () => {
 
       {/* Technology Stack */}
       <TechnologyStackSection />
+
+      {/* Pricing Section */}
+      <PricingSection />
 
       {/* CTA Section */}
       <CTASection />
@@ -602,9 +646,9 @@ const WhyJobTracSection = () => {
                 >
                   ▶️
                 </motion.div>
-                <h3 className="text-xl font-semibold mb-2">Demo Video Placeholder</h3>
+                <h3 className="text-xl font-semibold mb-2">Demo Video Coming 🔜</h3>
                 <p className="text-slate-300 text-center max-w-md px-4">
-                  Replace this placeholder with your JobTrac demo video
+                  🚀
                 </p>
               </div>
               
@@ -981,6 +1025,11 @@ const CTASection = () => {
       </div>
     </section>
   );
+};
+
+// Pricing Section Component
+const PricingSection = () => {
+  return <Pricing />;
 };
 
 // Footer Section
