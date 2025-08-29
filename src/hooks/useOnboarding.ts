@@ -4,13 +4,7 @@ import { db } from '../lib/firebase';
 import { toast } from 'react-hot-toast';
 import { 
   UserOnboarding, 
-  QuickStartTask, 
   OnboardingStatus, 
-  Application, 
-  PrepEntry, 
-  StarStory, 
-  CompanyResearch,
-  NetworkingContact
 } from '../types';
 import { 
   defaultOnboarding, 

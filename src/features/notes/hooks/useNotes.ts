@@ -9,9 +9,6 @@ import {
   query,
   orderBy,
   Timestamp,
-  Unsubscribe,
-  setDoc,
-  getDoc
 } from 'firebase/firestore';
 import { db } from '../../../lib/firebase';
 import { UserNotes, NotePage } from '../../../types';
