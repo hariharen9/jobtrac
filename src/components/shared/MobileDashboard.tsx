@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target } from 'lucide-react';
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
@@ -13,6 +13,8 @@ interface MobileDashboardProps {
   openProfileModal: () => void;
   activityCalendar: React.ReactNode;
   kanbanBoard: React.ReactNode;
+  onShowQuickStart?: () => void;
+  showQuickStartButton?: boolean;
 }
 
 const tabs = [
@@ -23,7 +25,7 @@ const tabs = [
   { id: 'star', label: 'STARs', icon: Star },
 ];
 
-const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, activityCalendar, kanbanBoard }) => {
+const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, activityCalendar, kanbanBoard, onShowQuickStart, showQuickStartButton = false }) => {
   return (
     <div className="flex flex-col h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg">
       <motion.header 
@@ -47,6 +49,16 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {showQuickStartButton && onShowQuickStart && (
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onShowQuickStart}
+              className="p-2 bg-blue-50 dark:bg-blue-900/20 amoled:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800 amoled:border-blue-800 text-blue-600 dark:text-blue-400 amoled:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 amoled:hover:bg-blue-900/30"
+            >
+              <Target className="w-4 h-4" />
+            </motion.button>
+          )}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
