@@ -38,7 +38,7 @@ const ProfileModal = ({
   onRestartTour?: () => void,
   quickStartProgress?: number 
 }) => {
-  const { user, logout } = useAuth();
+  const { user, deleteAccount } = useAuth();
   const { importData } = useDataImportExport(user?.uid);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showFinalDeleteConfirmation, setShowFinalDeleteConfirmation] = useState(false);
@@ -67,7 +67,7 @@ const ProfileModal = ({
   const handleDeleteAccount = async () => {
     if (!user) return;
     try {
-      await logout();
+      await deleteAccount();
       toast.success('User account deleted successfully.');
     } catch (error: unknown) {
       console.error('Error deleting account:', error);

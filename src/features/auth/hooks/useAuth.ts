@@ -10,7 +10,7 @@ import {
   deleteUser
 } from 'firebase/auth';
 import { auth, googleProvider, db } from '../../../lib/firebase';
-import { collection, query, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, query, getDocs, writeBatch, doc, getDoc, updateDoc, setDoc, deleteDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 import { AnalyticsService } from '../../../services/analyticsService';
 import { UserProfile } from '../../../types';
@@ -110,23 +110,49 @@ export function useAuth() {
     const collectionsToDelete = ['applications', 'prepEntries', 'companies', 'contacts', 'stories', 'notesCollection'];
     const batch = writeBatch(db);
 
-    // Delete documents from main collections
-    for (const collectionName of collectionsToDelete) {
-      const q = query(collection(db, 'users', userId, collectionName));
-      const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((doc) => {
+    try {
+      // Delete documents from main collections
+      for (const collectionName of collectionsToDelete) {
+        console.log(`Deleting documents from ${collectionName} for user:`, userId);
+        const q = query(collection(db, 'users', userId, collectionName));
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        console.log(`Added ${querySnapshot.docs.length} documents from ${collectionName} to deletion batch`);
+      }
+
+      // Delete all settings documents
+      console.log('Deleting settings for user:', userId);
+      const notesSettingsDocRef = doc(db, 'users', userId, 'settings', 'notesSettings');
+      const onboardingSettingsDocRef = doc(db, 'users', userId, 'settings', 'onboarding');
+      
+      batch.delete(notesSettingsDocRef);
+      batch.delete(onboardingSettingsDocRef);
+      console.log('Settings documents added to batch for deletion.');
+
+      // Delete the entire settings collection by querying and deleting all documents
+      const settingsQuery = query(collection(db, 'users', userId, 'settings'));
+      const settingsSnapshot = await getDocs(settingsQuery);
+      settingsSnapshot.forEach((doc) => {
         batch.delete(doc.ref);
       });
+      console.log(`Added ${settingsSnapshot.docs.length} settings documents to deletion batch`);
+
+      // Commit the batch deletion
+      await batch.commit();
+      console.log('✅ Batch deletion completed successfully');
+
+      // Delete the main user document (must be done separately after subcollections)
+      const userDocRef = doc(db, 'users', userId);
+      await deleteDoc(userDocRef);
+      console.log('✅ Main user document deleted successfully');
+
+      toast.success('All user data deleted from Firestore.');
+    } catch (error) {
+      console.error('❌ Error during data deletion:', error);
+      throw error; // Re-throw to allow caller to handle
     }
-
-    // Delete the notesSettings document
-    console.log('Attempting to delete notesSettings for user:', userId);
-    const notesSettingsDocRef = doc(db, 'users', userId, 'settings', 'notesSettings');
-    batch.delete(notesSettingsDocRef);
-    console.log('notesSettings document added to batch for deletion.');
-
-    await batch.commit();
-    toast.success('All user data deleted from Firestore.');
   };
 
   const logout = async () => {
@@ -177,6 +203,54 @@ export function useAuth() {
     }
   };
 
+  const deleteAccount = async () => {
+    if (!user) {
+      throw new Error('No authenticated user');
+    }
+
+    const currentUser = auth.currentUser;
+    if (!currentUser) {
+      throw new Error('No current user found');
+    }
+
+    try {
+      console.log('🗑️ Starting account deletion for user:', currentUser.uid);
+      
+      // For anonymous users, re-authenticate first
+      if (currentUser.isAnonymous) {
+        try {
+          await signInAnonymously(auth);
+          console.log('✅ Anonymous user re-authenticated successfully.');
+        } catch (reauthError) {
+          console.error('❌ Error re-authenticating anonymous user:', reauthError);
+          throw new Error('Failed to re-authenticate guest user.');
+        }
+      }
+
+      // Delete all user data from Firestore
+      try {
+        await deleteUserData(currentUser.uid);
+        console.log('✅ User data deleted from Firestore.');
+      } catch (dataDeleteError) {
+        console.error('❌ Error deleting user data:', dataDeleteError);
+        throw new Error('Failed to delete user data.');
+      }
+
+      // Delete the user account from Firebase Auth
+      try {
+        await deleteUser(currentUser);
+        console.log('✅ User account deleted from Firebase Auth.');
+        toast.success('Account deleted successfully.');
+      } catch (authDeleteError) {
+        console.error('❌ Error deleting user account from Auth:', authDeleteError);
+        throw new Error('Failed to delete user account from authentication.');
+      }
+    } catch (error) {
+      console.error('❌ Account deletion failed:', error);
+      throw error;
+    }
+  };
+
   const saveUserProfile = async (profileData: Omit<UserProfile, 'profileCompleted' | 'profileCompletedAt'>) => {
     if (!user) {
       throw new Error('No authenticated user');
@@ -208,6 +282,7 @@ export function useAuth() {
     signUpWithEmail,
     signInWithEmail,
     logout,
+    deleteAccount,
     saveUserProfile,
     skipProfileSetup
   };
