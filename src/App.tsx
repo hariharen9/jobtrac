@@ -755,9 +755,9 @@ function App() {
                     className="h-6 sm:h-8 md:h-10 w-auto object-contain hidden dark:block amoled:block"
                   />
                 </div>
-                <span className="flex-shrink-0" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
+                <span className="flex-shrink-0 text-sm sm:text-base lg:text-lg hidden sm:inline" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
               </h1>
-              <p className="mt-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base">
+              <p className="mt-2 ml-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base pt-1">
                 A comprehensive dashboard to manage preparation, applications, and interviews.
               </p>
             </div>
