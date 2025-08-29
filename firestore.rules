@@ -18,11 +18,11 @@ service cloud.firestore {
       // No user can read analytics documents
       allow read: if false;
 
-      // Allow authenticated users to create new docs
-      allow create: if request.auth != null;
+      // Allow authenticated users to create and update analytics docs
+      allow create, update: if request.auth != null;
 
-      // Prevent updates/deletes
-      allow update, delete: if false;
+      // Prevent deletes
+      allow delete: if false;
     }
 
     // Deny all other access

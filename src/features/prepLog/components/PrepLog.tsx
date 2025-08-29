@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, Plus, Filter, SortAsc, SortDesc, X } from 'lucide-react';
 import { PrepEntry } from '../../../types';
@@ -68,7 +68,7 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
   const confidenceOptions = [1, 2, 3, 4, 5];
 
   // Sorting function
-  const sortPrepEntries = (entries: PrepEntry[]) => {
+  const sortPrepEntries = useCallback((entries: PrepEntry[]) => {
     return [...entries].sort((a, b) => {
       let aValue: string | number;
       let bValue: string | number;
@@ -98,10 +98,10 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
       if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
       return 0;
     });
-  };
+  }, [sortField, sortDirection]);
 
   // Filtering function
-  const filterPrepEntries = (entries: PrepEntry[]) => {
+  const filterPrepEntries = useCallback((entries: PrepEntry[]) => {
     return entries.filter(entry => {
       // Topic filter
       if (filters.topic && !entry.topic.toLowerCase().includes(filters.topic.toLowerCase())) {
@@ -131,13 +131,13 @@ const PrepLog: React.FC<PrepLogProps> = ({ prepEntries, onAddPrepEntry, onEditPr
 
       return true;
     });
-  };
+  }, [filters]);
 
   // Combined sorting and filtering
   const processedEntries = useMemo(() => {
     const filtered = filterPrepEntries(prepEntries);
     return sortPrepEntries(filtered);
-  }, [prepEntries, sortField, sortDirection, filters]);
+  }, [prepEntries, filterPrepEntries, sortPrepEntries]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
