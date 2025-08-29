@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://jobtrac.site/sitemap.xml
+
+# Crawl delay (optional)
+Crawl-delay: 1
+
+# Disallow common bot traps and unnecessary crawling
+Disallow: /*?utm_*
+Disallow: /*?ref=*
+Disallow: /*?source=*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+
+# Allow all content since it's a SPA
+# All features are accessible from the main page
