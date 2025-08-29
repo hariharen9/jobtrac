@@ -17,9 +17,18 @@ import {
   CornerDownLeft,
   Hash,
   Sun,
-  StickyNote
+  StickyNote,
+  FileText,
+  Calendar,
+  MapPin,
+  Clock,
+  Target,
+  Phone,
+  Mail,
+  ExternalLink
 } from 'lucide-react';
 import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem } from '../../types';
+import { useMediaQuery } from '../../hooks/shared/useMediaQuery';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -31,6 +40,7 @@ interface CommandPaletteProps {
   companies: CompanyResearch[];
   contacts: NetworkingContact[];
   stories: StarStory[];
+  notes?: any[]; // Notes data
   onOpenModal: (type: TabType, item?: EditableItem) => void;
   onOpenHelp: () => void;
   onOpenProfile: () => void;
@@ -44,9 +54,11 @@ interface Command {
   description: string;
   action: () => void;
   icon: React.ComponentType<{ className?: string }>;
-  category: 'navigation' | 'actions' | 'items';
+  category: 'navigation' | 'actions' | 'items' | 'search-results';
   shortcut?: string;
   keywords?: string[];
+  dataType?: string; // For search results: 'application', 'prep', 'company', etc.
+  metadata?: string; // Additional info to display
 }
 
 const CommandPalette: React.FC<CommandPaletteProps> = ({
@@ -59,6 +71,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
   companies,
   contacts,
   stories,
+  notes = [],
   onOpenModal,
   onOpenHelp,
   onOpenProfile,
@@ -67,6 +80,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const commands: Command[] = useMemo(() => [
     // Navigation Commands
@@ -208,6 +222,123 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     }
   ], [setActiveTab, onClose, onOpenModal, onOpenHelp, onOpenProfile, onToggleTheme, onToggleNotes]);
 
+  // Global search results across all data
+  const searchResults: Command[] = useMemo(() => {
+    if (!searchTerm || searchTerm.length < 2) return [];
+    
+    const results: Command[] = [];
+    const searchLower = searchTerm.toLowerCase();
+    
+    // Helper function to check if text matches search
+    const matchesSearch = (text: string | undefined) => 
+      text && text.toLowerCase().includes(searchLower);
+    
+    // Search Applications
+    applications.forEach(app => {
+      if (matchesSearch(app.company) || matchesSearch(app.role) || 
+          matchesSearch(app.location) || matchesSearch(app.notes) || 
+          matchesSearch(app.recruiter) || matchesSearch(app.status)) {
+        results.push({
+          id: `search-app-${app.id}`,
+          title: `${app.role} at ${app.company}`,
+          description: `${app.status} • ${app.location}${app.date ? ` • Applied ${app.date}` : ''}`,
+          action: () => { setActiveTab('applications'); onOpenModal('applications', app); onClose(); },
+          icon: Briefcase,
+          category: 'search-results',
+          dataType: 'application',
+          metadata: app.status
+        });
+      }
+    });
+    
+    // Search Prep Entries
+    prepEntries.forEach(prep => {
+      if (matchesSearch(prep.topic) || matchesSearch(prep.notes) || 
+          matchesSearch(prep.problems)) {
+        results.push({
+          id: `search-prep-${prep.id}`,
+          title: prep.topic,
+          description: `${prep.time}h session • Confidence: ${prep.confidence}/10${prep.date ? ` • ${prep.date}` : ''}`,
+          action: () => { setActiveTab('prep'); onOpenModal('prep', prep); onClose(); },
+          icon: BookOpen,
+          category: 'search-results',
+          dataType: 'prep',
+          metadata: `${prep.confidence}/10`
+        });
+      }
+    });
+    
+    // Search Company Research
+    companies.forEach(company => {
+      if (matchesSearch(company.company) || matchesSearch(company.whatTheyDo) || 
+          matchesSearch(company.values) || matchesSearch(company.why) || 
+          matchesSearch(company.news)) {
+        results.push({
+          id: `search-company-${company.id}`,
+          title: company.company,
+          description: company.whatTheyDo || 'Company research entry',
+          action: () => { setActiveTab('research'); onOpenModal('research', company); onClose(); },
+          icon: Building,
+          category: 'search-results',
+          dataType: 'company'
+        });
+      }
+    });
+    
+    // Search Networking Contacts
+    contacts.forEach(contact => {
+      if (matchesSearch(contact.name) || matchesSearch(contact.company) || 
+          matchesSearch(contact.role) || matchesSearch(contact.notes) || 
+          matchesSearch(contact.status)) {
+        results.push({
+          id: `search-contact-${contact.id}`,
+          title: contact.name,
+          description: `${contact.role} at ${contact.company} • ${contact.status}`,
+          action: () => { setActiveTab('networking'); onOpenModal('networking', contact); onClose(); },
+          icon: Users,
+          category: 'search-results',
+          dataType: 'contact',
+          metadata: contact.status
+        });
+      }
+    });
+    
+    // Search STAR Stories
+    stories.forEach(story => {
+      if (matchesSearch(story.title) || matchesSearch(story.situation) || 
+          matchesSearch(story.task) || matchesSearch(story.action) || 
+          matchesSearch(story.result)) {
+        results.push({
+          id: `search-story-${story.id}`,
+          title: story.title,
+          description: story.situation ? `Situation: ${story.situation.substring(0, 60)}...` : 'STAR behavioral story',
+          action: () => { setActiveTab('star'); onOpenModal('star', story); onClose(); },
+          icon: Star,
+          category: 'search-results',
+          dataType: 'story'
+        });
+      }
+    });
+    
+    // Search Notes
+    notes.forEach((note: any) => {
+      if (matchesSearch(note.title) || matchesSearch(note.content)) {
+        results.push({
+          id: `search-note-${note.id}`,
+          title: note.title || 'Untitled Note',
+          description: note.content ? `${note.content.substring(0, 80).replace(/[#*`]/g, '')}...` : 'Note content',
+          action: () => { onToggleNotes(); onClose(); },
+          icon: StickyNote,
+          category: 'search-results',
+          dataType: 'note',
+          metadata: 'Click to open notes'
+        });
+      }
+    });
+    
+    return results.slice(0, 20); // Limit to 20 results for performance
+  }, [searchTerm, applications, prepEntries, companies, contacts, stories, notes, setActiveTab, onOpenModal, onToggleNotes, onClose]);
+
   // Add item-specific commands based on current tab
   const itemCommands: Command[] = useMemo(() => {
     const items: Command[] = [];
@@ -285,12 +416,35 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     return items;
   }, [activeTab, applications, prepEntries, companies, contacts, stories, onOpenModal, onClose]);
 
-  const allCommands = useMemo(() => [...commands, ...itemCommands], [commands, itemCommands]);
+  const allCommands = useMemo(() => {
+    // If there's a search term, prioritize search results
+    if (searchTerm && searchTerm.length >= 2) {
+      return [...searchResults, ...commands, ...itemCommands];
+    }
+    return [...commands, ...itemCommands];
+  }, [commands, itemCommands, searchResults, searchTerm]);
 
   const filteredCommands = useMemo(() => {
-    if (!searchTerm) return allCommands;
+    if (!searchTerm) return allCommands.filter(cmd => cmd.category !== 'search-results');
     
+    // For search terms >= 2 characters, show search results first
+    if (searchTerm.length >= 2) {
+      const searchResults = allCommands.filter(cmd => cmd.category === 'search-results');
+      const otherCommands = allCommands.filter(command => {
+        if (command.category === 'search-results') return false;
+        const searchLower = searchTerm.toLowerCase();
+        return (
+          command.title.toLowerCase().includes(searchLower) ||
+          command.description.toLowerCase().includes(searchLower) ||
+          command.keywords?.some(keyword => keyword.includes(searchLower))
+        );
+      });
+      return [...searchResults, ...otherCommands];
+    }
+    
+    // For shorter search terms, just filter commands normally
     return allCommands.filter(command => {
+      if (command.category === 'search-results') return false;
       const searchLower = searchTerm.toLowerCase();
       return (
         command.title.toLowerCase().includes(searchLower) ||
@@ -350,12 +504,14 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
   }, {} as Record<string, Command[]>);
 
   const categoryLabels = {
+    'search-results': 'Search Results',
     navigation: 'Navigation',
     actions: 'Actions',
     items: 'Current Tab Items'
   };
 
   const categoryIcons = {
+    'search-results': Search,
     navigation: Hash,
     actions: Plus,
     items: Edit3
@@ -383,25 +539,32 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
               <Search className="w-5 h-5 text-gray-400 mr-3" />
               <input
                 type="text"
-                placeholder="Type a command or search..."
+                placeholder="Search everything, run commands, or navigate..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="flex-1 bg-transparent text-gray-900 dark:text-dark-text amoled:text-amoled-text placeholder-gray-500 dark:placeholder-dark-text-secondary amoled:placeholder-amoled-text-secondary outline-none"
                 autoFocus
               />
-              <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-                <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border">
-                  <ArrowUp className="w-3 h-3" />
-                </kbd>
-                <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border">
-                  <ArrowDown className="w-3 h-3" />
-                </kbd>
-                <span>to navigate</span>
-                <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border flex items-center">
-                  <CornerDownLeft className="w-3 h-3" />
-                </kbd>
-                <span>to select</span>
-              </div>
+              {searchTerm.length >= 2 && (
+                <div className="text-xs text-gray-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mr-4">
+                  {filteredCommands.filter(cmd => cmd.category === 'search-results').length} results
+                </div>
+              )}
+              {!isMobile && (
+                <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                  <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border">
+                    <ArrowUp className="w-3 h-3" />
+                  </kbd>
+                  <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border">
+                    <ArrowDown className="w-3 h-3" />
+                  </kbd>
+                  <span>to navigate</span>
+                  <kbd className="px-2 py-1 bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border flex items-center">
+                    <CornerDownLeft className="w-3 h-3" />
+                  </kbd>
+                  <span>to select</span>
+                </div>
+              )}
             </div>
 
             {/* Commands */}
@@ -409,7 +572,17 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
               {filteredCommands.length === 0 ? (
                 <div className="p-8 text-center text-gray-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                   <Search className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No commands found</p>
+                  {searchTerm.length >= 2 ? (
+                    <div>
+                      <p>No results found for "{searchTerm}"</p>
+                      <p className="text-xs mt-1">Try searching for company names, roles, topics, or contacts</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>Start typing to search everything</p>
+                      <p className="text-xs mt-1">Search across applications, prep logs, companies, contacts, stories & notes</p>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div className="p-2">
@@ -441,16 +614,39 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
                               <div className="flex items-center flex-1">
                                 <Icon className="w-5 h-5 mr-3 flex-shrink-0" />
                                 <div className="flex-1 min-w-0">
-                                  <div className="font-medium text-sm">{command.title}</div>
+                                  <div className="flex items-center gap-2">
+                                    <div className="font-medium text-sm truncate">{command.title}</div>
+                                    {command.dataType && (
+                                      <span className={`text-xs px-2 py-0.5 rounded-full ${
+                                        command.dataType === 'application' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300' :
+                                        command.dataType === 'prep' ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300' :
+                                        command.dataType === 'company' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' :
+                                        command.dataType === 'contact' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-300' :
+                                        command.dataType === 'story' ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300' :
+                                        command.dataType === 'note' ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300' :
+                                        'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                                      }`}>
+                                        {command.dataType}
+                                      </span>
+                                    )}
+                                  </div>
                                   <div className="text-xs text-gray-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary truncate">
                                     {command.description}
                                   </div>
+                                  {command.metadata && (
+                                    <div className="text-xs text-gray-400 dark:text-dark-text-secondary amoled:text-amoled-text-secondary truncate mt-1">
+                                      {command.metadata}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               {command.shortcut && (
                                 <kbd className="px-2 py-1 text-xs bg-gray-100 dark:bg-dark-bg amoled:bg-amoled-bg rounded border flex-shrink-0 ml-2">
                                   {command.shortcut}
                                 </kbd>
+                              )}
+                              {command.category === 'search-results' && (
+                                <ExternalLink className="w-4 h-4 ml-2 text-gray-400 flex-shrink-0" />
                               )}
                             </motion.div>
                           );

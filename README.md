@@ -139,9 +139,9 @@
 
 | **Shortcut** | **Action** | **Description** |
 |:------------:|:----------:|:---------------:|
-| `Cmd/Ctrl + K` | Open Command Palette | Universal search and quick actions |
+| `Cmd/Ctrl + K` | Open Command Palette | Universal search, quick actions, and global data discovery |
 | `↑` `↓` | Navigate Commands | Move up and down in command list |
-| `Enter` | Execute Command | Run the selected command |
+| `Enter` | Execute Command | Run the selected command or open selected data |
 | `Escape` | Close Palette | Exit command palette |
 
 ---
@@ -181,6 +181,22 @@
 
 ---
 
+### **🔍 Global Search Power**
+
+**Search Everything, Find Instantly:**
+- **Universal Search**: Type 2+ characters to search across ALL your data
+- **Smart Results**: Company names, roles, topics, contacts, notes - everything indexed
+- **Quick Navigation**: Click any result to jump directly to that item for editing
+- **Visual Indicators**: Color-coded badges show data type (applications, prep, companies, etc.)
+- **Real-time Results**: Instant search with result counter
+
+**Example Searches:**
+- `"Google"` → Shows applications, research, contacts, and notes about Google
+- `"React"` → Finds prep sessions, stories, and notes mentioning React
+- `"John Smith"` → Locates networking contact and related information
+
+---
+
 ### **📝 Smart Search Features**
 
 **Search by Keywords:**
@@ -189,6 +205,19 @@
 - Type `company`, `research` → Navigate to Company Research
 - Type `networking`, `contacts` → Navigate to Networking
 - Type `behavioral`, `star` → Navigate to STAR Stories
+
+**Global Data Search:**
+- Type any company name (e.g., `Google`, `Microsoft`) → See all related data
+- Search role keywords (e.g., `Engineer`, `Manager`) → Find applications and contacts
+- Look up technologies (e.g., `React`, `Python`) → Discover prep sessions and notes
+- Find people by name → Locate networking contacts instantly
+- Search story keywords → Recall relevant STAR examples
+
+**Smart Result Display:**
+- **Visual badges** identify data type (application, prep, company, contact, story, note)
+- **Rich previews** show key information at a glance
+- **Click to navigate** → Opens item for editing in correct tab
+- **Result counter** shows total matches found
 
 **Edit Items in Current Tab:**
 - Command palette shows up to 5 recent items from your active tab

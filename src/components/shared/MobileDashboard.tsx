@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
@@ -11,6 +11,7 @@ interface MobileDashboardProps {
   renderTabContent: () => React.ReactNode;
   openHelpModal: () => void;
   openProfileModal: () => void;
+  openCommandPalette: () => void;
   activityCalendar: React.ReactNode;
   kanbanBoard: React.ReactNode;
   onShowQuickStart?: () => void;
@@ -25,7 +26,7 @@ const tabs = [
   { id: 'star', label: 'STARs', icon: Star },
 ];
 
-const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, activityCalendar, kanbanBoard, onShowQuickStart, showQuickStartButton = false }) => {
+const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, openCommandPalette, activityCalendar, kanbanBoard, onShowQuickStart, showQuickStartButton = false }) => {
   return (
     <div className="flex flex-col h-screen bg-slate-50 dark:bg-dark-bg amoled:bg-amoled-bg">
       <motion.header 
@@ -49,6 +50,15 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
           </div>
         </div>
         <div className="flex items-center gap-2">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={openCommandPalette}
+            className="p-2 bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-indigo-900/20 rounded-lg border border-indigo-200 dark:border-indigo-800 amoled:border-indigo-800 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:bg-indigo-100 dark:hover:bg-indigo-900/30 amoled:hover:bg-indigo-900/30"
+            title="Search everything (⌘K)"
+          >
+            <Search className="w-4 h-4" />
+          </motion.button>
           {showQuickStartButton && onShowQuickStart && (
             <motion.button
               whileHover={{ scale: 1.05 }}
