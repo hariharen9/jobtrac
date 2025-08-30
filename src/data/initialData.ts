@@ -319,7 +319,7 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days ago
     topic: 'System Design: Distributed Caching',
     problems: 'Designed Twitter-like feed system with Redis clustering',
-    time: 120, // 2 hours
+    time: 2, // 2 hours
     confidence: 7,
     notes: 'Covered Redis Cluster, consistent hashing, and cache eviction policies. Need to review CAP theorem.'
   },
@@ -328,7 +328,7 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Yesterday
     topic: 'Behavioral: Leadership & Conflict Resolution',
     problems: '',
-    time: 45,
+    time: 0.75,
     confidence: 8,
     notes: 'Practiced STAR stories for project management scenarios. Feeling confident about team leadership examples.'
   },
@@ -337,7 +337,7 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     date: new Date().toISOString().split('T')[0], // Today
     topic: 'Coding: Dynamic Programming',
     problems: 'LeetCode: Longest Increasing Subsequence, Edit Distance',
-    time: 90,
+    time: 1.5,
     confidence: 6,
     notes: 'DP is still challenging. Need more practice with state transitions and optimization.'
   }
