@@ -51,7 +51,7 @@ export default function Notes({ userId, isExpanded: controlledExpanded, onToggle
     updatePage,
     deletePage,
     clearError,
-  } = useNotes(userId);
+  } = useNotes(userId, false); // Use real-time sync instead of polling
 
   const [isExpanded, setIsExpanded] = useState(false);
   // Use controlled state if provided, otherwise use internal state

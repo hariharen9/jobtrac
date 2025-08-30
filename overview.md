@@ -41,6 +41,18 @@ JobTrac is a comprehensive **Job Search Command Center** - a modern React web ap
 - **Real-time Sync:** Firebase-powered synchronization
 - **Floating UI:** Minimizable note-taking interface
 
+
+## **🛠 Other main features**
+   * Analytics Dashboard: Visual charts to track progress, such as application sources and success rates.
+   * Goal Setting: Users can set and track weekly or monthly goals for their job search activities.
+   * Global search: Search anything across the app, from job postings to applications.
+   * Smart Notes: A Markdown-enabled notebook for taking and organizing notes.
+   * Onboarding: A comprehensive onboarding experience with a welcome wizard, demo mode, and a quick-start checklist to guide new users.
+   * User Profile: A profile section where users can manage their account, connect with Google, and view their analytics.
+   * Data Import/Export: Users can import data from CSV files and export their data for backup.
+   * Keyboard Shortcuts: The application supports various keyboard shortcuts for navigation and actions.
+   * Theming: Light, dark, and AMOLED themes are available.
+   * Responsive Design: The application is designed to work on both desktop and mobile devices.
 ### **🛠 Technical Architecture**
 
 #### **Frontend Stack**

@@ -32,7 +32,7 @@ const DEFAULT_PAGE: Omit<NotePage, 'id'> = {
   pinned: false,
 };
 
-export const useNotes = (userId: string | undefined, usePolling: boolean = true, pollingInterval: number = 60000) => {
+export const useNotes = (userId: string | undefined, usePolling: boolean = false, pollingInterval: number = 60000) => {
   const [notes, setNotes] = useState<NotePage[]>([]);
   const [settings, setSettings] = useState<UserNotes['settings']>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
