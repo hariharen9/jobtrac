@@ -85,26 +85,28 @@ const ProfileModal = ({
       <div className="flex flex-col gap-6">
         {/* Google Connection Section */}
         <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-blue-200 dark:border-blue-700/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${isGoogleConnected ? 'bg-green-100 dark:bg-green-900/30' : 'bg-blue-100 dark:bg-blue-900/30'}`}>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
+              <div className={`p-2 rounded-lg flex-shrink-0 ${
+                isGoogleConnected ? 'bg-green-100 dark:bg-green-900/30' : 'bg-blue-100 dark:bg-blue-900/30'
+              }`}>
                 {isGoogleConnected ? (
                   <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                 ) : (
                   <Link className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 )}
               </div>
-              <div>
+              <div className="min-w-0 flex-1">
                 <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                   Google Account
                 </h3>
-                <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
                   {isGoogleConnected 
                     ? '✅ Connected - Enhanced sync & backup enabled' 
                     : '🔗 Connect for better sync and data backup'
                   }
                 </p>
-                <div className="mt-1">
+                <div className="mt-2">
                   <span className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
                     userType === 'Google' 
                       ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
@@ -120,14 +122,14 @@ const ProfileModal = ({
             <button 
               onClick={handleConnectGoogle}
               disabled={isGoogleConnected}
-              className={`flex items-center gap-2 px-4 py-2 font-semibold rounded-lg transition-all ${
+              className={`flex items-center gap-2 px-4 py-2 font-semibold rounded-lg transition-all flex-shrink-0 self-start sm:self-center ${
                 isGoogleConnected
                   ? 'bg-gray-100 text-gray-500 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed'
                   : 'bg-red-600 text-white hover:bg-red-700 hover:scale-105 shadow-md hover:shadow-lg'
               }`}
             >
               <GoogleIcon />
-              {isGoogleConnected ? 'Connected' : 'Connect Google'}
+              <span className="whitespace-nowrap">{isGoogleConnected ? 'Connected' : 'Connect Google'}</span>
             </button>
           </div>
         </div>
