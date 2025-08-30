@@ -17,9 +17,9 @@
     <a href="https://github.com/hariharen9/jobtrac/stargazers">
       <img src="https://img.shields.io/github/stars/hariharen9/jobtrac?style=for-the-badge&logo=github" alt="GitHub Stars">
     </a>
-<!--     <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
+    <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/hariharen9/jobtrac?style=for-the-badge" alt="License">
-    </a> -->
+    </a>
   </p>
 </div>
 
@@ -325,6 +325,31 @@
 - Extensible architecture - Ready for future features
 
 ---
+
+### 💖 Open Core Model
+
+JobTrac is built on an Open Core model. We believe in providing powerful, essential tools for free to the community, while offering advanced, proprietary features for professional or commercial use.
+
+**Core Features (Free & Open Source - MIT License):**
+- Job application tracking system
+- Interview preparation tools (prep log, STAR stories)
+- Company research management
+- Networking contact system
+- Basic analytics dashboard
+- Notes system with markdown support
+- User authentication and data management
+- And many more...
+
+**Jobtrac Pro (Coming Soon - Proprietary):**
+- Advanced AI-powered analytics
+- Automated email reminders
+- Team collaboration features
+- Advanced data export options
+- And more for power users and teams...
+
+This model ensures that the core product remains free and open-source forever, supported by optional paid features.
+
+---
 ## ⚡ **Quick Start ( For DEVs )**
 
 ### **🚀 Deploy in 2 Minutes**
@@ -423,6 +448,11 @@ git push origin feature/AmazingFeature
 | 📈 **User Growth** | 10,000+ Active Users |
 
 </div>
+
+---
+
+### ⭐ Why Star This Repository?
+If you find JobTrac useful, please consider giving it a star! It's a simple way to show your appreciation and helps the project gain visibility in the community. More stars mean more contributors and a better tool for everyone. Thank you for your support!
 
 ---
 
