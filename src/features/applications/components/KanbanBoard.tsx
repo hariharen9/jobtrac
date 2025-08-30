@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
 import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
@@ -29,6 +29,11 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [draggedItem, setDraggedItem] = useState<Application | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const dragCounter = useRef(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollRef = useRef<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const currentMouseX = useRef<number>(0);
+  const [showScrollHint, setShowScrollHint] = useState(false);
 
   const columns: KanbanColumn[] = [
     { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
@@ -54,26 +59,98 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     }, {} as Record<ApplicationStatus, Application[]>);
   }, [applications]);
 
+  // Auto-scroll functionality
+  const autoScroll = useCallback(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return false;
+
+    const containerRect = container.getBoundingClientRect();
+    const scrollThreshold = 350; // significantly increased activation zone
+    const scrollSpeed = 20; // increased for faster scrolling
+    const clientX = currentMouseX.current;
+
+    // Check if we need to scroll left
+    if (clientX - containerRect.left < scrollThreshold && container.scrollLeft > 0) {
+      container.scrollLeft -= scrollSpeed;
+      return true; // Continue auto-scroll
+    }
+    // Check if we need to scroll right
+    else if (containerRect.right - clientX < scrollThreshold && 
+             container.scrollLeft < (container.scrollWidth - container.clientWidth)) {
+      container.scrollLeft += scrollSpeed;
+      return true; // Continue auto-scroll
+    }
+    
+    return false; // Stop auto-scroll
+  }, []);
+
+  // Start auto-scroll during drag
+  const startAutoScroll = useCallback(() => {
+    if (autoScrollRef.current) {
+      cancelAnimationFrame(autoScrollRef.current);
+    }
+
+    const scroll = () => {
+      const shouldContinue = autoScroll();
+      if (shouldContinue && isDragging) {
+        autoScrollRef.current = requestAnimationFrame(scroll);
+      }
+    };
+    autoScrollRef.current = requestAnimationFrame(scroll);
+  }, [autoScroll, isDragging]);
+
+  // Stop auto-scroll
+  const stopAutoScroll = useCallback(() => {
+    if (autoScrollRef.current) {
+      cancelAnimationFrame(autoScrollRef.current);
+      autoScrollRef.current = null;
+    }
+  }, []);
+
+  // Cleanup auto-scroll on unmount
+  useEffect(() => {
+    return () => {
+      if (autoScrollRef.current) {
+        cancelAnimationFrame(autoScrollRef.current);
+      }
+    };
+  }, []);
+
   const handleDragStart = (e: React.DragEvent, application: Application) => {
     setDraggedItem(application);
+    setIsDragging(true);
+    setShowScrollHint(true);
     e.dataTransfer.effectAllowed = 'move';
+    
+    // Store initial mouse position and start auto-scroll
+    currentMouseX.current = e.clientX;
+    startAutoScroll();
   };
 
   const handleDragEnd = () => {
     setDraggedItem(null);
     setDragOverColumn(null);
+    setIsDragging(false);
+    setShowScrollHint(false);
     dragCounter.current = 0;
+    stopAutoScroll();
   };
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
+    
+    // Update mouse position for auto-scroll
+    currentMouseX.current = e.clientX;
   };
 
   const handleDragEnter = (e: React.DragEvent, columnId: string) => {
     e.preventDefault();
     dragCounter.current++;
     setDragOverColumn(columnId);
+    
+    // Update mouse position for auto-scroll
+    currentMouseX.current = e.clientX;
   };
 
   const handleDragLeave = (e: React.DragEvent) => {
@@ -94,6 +171,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     
     setDraggedItem(null);
     setDragOverColumn(null);
+    setIsDragging(false);
+    setShowScrollHint(false);
+    stopAutoScroll();
   };
 
   if (loading) {
@@ -114,7 +194,13 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   }
 
   return (
-    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
+    <div 
+      className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm relative" 
+      style={{ 
+        zIndex: isDragging ? 1 : 'auto',
+        overflow: 'visible'
+      }}
+    >
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
         <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
           <MoreHorizontal className="w-5 h-5" />
@@ -169,8 +255,12 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       </div>
 
       {/* Desktop View - Horizontal Kanban */}
-      <div className="hidden lg:block">
-        <div className="flex gap-4 overflow-x-auto pb-4">
+      <div className="hidden lg:block" style={{ overflow: 'visible' }}>
+        <div 
+          ref={scrollContainerRef}
+          className="flex gap-4 overflow-x-auto pb-4 relative"
+          style={{ overflowY: 'visible' }}
+        >
           {columns.map(column => {
             const columnApplications = applicationsByStatus[column.id] || [];
             const isDropTarget = dragOverColumn === column.id;
@@ -178,13 +268,14 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
             return (
               <div
                 key={column.id}
-                className={`flex-shrink-0 w-72 ${column.color} rounded-lg transition-all duration-200 ${
+                className={`flex-shrink-0 w-72 ${column.color} rounded-lg transition-all duration-200 relative ${
                   isDropTarget ? 'ring-2 ring-indigo-500 shadow-lg scale-105' : ''
                 }`}
                 onDragOver={handleDragOver}
                 onDragEnter={(e) => handleDragEnter(e, column.id)}
                 onDragLeave={handleDragLeave}
                 onDrop={(e) => handleDrop(e, column.id)}
+                style={{ overflowY: 'visible' }}
               >
                 {/* Column Header */}
                 <div className="p-4 border-b border-slate-200 dark:border-slate-600">
@@ -200,7 +291,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                 </div>
 
                 {/* Column Content */}
-                <div className="p-4 space-y-3 min-h-[200px]">
+                <div className="p-4 space-y-3 min-h-[200px] relative" style={{ overflowY: 'visible' }}>
                   {columnApplications.map(app => (
                     <ApplicationCard
                       key={app.id}
@@ -229,6 +320,19 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
             );
           })}
         </div>
+        
+        {/* Scroll Hint during drag */}
+        {showScrollHint && (
+          <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-pulse">
+            {/* <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l4-4m0 0l4 4m-4-4v12" />
+            </svg> */}
+            <span className="text-sm font-medium">Drag near edges to scroll</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </div>
+        )}
       </div>
 
       {applications.length === 0 && (
@@ -264,8 +368,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       onDragStart={onDragStart ? (e) => onDragStart(e, application) : undefined}
       onDragEnd={onDragEnd}
       className={`bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
-        isDragging ? 'opacity-50 rotate-2 scale-105' : 'hover:scale-[1.02]'
+        isDragging ? 'opacity-50 rotate-2 scale-105 relative' : 'hover:scale-[1.02]'
       } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''}`}
+      style={isDragging ? { 
+        zIndex: 99999
+      } : {}}
     >
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1 min-w-0">
