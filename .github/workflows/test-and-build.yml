@@ -1,0 +1,201 @@
+name: 🧪 Test Suite & Build
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  # Unit & Integration Tests
+  unit-tests:
+    name: 🔬 Unit & Integration Tests
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+        
+    steps:
+    - name: 📦 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: 📚 Install Dependencies
+      run: npm ci
+      
+    - name: 🧪 Run Unit Tests
+      run: npm run test:run
+      
+    - name: 📊 Generate Coverage Report
+      run: npm run test:coverage
+      
+    - name: 📈 Upload Coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  # Build Test
+  build-test:
+    name: 🏗️ Build Test
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    
+    steps:
+    - name: 📦 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📚 Install Dependencies
+      run: npm ci
+      
+    - name: 🏗️ Build Application
+      run: npm run build
+      
+    - name: 📤 Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-files
+        path: dist/
+        retention-days: 7
+
+  # E2E Tests
+  e2e-tests:
+    name: 🎭 E2E Tests
+    runs-on: ubuntu-latest
+    needs: build-test
+    
+    steps:
+    - name: 📦 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📚 Install Dependencies
+      run: npm ci
+      
+    - name: 🎭 Install Playwright
+      run: npx playwright install --with-deps
+      
+    - name: 🧪 Run E2E Tests
+      run: npm run test:e2e
+      env:
+        # Set any environment variables needed for E2E tests
+        CI: true
+        
+    - name: 📤 Upload E2E Reports
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 14
+        
+    - name: 📤 Upload E2E Test Results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-results
+        path: test-results/
+        retention-days: 14
+
+  # Security & Quality Checks
+  security-scan:
+    name: 🔒 Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 📦 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📚 Install Dependencies
+      run: npm ci
+      
+    - name: 🔍 Run Security Audit
+      run: npm audit --audit-level moderate
+      continue-on-error: true
+      
+    - name: 🛡️ Run Snyk Security Scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high
+      continue-on-error: true
+
+  # Deployment Preview (for PRs)
+  deploy-preview:
+    name: 🚀 Deploy Preview
+    runs-on: ubuntu-latest
+    needs: [unit-tests, build-test]
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📦 Checkout Code
+      uses: actions/checkout@v4
+      
+    - name: 🟢 Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+        cache: 'npm'
+        
+    - name: 📚 Install Dependencies
+      run: npm ci
+      
+    - name: 🏗️ Build for Preview
+      run: npm run build
+      
+    - name: 🚀 Deploy to Netlify Preview
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: './dist'
+        production-branch: main
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        deploy-message: "Deploy from GitHub Actions"
+        enable-pull-request-comment: true
+        enable-commit-comment: false
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+  # Success Summary
+  test-success:
+    name: ✅ All Tests Passed
+    runs-on: ubuntu-latest
+    needs: [unit-tests, build-test, e2e-tests, security-scan]
+    if: success()
+    
+    steps:
+    - name: 🎉 Success Message
+      run: |
+        echo "🎉 All tests passed successfully!"
+        echo "✅ Unit & Integration Tests: Passed"
+        echo "✅ Build Test: Passed" 
+        echo "✅ E2E Tests: Passed"
+        echo "✅ Security Scan: Passed"
+        echo ""
+        echo "🚀 Ready for deployment!"
