@@ -901,7 +901,7 @@ const SuccessMetricsSection = () => {
           <blockquote className="text-xl italic text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-4xl mx-auto mb-4">
             "JobTrac turned my chaotic job search into a strategic campaign. I went from scattered applications to organized success in weeks, not months."
           </blockquote>
-          <cite className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400">- Sarah Chen, Software Engineer</cite>
+          <cite className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400">- Manassa Varshni, Software Engineer</cite>
         </div>
       </div>
     </section>
