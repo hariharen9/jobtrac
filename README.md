@@ -17,9 +17,9 @@
     <a href="https://github.com/hariharen9/jobtrac/stargazers">
       <img src="https://img.shields.io/github/stars/hariharen9/jobtrac?style=for-the-badge&logo=github" alt="GitHub Stars">
     </a>
-    <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
+<!--     <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/hariharen9/jobtrac?style=for-the-badge" alt="License">
-    </a>
+    </a> -->
   </p>
 </div>
 
@@ -123,8 +123,6 @@
 </div>
 
 ---
-
-## ⌨️ **Keyboard Shortcuts & Command Palette**
 
 <div align="center">
 
