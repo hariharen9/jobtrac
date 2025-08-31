@@ -308,6 +308,15 @@ npm run dev
 ---
 
 <div align="center">
+  <p> If you find my work helpful, consider supporting me!</p>
+  <p>
+    <a href="https://www.buymeacoffee.com/hariharen" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 50px !important;width: 180px !important;" ></a>
+    <a href="https://paypal.me/thisishariharen" target="_blank"><img src="https://img.shields.io/badge/PayPal-Support%20Me-blue?style=flat-square&logo=paypal" alt="PayPal" style="height: 50px !important;width: 180px !important;"></a>
+  </p>
+</div>
+
+---
+<div align="center">
 
 ### **Ready to Transform Your Career Journey?**
 
