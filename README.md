@@ -9,10 +9,7 @@
   
   <p>
     <a href="https://jobtrac.site/" target="_blank">
-      <img src="https://img.shields.io/badge/🚀%20Live%20Demo-Visit%20Now-success?style=for-the-badge" alt="Live Demo">
-    </a>
-    <a href="#-quick-start--for-devs-">
-      <img src="https://img.shields.io/badge/⚡%20Quick%20Start-Get%20Started-blue?style=for-the-badge" alt="Quick Start">
+      <img src="https://img.shields.io/badge/🚀%20Live-Visit%20Now-success?style=for-the-badge" alt="Live Demo">
     </a>
     <a href="https://github.com/hariharen9/jobtrac/stargazers">
       <img src="https://img.shields.io/github/stars/hariharen9/jobtrac?style=for-the-badge&logo=github" alt="GitHub Stars">
@@ -254,7 +251,7 @@ JobTrac is, and always will be, fundamentally free and open-source.
 If you find JobTrac useful, please consider giving it a star! It's a simple way to show your appreciation and helps the project gain visibility in the community. More stars mean more contributors and a better tool for everyone. Thank you for your support!
 
 ### **Contributing to Success**
-We welcome contributors of all levels! Check out our [`CONTRIBUTING.md`](CONTRIBUTING.md) and look for issues tagged with `good first issue` to get started.
+We welcome contributors of all levels! Check out our [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 <div align="center">
 
