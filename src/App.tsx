@@ -34,6 +34,7 @@ import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
 import { ProfileModal } from './features/profile';
 import UserProfileModal from './features/auth/components/UserProfileModal';
+import { Helmet } from 'react-helmet-async';
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -165,6 +166,9 @@ function App() {
     { id: 'networking', label: 'Networking & Referrals', icon: Users },
     { id: 'star', label: 'Behavioral Story Bank', icon: Star },
   ], []);
+
+  const currentTab = useMemo(() => tabs.find(tab => tab.id === activeTab), [activeTab, tabs]);
+  const pageTitle = currentTab ? `JobTrac - ${currentTab.label}` : 'JobTrac - Dashboard';
 
   const openModal = useCallback((type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
@@ -666,6 +670,9 @@ function App() {
   if (isMobile) {
     return (
       <>
+        <Helmet>
+          <title>{pageTitle}</title>
+        </Helmet>
         <MobileDashboard 
           activeTab={activeTab}
           setActiveTab={setActiveTab}
@@ -781,6 +788,9 @@ function App() {
 
   return (
     <div className="min-h-screen dark:bg-dark-bg amoled:bg-amoled-bg" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      <Helmet>
+        <title>{pageTitle}</title>
+      </Helmet>
       <Toaster />
       <div className="container p-4 mx-auto sm:p-6 lg:p-8">
         <motion.header 
