@@ -15,7 +15,7 @@ export function useDataImportExport(userId?: string | null) {
       throw new Error('User not authenticated');
     }
 
-    const data = JSON.parse(text);
+    const { type, data } = importRequest;
     let successCount = 0;
     let errorCount = 0;
 
