@@ -43,7 +43,8 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
           {app.status}
         </span>
       </td>
-      <td className="px-6 py-6">{app.nextStep}</td>
+      <td className="px-6 py-6">{app.source === 'Other' ? app.sourceOther : app.source}</td>
+      
       <td className="px-6 py-6">{app.location}</td>
       <td className="px-6 py-6 max-w-xs truncate">{app.notes}</td>
       <td className="px-6 py-6 text-right">

@@ -20,6 +20,17 @@
     <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/hariharen9/jobtrac?style=for-the-badge" alt="License">
     </a>
+    <br>
+    <a href="https://github.com/hariharen9/jobtrac/actions/workflows/test-and-build.yml">
+      <img src="https://img.shields.io/github/actions/workflow/status/hariharen9/jobtrac/test-and-build.yml?style=for-the-badge" alt="CI Status">
+    </a>
+    <img src="https://img.shields.io/github/repo-size/hariharen9/jobtrac?style=for-the-badge" alt="Repo Size">
+    <a href="eslint.config.js">
+        <img src="https://img.shields.io/badge/code%20style-eslint-4B32C3?style=for-the-badge&logo=eslint" alt="Code Style: ESLint">
+    </a>
+    <a href="CONTRIBUTING.md">
+      <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge" alt="Contributions Welcome">
+    </a>
     <a href="https://drive.google.com/file/d/1Yj9Ygg--BnXFu0--GbwAxf8PGxvI72F2/view?usp=sharing" target="_blank">
   <img src="https://img.shields.io/badge/Demo%20Video-Watch%20Now-red?style=for-the-badge&logo=youtube" alt="Complete Demo Video">
 </a>
