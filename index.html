@@ -147,6 +147,35 @@
     }
     </script>
 
+    <!-- Website Schema for Sitelinks Searchbox -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "JobTrac",
+      "url": "https://jobtrac.site/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://jobtrac.site/app?q={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://jobtrac.site/"
+      }]
+    }
+    </script>
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://jobtrac.site/" />
