@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+.glassmorphism {
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%);
+  border: 1px solid rgba(209, 213, 219, 0.3);
+}
+
+.dark .glassmorphism {
+  background: rgba(22, 27, 34, 0.75);
+}
+
+.amoled .glassmorphism {
+  background: rgba(0, 0, 0, 0.75);
+}
+
 /* Mobile optimizations */
 .scrollbar-hide {
   -ms-overflow-style: none;  /* IE and Edge */
