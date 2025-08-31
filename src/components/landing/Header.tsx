@@ -71,8 +71,8 @@ const Header = () => {
             to="/auth"
             className="px-4 py-2 sm:px-8 sm:py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl sm:rounded-2xl font-bold text-sm sm:text-lg shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-sm whitespace-nowrap"
           >
-            <span className="sm:hidden">START</span>
-            <span className="hidden sm:inline">GET STARTED</span>
+            <span className="sm:hidden">Start Now 🚀</span>
+            <span className="hidden sm:inline">Launch JobTrac 🚀</span>
           </Link>
         </motion.div>
       </div>

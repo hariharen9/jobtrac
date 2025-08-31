@@ -1,5 +1,5 @@
 
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import App from "../App";
 import AuthPage from "../features/auth/components/AuthPage";
 import LandingPage from "../pages/LandingPage";
@@ -27,8 +27,12 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                                element: <ErrorBoundary><App /></ErrorBoundary>
+                element: <ErrorBoundary><App /></ErrorBoundary>
             }
         ]
+    },
+    {
+        path: "*",
+        element: <Navigate to="/" replace />
     }
 ]);
