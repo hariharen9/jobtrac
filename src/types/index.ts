@@ -1,5 +1,14 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type ApplicationSource =
+  | 'LinkedIn'
+  | 'Indeed'
+  | 'Glassdoor'
+  | 'Naukri'
+  | 'Company Website'
+  | 'Referral'
+  | 'Other';
+
 export interface Application {
   id: string;
   company: string;
@@ -7,7 +16,8 @@ export interface Application {
   link: string;
   date: string;
   status: ApplicationStatus;
-  nextStep: string;
+  source: ApplicationSource;
+  sourceOther?: string;
   recruiter: string;
   referral: 'Y' | 'N';
   location: string;

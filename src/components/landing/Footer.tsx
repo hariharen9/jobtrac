@@ -1,9 +1,18 @@
 import { motion } from 'framer-motion';
 import { Github, Globe } from 'lucide-react';
+import CurvedLoop from './CurvedLoop';
 
 const Footer = () => {
   return (
     <footer className="bg-slate-900 dark:bg-dark-card amoled:bg-amoled-card text-white py-8 sm:py-16 px-6">
+      <CurvedLoop 
+        marqueeText="JOBTRAC ✦ Your ✦ Ultimate ✦ Job-Search ✦ Command ✦ Center ✦"
+        speed={1.8}
+        curveAmount={500}
+        direction="left"
+        interactive={true}
+        className="custom-text-style opacity-20"
+      />
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-6 sm:mb-12">
           <div className="sm:col-span-2 md:col-span-2">

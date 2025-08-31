@@ -4,6 +4,7 @@ import { RouterProvider } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { router } from './router';
 import './index.css';
+import './scrollbar.css';
 
 const root = createRoot(document.getElementById('root')!);
 

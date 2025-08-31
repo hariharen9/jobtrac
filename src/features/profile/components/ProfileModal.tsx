@@ -80,7 +80,7 @@ const ProfileModal = ({
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card">
+    <div className="p-6 bg-white rounded-lg shadow-lg dark:bg-dark-card amoled:bg-amoled-card glassmorphism">
       <h2 className="mb-6 text-2xl font-bold text-center text-slate-900 dark:text-dark-text amoled:text-amoled-text">User Profile</h2>
       <div className="flex flex-col gap-6">
         {/* Google Connection Section */}
