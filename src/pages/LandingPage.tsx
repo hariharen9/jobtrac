@@ -14,6 +14,7 @@ import TechnologyStackSection from '../components/landing/TechnologyStackSection
 import PricingSection from '../components/landing/PricingSection';
 import CTASection from '../components/landing/CTASection';
 import Footer from '../components/landing/Footer';
+import BackToTopButton from '../components/shared/BackToTopButton';
 import { Helmet } from 'react-helmet-async';
 
 const LandingPage = () => {
@@ -114,6 +115,7 @@ const LandingPage = () => {
         <PricingSection />
         <CTASection />
         <Footer />
+        <BackToTopButton />
       </div>
     </>
   );
