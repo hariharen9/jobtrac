@@ -1,0 +1,61 @@
+:root {
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #888;
+  --scrollbar-thumb-hover: #555;
+}
+
+.dark {
+  --scrollbar-track: #161B22;
+  --scrollbar-thumb: #7E8995;
+  --scrollbar-thumb-hover: #B4BCC5;
+}
+
+.amoled {
+  --scrollbar-track: #000000;
+  --scrollbar-thumb: #AAAAAA;
+  --scrollbar-thumb-hover: #FFFFFF;
+}
+
+@keyframes scrollbar-animation {
+  0% {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  }
+  25% {
+    background: linear-gradient(45deg, #bc1888 0%, #f09433 25%, #e6683c 50%, #dc2743 75%, #cc2366 100%);
+  }
+  50% {
+    background: linear-gradient(45deg, #cc2366 0%, #bc1888 25%, #f09433 50%, #e6683c 75%, #dc2743 100%);
+  }
+  75% {
+    background: linear-gradient(45deg, #dc2743 0%, #cc2366 25%, #bc1888 50%, #f09433 75%, #e6683c 100%);
+  }
+  100% {
+    background: linear-gradient(45deg, #e6683c 0%, #dc2743 25%, #cc2366 50%, #bc1888 75%, #f09433 100%);
+  }
+}
+
+/* For Webkit-based browsers (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+  animation: scrollbar-animation 5s linear infinite;
+}
+
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
