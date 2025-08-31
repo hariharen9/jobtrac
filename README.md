@@ -20,6 +20,9 @@
     <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/hariharen9/jobtrac?style=for-the-badge" alt="License">
     </a>
+    <a href="https://drive.google.com/file/d/1Yj9Ygg--BnXFu0--GbwAxf8PGxvI72F2/view?usp=sharing" target="_blank">
+  <img src="https://img.shields.io/badge/Demo%20Video-Watch%20Now-red?style=for-the-badge&logo=youtube" alt="Complete Demo Video">
+</a>
   </p>
 </div>
 
@@ -36,34 +39,7 @@
 ---
 
 
-<!-- <table align="center">
-  <tr>
-    <td align="center" width="45%">
-      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Application+Pipeline" alt="Application Pipeline"><br>
-      <h3>🎯 Application Pipeline</h3>
-      <p>Kanban-Style Visualization</p>
-    </td>
-    <td align="center" width="45%">
-      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Interview+Mastery" alt="Interview Mastery"><br>
-      <h3>📚 Interview Mastery Suite</h3>
-      <p>Systematic Preparation System</p>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="45%">
-      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Company+Intelligence" alt="Company Intelligence"><br>
-      <h3>🏢 Company Intelligence</h3>
-      <p>Strategic Research Hub</p>
-    </td>
-    <td align="center" width="45%">
-      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Networking+Powerhouse" alt="Networking Powerhouse"><br>
-      <h3>🤝 Networking Powerhouse</h3>
-      <p>Relationship Management System</p>
-    </td>
-  </tr>
-</table>
 
---- -->
 
 ### 💡 The Problem It Solves
 
@@ -186,6 +162,7 @@
 
 - **Universal Search**: Type 2+ characters to search across ALL your data.
 - **Smart Results**: Company names, roles, topics, contacts, notes - everything indexed.
+
 - **Quick Navigation**: Click any result to jump directly to that item for editing.
 
 </details>
@@ -202,6 +179,53 @@
 | **Networking Management**| ✅ Contact system                      | ❌ Phone contacts   | 🚯 Separate app   |
 | **Analytics & Insights** | ✅ Visual dashboard                    | ❌ Manual charts    | ⛔️ Basic stats    |
 | **Mobile Experience**    | ✅ Native-like                         | ❌ Desktop only     | 🚫 Poor mobile    |
+
+<br>
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/web%20page.gif" alt="General UI" width="100%"><br>
+      <sub><b>General UI</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/auth.gif" alt="Authentication" width="100%"><br>
+      <sub><b>Authentication</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/onboarding.gif" alt="Onboarding" width="100%"><br>
+      <sub><b>Onboarding</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/kanban.gif" alt="Kanban Board" width="100%"><br>
+      <sub><b>Kanban Board</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/applications&calander.gif" alt="Calendar View" width="100%"><br>
+      <sub><b>Calendar View</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/prep.gif" alt="Prep Log" width="100%"><br>
+      <sub><b>Prep Log</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/company,network&STAR.gif" alt="Research, Networking, STAR" width="100%"><br>
+      <sub><b>Research, Networking, STAR</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/command%20pallet.gif" alt="Command Palette" width="100%"><br>
+      <sub><b>Command Palette</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/theme%20and%20profile%20modal.gif" alt="Theming and Profile" width="100%"><br>
+      <sub><b>Theming and Profile</b></sub>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -247,7 +271,7 @@ We welcome contributors of all levels! Check out our [`CONTRIBUTING.md`](CONTRIB
   <img src="https://img.shields.io/badge/TypeScript-5.5.3-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Vite-7.1.3-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/Firebase-12.0.0-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase">
-  <img src="https://img.shields.io/badge/Tailwind%20CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.io/badge/Tailwind%20CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/Framer%20Motion-12.23.6-0055FF?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion">
 </p>
 
@@ -283,6 +307,12 @@ npm run dev
   <a href="https://jobtrac.site/" target="_blank">
     <img src="https://img.shields.io/badge/🚀%20Start%20Your%20Success%20Story-Try%20JobTrac%20Now-success?style=for-the-badge&logo=rocket" alt="Try JobTrac">
   </a>
+</p>
+<p>
+  <a href="https://drive.google.com/file/d/1Yj9Ygg--BnXFu0--GbwAxf8PGxvI72F2/view?usp=sharing" target="_blank">
+  <img src="https://img.shields.io/badge/Demo%20Video-Watch%20Now-red?style=for-the-badge&logo=youtube" alt="Complete Demo Video">
+</a>
+
 </p>
 
 ---
