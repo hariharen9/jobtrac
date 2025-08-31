@@ -234,8 +234,6 @@ SOFTWARE.`}</pre>
         <hr style={styles.hr} />
 
         <h2 style={styles.h2}>Contact Information</h2>
-        <h3 style={styles.h3}>For Commercial Licensing:</h3>
-        <p style={styles.p}><a href="https://jobtrac.site/enterprise" style={styles.a}>https://jobtrac.site/enterprise</a></p>
 
         <h3 style={styles.h3}>For Open Source Questions:</h3>
         <ul style={styles.ul}>
@@ -257,7 +255,7 @@ SOFTWARE.`}</pre>
 
         <hr style={styles.hr} />
 
-        <p style={{...styles.p, fontStyle: 'italic', textAlign: 'center'}}>Last updated: August 29, 2025</p>
+        <p style={{...styles.p, fontStyle: 'italic', textAlign: 'center'}}>Last updated: August 31, 2025</p>
         <p style={{...styles.p, fontStyle: 'italic', textAlign: 'center'}}><strong style={styles.strong}>JobTrac - Empowering careers, one application at a time.</strong></p>
     </div>
   );
