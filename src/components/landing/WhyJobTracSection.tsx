@@ -37,20 +37,15 @@ const WhyJobTracSection = () => {
         >
           <div className="bg-white/20 dark:bg-dark-card/20 amoled:bg-amoled-card/20 backdrop-blur-sm rounded-3xl p-8 border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30">
             <div className="aspect-video bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-800 dark:to-slate-900 amoled:from-black amoled:to-slate-900 rounded-2xl flex items-center justify-center relative overflow-hidden">
-              {/* Video Placeholder */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                <motion.div
-                  className="text-6xl mb-4"
-                  animate={{ scale: [1, 1.1, 1] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                >
-                  ▶️
-                </motion.div>
-                <h3 className="text-xl font-semibold mb-2">Demo Video Coming 🔜</h3>
-                <p className="text-slate-300 text-center max-w-md px-4">
-                  🚀
-                </p>
-              </div>
+              <video
+                src="/assets/JobTrac.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                poster="/assets/preview.png"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               
               {/* Optional: Add a subtle overlay pattern */}
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-purple-500/5" />
