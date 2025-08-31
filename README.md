@@ -33,6 +33,38 @@
   <img src="https://ik.imagekit.io/halcyonweb/jt.png?updatedAt=1755524242386" alt="JobTrac Interface" width="900">
 </div>
 
+---
+
+
+<!-- <table align="center">
+  <tr>
+    <td align="center" width="45%">
+      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Application+Pipeline" alt="Application Pipeline"><br>
+      <h3>🎯 Application Pipeline</h3>
+      <p>Kanban-Style Visualization</p>
+    </td>
+    <td align="center" width="45%">
+      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Interview+Mastery" alt="Interview Mastery"><br>
+      <h3>📚 Interview Mastery Suite</h3>
+      <p>Systematic Preparation System</p>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="45%">
+      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Company+Intelligence" alt="Company Intelligence"><br>
+      <h3>🏢 Company Intelligence</h3>
+      <p>Strategic Research Hub</p>
+    </td>
+    <td align="center" width="45%">
+      <img src="https://via.placeholder.com/400x250/F0F0F0/000000?text=Networking+Powerhouse" alt="Networking Powerhouse"><br>
+      <h3>🤝 Networking Powerhouse</h3>
+      <p>Relationship Management System</p>
+    </td>
+  </tr>
+</table>
+
+--- -->
+
 ### 💡 The Problem It Solves
 
 -   **From Scattered to Strategic:** Replaces messy spreadsheets, random notes, and forgotten contacts with a unified command center.
@@ -43,9 +75,10 @@
 
 ## 🏆 Core Features
 
+<div align="center">
 <table>
 <tr>
-<td width="50%">
+<td width="45%">
 
 ### 🎯 **Application Pipeline**
 **Kanban-Style Visualization**
@@ -55,7 +88,7 @@
 - Job description storage & quick access
 
 </td>
-<td width="50%">
+<td width="45%">
 
 ### 📚 **Interview Mastery Suite**
 **Systematic Preparation System**
@@ -67,7 +100,7 @@
 </td>
 </tr>
 <tr>
-<td width="50%">
+<td width="45%">
 
 ### 🏢 **Company Intelligence**
 **Strategic Research Hub**
@@ -76,7 +109,7 @@
 - Interview insights & preparation notes
 
 </td>
-<td width="50%">
+<td width="45%">
 
 ### 🤝 **Networking Powerhouse**
 **Relationship Management System**
@@ -87,6 +120,7 @@
 </td>
 </tr>
 </table>
+</div>
 
 ### ✨ A Modern, User-First Experience
 
@@ -100,7 +134,7 @@
 | 🔄 **Data Portability** | Easily import from CSV or export your data for complete ownership.       |
 
 <details>
-<summary><strong>🔥 Click to Explore All Power-User Tools & Keyboard Shortcuts</strong></summary>
+<summary><h3>🔽 Click to Explore All Power-User Tools</h3></summary>
 <br>
 
 ### **🚀 Command Palette**

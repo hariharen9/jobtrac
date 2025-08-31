@@ -99,9 +99,7 @@ const LandingPage = () => {
       </div>
 
       <Header />
-      <motion.div style={{ y: yTransform, opacity: opacityTransform }}>
-        <Hero />
-      </motion.div>
+      <Hero />
       <FeaturesSection />
       <WhyJobTracSection />
       <ProblemSolutionSection />
