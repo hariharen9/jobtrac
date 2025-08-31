@@ -63,6 +63,12 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
           <p className="text-slate-500 dark:text-slate-400">Location</p>
           <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{app.location}</p>
         </div>
+        <div>
+          <p className="text-slate-500 dark:text-slate-400">Source</p>
+          <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">
+            {app.source === 'Other' ? app.sourceOther : app.source}
+          </p>
+        </div>
       </div>
       
       <div className="flex items-center justify-between">
@@ -80,12 +86,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
         </motion.button>
       </div>
       
-      {app.nextStep && (
-        <div className="text-sm">
-          <p className="text-slate-500 dark:text-slate-400">Next Step</p>
-          <p className="mt-1 text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">{app.nextStep}</p>
-        </div>
-      )}
+      
       
       {app.notes && (
         <div className="text-sm">

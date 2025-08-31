@@ -6,7 +6,7 @@ import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
 import EmptyState from '../../../components/shared/EmptyState';
 
-type SortField = 'date' | 'company' | 'role' | 'status';
+type SortField = 'date' | 'company' | 'role' | 'status' | 'source';
 type SortDirection = 'asc' | 'desc';
 
 interface FilterOptions {
@@ -90,6 +90,10 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
         case 'status':
           aValue = statusOptions.indexOf(a.status);
           bValue = statusOptions.indexOf(b.status);
+          break;
+        case 'source':
+          aValue = (a.source === 'Other' ? a.sourceOther : a.source) || '';
+          bValue = (b.source === 'Other' ? b.sourceOther : b.source) || '';
           break;
         default:
           return 0;
@@ -324,7 +328,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
       {/* Sort Controls */}
       <div className="hidden sm:flex items-center gap-2 mb-4 text-sm">
         <span className="text-slate-600 dark:text-slate-400">Sort by:</span>
-        {(['date', 'company', 'role', 'status'] as SortField[]).map(field => (
+        {(['date', 'company', 'role', 'status', 'source'] as SortField[]).map(field => (
           <button
             key={field}
             onClick={() => handleSort(field)}
@@ -433,7 +437,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                   )}
                 </button>
               </th>
-              <th scope="col" className="px-6 py-3">Next Step</th>
+              <th scope="col" className="px-6 py-3">Source</th>
+              
               <th scope="col" className="px-6 py-3">Location</th>
               <th scope="col" className="px-6 py-3">Notes</th>
               <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>
