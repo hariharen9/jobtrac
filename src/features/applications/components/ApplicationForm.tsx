@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Application, ApplicationStatus } from '../../../types';
+import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 
 interface ApplicationFormProps {
-  onSubmit: (application: Omit<Application, 'id'>) => void;
+  onSubmit: (application: Omit<Application, 'id' | 'nextStep'>) => void;
   onCancel: () => void;
   initialData?: Application | null;
   loading?: boolean;
@@ -15,7 +15,8 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
     link: '',
     date: new Date().toISOString().split('T')[0],
     status: 'To Apply' as ApplicationStatus,
-    nextStep: '',
+    source: 'LinkedIn' as ApplicationSource,
+    sourceOther: '',
     recruiter: '',
     referral: 'N' as 'Y' | 'N',
     location: '',
@@ -30,23 +31,29 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
         link: initialData.link || '',
         date: initialData.date,
         status: initialData.status,
-        nextStep: initialData.nextStep || '',
+        source: initialData.source || 'LinkedIn',
+        sourceOther: initialData.sourceOther || '',
         recruiter: initialData.recruiter || '',
         referral: initialData.referral || 'N',
         location: initialData.location || '',
-        notes: initialData.notes || ''
+        notes: initialData.nextStep ? `${initialData.nextStep}\n\n${initialData.notes}` : initialData.notes || ''
       });
     }
   }, [initialData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    const { ...submissionData } = formData;
+    onSubmit(submissionData);
   };
 
   const statusOptions: ApplicationStatus[] = [
     'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 
     'Manager Round', 'Final Round', 'Offer', 'Rejected', 'Ghosted'
+  ];
+
+  const sourceOptions: ApplicationSource[] = [
+    'LinkedIn', 'Indeed', 'Glassdoor', 'Naukri', 'Company Website', 'Referral', 'Other'
   ];
 
   return (
@@ -103,6 +110,29 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           </select>
         </div>
         <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Source</label>
+          <select
+            value={formData.source}
+            onChange={(e) => setFormData({ ...formData, source: e.target.value as ApplicationSource })}
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          >
+            {sourceOptions.map(source => (
+              <option key={source} value={source}>{source}</option>
+            ))}
+          </select>
+        </div>
+        {formData.source === 'Other' && (
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Other Source</label>
+            <input
+              type="text"
+              value={formData.sourceOther}
+              onChange={(e) => setFormData({ ...formData, sourceOther: e.target.value })}
+              className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+        )}
+        <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Location</label>
           <input
             type="text"
@@ -131,15 +161,6 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             <option value="Y">Yes</option>
           </select>
         </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Next Step</label>
-        <input
-          type="text"
-          value={formData.nextStep}
-          onChange={(e) => setFormData({ ...formData, nextStep: e.target.value })}
-          className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-        />
       </div>
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Notes</label>

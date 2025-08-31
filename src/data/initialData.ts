@@ -8,11 +8,11 @@ export const initialApplications: Application[] = [
     link: '#',
     date: '2025-09-22',
     status: 'To Apply',
-    nextStep: 'Apply via referral',
+    source: 'Referral',
     recruiter: '',
     referral: 'Y',
     location: 'Bangalore',
-    notes: 'Target team: GKE Networking.'
+    notes: 'Apply via referral. Target team: GKE Networking.'
   },
   {
     id: '2',
@@ -21,11 +21,11 @@ export const initialApplications: Application[] = [
     link: '#',
     date: '2025-09-22',
     status: 'HR Screen',
-    nextStep: 'Tech Screen on 28-Sep',
+    source: 'LinkedIn',
     recruiter: 'recruiter@ms.com',
     referral: 'N',
     location: 'Hyderabad',
-    notes: 'Discussed 17LPA expectation.'
+    notes: 'Tech Screen on 28-Sep. Discussed 17LPA expectation.'
   },
   {
     id: '3',
@@ -34,7 +34,7 @@ export const initialApplications: Application[] = [
     link: '#',
     date: '2025-09-23',
     status: 'Rejected',
-    nextStep: '',
+    source: 'Company Website',
     recruiter: '',
     referral: 'N',
     location: 'Bangalore',
@@ -262,11 +262,11 @@ export const enhancedSampleApplications: Application[] = [
     link: 'https://careers.google.com/jobs/123',
     date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 week ago
     status: 'Tech Screen',
-    nextStep: 'System Design Interview - Friday 2PM',
+    source: 'Referral',
     recruiter: 'sarah.chen@google.com',
     referral: 'Y',
     location: 'Mountain View, CA',
-    notes: 'Referral from John (ex-colleague). Discussed distributed systems experience.',
+    notes: 'System Design Interview - Friday 2PM. Referral from John (ex-colleague). Discussed distributed systems experience.',
     jobDescription: 'We are looking for a Senior Software Engineer to join our Cloud Infrastructure team...'
   },
   {
@@ -276,11 +276,11 @@ export const enhancedSampleApplications: Application[] = [
     link: 'https://careers.microsoft.com/us/en/job/456',
     date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 days ago
     status: 'Applied',
-    nextStep: 'Wait for response (applied Tuesday)',
+    source: 'LinkedIn',
     recruiter: '',
     referral: 'N',
     location: 'Seattle, WA',
-    notes: 'Applied through LinkedIn. Strong match for Kubernetes experience.',
+    notes: 'Wait for response (applied Tuesday). Applied through LinkedIn. Strong match for Kubernetes experience.',
     jobDescription: 'Join the Azure Compute team to build the next generation of container orchestration...'
   },
   {
@@ -290,11 +290,12 @@ export const enhancedSampleApplications: Application[] = [
     link: 'https://jobs.netflix.com/jobs/789',
     date: new Date().toISOString().split('T')[0], // Today
     status: 'To Apply',
-    nextStep: 'Complete application by end of week',
+    source: 'Other',
+    sourceOther: 'Hiring Manager on Naukri',
     recruiter: '',
     referral: 'Y',
     location: 'Los Gatos, CA',
-    notes: 'Reached out to hiring manager via LinkedIn. Focus on streaming infrastructure.',
+    notes: 'Complete application by end of week. Reached out to hiring manager via LinkedIn. Focus on streaming infrastructure.',
     jobDescription: 'We need a Staff Engineer to lead our video streaming optimization initiatives...'
   },
   {
@@ -304,11 +305,11 @@ export const enhancedSampleApplications: Application[] = [
     link: 'https://stripe.com/jobs/101112',
     date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 weeks ago
     status: 'Final Round',
-    nextStep: 'Executive interview with CTO next Monday',
+    source: 'Company Website',
     recruiter: 'talent@stripe.com',
     referral: 'N',
     location: 'San Francisco, CA',
-    notes: 'Great cultural fit. Team is excited about my fintech background.',
+    notes: 'Executive interview with CTO next Monday. Great cultural fit. Team is excited about my fintech background.',
     jobDescription: 'Lead a team of 8 engineers building payment processing infrastructure...'
   }
 ];
