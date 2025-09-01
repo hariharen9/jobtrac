@@ -117,6 +117,51 @@
 | 🌐 **Landing Page**     | A beautiful, informative landing page to welcome users to the project.   |
 | 🔄 **Data Portability** | Easily import from CSV or export your data for complete ownership.       |
 
+<img src="assets/screenshots/Hero.png" alt="Hero" width="100%">
+<br>
+<sub><b>JobTrac</b></sub>
+<br><br>
+<details>
+<summary><h2>🖼️ Click to expand more Screenshots</h2></summary>
+<br>
+
+<img src="assets/screenshots/Landing.png" alt="Landing" width="100%">
+<br>
+<sub><b>Landing Page</b></sub>
+<br><br>
+<img src="assets/screenshots/Auth.png" alt="Auth" width="100%">
+<br>
+<sub><b>Auth</b></sub>
+<br><br>
+<img src="assets/screenshots/Applications.png" alt="Applications" width="100%">
+<br>
+<sub><b>Applications</b></sub>
+<br><br>
+<img src="assets/screenshots/Calander&kanban.png" alt="Calander & Kanban" width="100%">
+<br>
+<sub><b>Calander & Kanban</b></sub>
+<br><br>
+<img src="assets/screenshots/Networking.png" alt="Networking" width="100%">
+<br>
+<sub><b>Networking</b></sub>
+<br><br>
+<img src="assets/screenshots/Preplog.png" alt="Preplog" width="100%">
+<br>
+<sub><b>Preplog</b></sub>
+<br><br>
+<img src="assets/screenshots/Research.png" alt="Research" width="100%">
+<br>
+<sub><b>Research</b></sub>
+<br><br>
+<img src="assets/screenshots/STAR.png" alt="STAR" width="100%">
+<br>
+<sub><b>STAR</b></sub>
+<br><br>
+
+</details>
+
+---
+
 <details>
 <summary><h3>🔽 Click to Explore All Power-User Tools</h3></summary>
 <br>
@@ -279,7 +324,7 @@ We welcome contributors of all levels! Check out our [`CONTRIBUTING.md`](CONTRIB
   <img src="https://img.shields.io/badge/TypeScript-5.5.3-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
   <img src="https://img.shields.io/badge/Vite-7.1.3-646CFF?style=flat-square&logo=vite&logoColor=white" alt="Vite">
   <img src="https://img.shields.io/badge/Firebase-12.0.0-FFCA28?style=flat-square&logo=firebase&logoColor=black" alt="Firebase">
-  <img src="https://img.io/badge/Tailwind%20CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-3.4.1-38B2AC?style=flat-square&logo=tailwind-css&logoColor=white" alt="Tailwind CSS">
   <img src="https://img.shields.io/badge/Framer%20Motion-12.23.6-0055FF?style=flat-square&logo=framer&logoColor=white" alt="Framer Motion">
 </p>
 
