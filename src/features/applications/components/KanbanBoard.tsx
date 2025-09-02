@@ -1,7 +1,9 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
-import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus } from 'lucide-react';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
+import SettingsModal from '../../../components/shared/SettingsModal';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -34,6 +36,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [isDragging, setIsDragging] = useState(false);
   const currentMouseX = useRef<number>(0);
   const [showScrollHint, setShowScrollHint] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [viewMode, setViewMode] = useLocalStorage<'scroll' | 'grid'>('kanban-view-mode', 'scroll');
 
   const columns: KanbanColumn[] = [
     { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
@@ -202,10 +206,18 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       }}
     >
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-          <MoreHorizontal className="w-5 h-5" />
-          Application Pipeline
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            <MoreHorizontal className="w-5 h-5" />
+            Application Pipeline
+          </h2>
+          <button
+            onClick={() => setIsSettingsModalOpen(true)}
+            className="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          >
+            <Settings className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+          </button>
+        </div>
         <button
           onClick={onAddApplication}
           className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start"
@@ -214,6 +226,32 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           Add Application
         </button>
       </div>
+
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        title="Application Pipeline Settings"
+      >
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+            View Mode
+          </label>
+          <div className="flex rounded-md shadow-sm">
+            <button
+              type="button"
+              onClick={() => setViewMode('scroll')}
+              className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'scroll' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+              Scroll
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`relative -ml-px inline-flex items-center px-4 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+              Grid
+            </button>
+          </div>
+        </div>
+      </SettingsModal>
 
       {/* Mobile View - Vertical Cards */}
       <div className="lg:hidden space-y-6">
@@ -255,6 +293,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       </div>
 
       {/* Desktop View - Horizontal Kanban */}
+      {viewMode === 'scroll' && (
       <div className="hidden lg:block" style={{ overflow: 'visible' }}>
         <div 
           ref={scrollContainerRef}
@@ -334,6 +373,62 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           </div>
         )}
       </div>
+      )}
+
+      {/* Grid View */}
+      {viewMode === 'grid' && (
+        <div className="hidden lg:grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
+          {columns.map(column => {
+            const columnApplications = applicationsByStatus[column.id] || [];
+            const isDropTarget = dragOverColumn === column.id;
+            return (
+              <div 
+                key={column.id} 
+                className={`rounded-lg ${column.color} p-4 transition-all duration-200 relative ${
+                  isDropTarget ? 'ring-2 ring-indigo-500 shadow-lg scale-105' : ''
+                }`}
+                onDragOver={handleDragOver}
+                onDragEnter={(e) => handleDragEnter(e, column.id)}
+                onDragLeave={handleDragLeave}
+                onDrop={(e) => handleDrop(e, column.id)}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text flex items-center gap-2">
+                    <span className={`w-3 h-3 rounded-full ${statusColors[column.id].split(' ')[0]}`}></span>
+                    {column.title}
+                  </h3>
+                  <span className="text-sm text-slate-500 dark:text-slate-400 bg-white dark:bg-slate-800 px-2 py-1 rounded-full">
+                    {columnApplications.length}
+                  </span>
+                </div>
+                <div className="space-y-3 min-h-[200px] relative">
+                  {columnApplications.map(app => (
+                    <ApplicationCard
+                      key={app.id}
+                      application={app}
+                      onEdit={onEditApplication}
+                      onDelete={onDeleteApplication}
+                      onDragStart={handleDragStart}
+                      onDragEnd={handleDragEnd}
+                      isDragging={draggedItem?.id === app.id}
+                    />
+                  ))}
+                  {columnApplications.length === 0 && !isDropTarget && (
+                    <div className="text-center py-8 text-slate-400 dark:text-slate-500 border-2 border-dashed border-slate-200 dark:border-slate-600 rounded-lg">
+                      Drop applications here
+                    </div>
+                  )}
+                  {isDropTarget && columnApplications.length === 0 && (
+                    <div className="text-center py-8 text-indigo-600 dark:text-indigo-400 border-2 border-dashed border-indigo-300 dark:border-indigo-700 rounded-lg bg-indigo-50 dark:bg-indigo-900/20">
+                      Drop here to move to {column.title}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       {applications.length === 0 && (
         <div className="text-center py-12 text-slate-500 dark:text-slate-400">

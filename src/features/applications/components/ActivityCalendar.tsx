@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Briefcase, BookOpen, Building, Users, Star } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Briefcase, BookOpen, Building, Users, Star, Settings } from 'lucide-react';
 import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory } from '../../../types';
+import SettingsModal from '../../../components/shared/SettingsModal';
+import { useLocalStorage } from '../../../hooks/useLocalStorage';
 
 interface ActivityCalendarProps {
   applications: Application[];
@@ -28,6 +30,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [showWeekends, setShowWeekends] = useLocalStorage('calendar-show-weekends', true);
 
   // Convert all data to activity items
   const activities = useMemo(() => {
@@ -104,13 +108,17 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   }, [activities]);
 
   // Get calendar data
-  const getDaysInMonth = (date: Date) => {
+  const getDaysInMonth = (date: Date, showWeekends: boolean) => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
+    let startingDayOfWeek = firstDay.getDay();
+
+    if (!showWeekends) {
+      startingDayOfWeek = (startingDayOfWeek === 0) ? 0 : startingDayOfWeek -1;
+    }
 
     const days = [];
     
@@ -121,7 +129,14 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
     
     // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
-      days.push(day);
+      if (showWeekends) {
+        days.push(day);
+      } else {
+        const dayOfWeek = new Date(year, month, day).getDay();
+        if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+          days.push(day);
+        }
+      }
     }
     
     return days;
@@ -143,21 +158,53 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
     });
   };
 
-  const days = getDaysInMonth(currentDate);
+
+  const days = getDaysInMonth(currentDate, showWeekends);
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
 
   const selectedActivities = selectedDate ? activitiesByDate[selectedDate] || [] : [];
+  const weekDays = showWeekends ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
 
   return (
     <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-          <Calendar className="w-5 h-5" />
-          Activity Calendar
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            <Calendar className="w-5 h-5" />
+            Activity Calendar
+          </h2>
+          <button
+            onClick={() => setIsSettingsModalOpen(true)}
+            className="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+          >
+            <Settings className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+          </button>
+        </div>
       </div>
+
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        title="Activity Calendar Settings"
+      >
+        <div className="flex items-center justify-between">
+          <label htmlFor="show-weekends" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+            Show Weekends
+          </label>
+          <button
+            id="show-weekends"
+            type="button"
+            onClick={() => setShowWeekends(!showWeekends)}
+            className={`${showWeekends ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+          >
+            <span
+              className={`${showWeekends ? 'translate-x-5' : 'translate-x-0'} inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+            />
+          </button>
+        </div>
+      </SettingsModal>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Calendar Grid */}
@@ -184,8 +231,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           {/* Calendar */}
           <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
             {/* Days of week header */}
-            <div className="grid grid-cols-7 bg-slate-50 dark:bg-slate-700">
-              {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+            <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} bg-slate-50 dark:bg-slate-700`}>
+              {weekDays.map(day => (
                 <div key={day} className="p-3 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
                   {day}
                 </div>
@@ -193,7 +240,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
             </div>
 
             {/* Calendar days */}
-            <div className="grid grid-cols-7">
+            <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} `}>
               {days.map((day, index) => {
                 if (day === null) {
                   return <div key={`empty-${index}`} className="p-3 h-20 border-r border-b border-slate-200 dark:border-slate-700"></div>;
