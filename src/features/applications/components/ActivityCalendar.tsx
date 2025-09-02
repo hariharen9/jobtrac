@@ -32,68 +32,80 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [showWeekends, setShowWeekends] = useLocalStorage('calendar-show-weekends', true);
+  const [startOfWeek, setStartOfWeek] = useLocalStorage<'sun' | 'mon'>('calendar-start-of-week', 'sun');
+  const [visibleActivities, setVisibleActivities] = useLocalStorage<string[]>('calendar-visible-activities', ['application', 'prep', 'company', 'contact', 'story']);
 
   // Convert all data to activity items
   const activities = useMemo(() => {
     const items: ActivityItem[] = [];
 
-    applications.forEach(app => {
-      items.push({
-        id: app.id,
-        type: 'application',
-        title: `${app.company} - ${app.role}`,
-        date: app.date,
-        icon: Briefcase,
-        color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+    if (visibleActivities.includes('application')) {
+      applications.forEach(app => {
+        items.push({
+          id: app.id,
+          type: 'application',
+          title: `${app.company} - ${app.role}`,
+          date: app.date,
+          icon: Briefcase,
+          color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+        });
       });
-    });
+    }
 
-    prepEntries.forEach(entry => {
-      items.push({
-        id: entry.id,
-        type: 'prep',
-        title: entry.topic,
-        date: entry.date,
-        icon: BookOpen,
-        color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+    if (visibleActivities.includes('prep')) {
+      prepEntries.forEach(entry => {
+        items.push({
+          id: entry.id,
+          type: 'prep',
+          title: entry.topic,
+          date: entry.date,
+          icon: BookOpen,
+          color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+        });
       });
-    });
+    }
 
-    companies.forEach(company => {
-      items.push({
-        id: company.id,
-        type: 'company',
-        title: `Research: ${company.company}`,
-        date: company.createdAt,
-        icon: Building,
-        color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
+    if (visibleActivities.includes('company')) {
+      companies.forEach(company => {
+        items.push({
+          id: company.id,
+          type: 'company',
+          title: `Research: ${company.company}`,
+          date: company.createdAt,
+          icon: Building,
+          color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
+        });
       });
-    });
+    }
 
-    contacts.forEach(contact => {
-      items.push({
-        id: contact.id,
-        type: 'contact',
-        title: `${contact.name} - ${contact.company}`,
-        date: contact.date,
-        icon: Users,
-        color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+    if (visibleActivities.includes('contact')) {
+      contacts.forEach(contact => {
+        items.push({
+          id: contact.id,
+          type: 'contact',
+          title: `${contact.name} - ${contact.company}`,
+          date: contact.date,
+          icon: Users,
+          color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+        });
       });
-    });
+    }
 
-    stories.forEach(story => {
-      items.push({
-        id: story.id,
-        type: 'story',
-        title: story.title,
-        date: story.createdAt,
-        icon: Star,
-        color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300'
+    if (visibleActivities.includes('story')) {
+      stories.forEach(story => {
+        items.push({
+          id: story.id,
+          type: 'story',
+          title: story.title,
+          date: story.createdAt,
+          icon: Star,
+          color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300'
+        });
       });
-    });
+    }
 
     return items.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-  }, [applications, prepEntries, companies, contacts, stories]);
+  }, [applications, prepEntries, companies, contacts, stories, visibleActivities]);
 
   // Group activities by date
   const activitiesByDate = useMemo(() => {
@@ -108,13 +120,17 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   }, [activities]);
 
   // Get calendar data
-  const getDaysInMonth = (date: Date, showWeekends: boolean) => {
+  const getDaysInMonth = (date: Date, showWeekends: boolean, startOfWeek: 'sun' | 'mon') => {
     const year = date.getFullYear();
     const month = date.getMonth();
     const firstDay = new Date(year, month, 1);
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
     let startingDayOfWeek = firstDay.getDay();
+
+    if (startOfWeek === 'mon') {
+      startingDayOfWeek = (startingDayOfWeek === 0) ? 6 : startingDayOfWeek - 1;
+    }
 
     if (!showWeekends) {
       startingDayOfWeek = (startingDayOfWeek === 0) ? 0 : startingDayOfWeek -1;
@@ -158,14 +174,17 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
     });
   };
 
-
-  const days = getDaysInMonth(currentDate, showWeekends);
+  const days = getDaysInMonth(currentDate, showWeekends, startOfWeek);
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const monthName = currentDate.toLocaleString('default', { month: 'long' });
 
   const selectedActivities = selectedDate ? activitiesByDate[selectedDate] || [] : [];
-  const weekDays = showWeekends ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
+  
+  const allWeekDays = startOfWeek === 'sun' 
+    ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] 
+    : ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const weekDays = showWeekends ? allWeekDays : allWeekDays.filter(day => day !== 'Sun' && day !== 'Sat');
 
   return (
     <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
@@ -189,20 +208,68 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
         onClose={() => setIsSettingsModalOpen(false)}
         title="Activity Calendar Settings"
       >
-        <div className="flex items-center justify-between">
-          <label htmlFor="show-weekends" className="text-sm font-medium text-slate-700 dark:text-slate-300">
-            Show Weekends
-          </label>
-          <button
-            id="show-weekends"
-            type="button"
-            onClick={() => setShowWeekends(!showWeekends)}
-            className={`${showWeekends ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-          >
-            <span
-              className={`${showWeekends ? 'translate-x-5' : 'translate-x-0'} inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
-            />
-          </button>
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <label htmlFor="show-weekends" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              Show Weekends
+            </label>
+            <button
+              id="show-weekends"
+              type="button"
+              onClick={() => setShowWeekends(!showWeekends)}
+              className={`${showWeekends ? 'bg-indigo-600' : 'bg-gray-200 dark:bg-gray-700'} relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+            >
+              <span
+                className={`${showWeekends ? 'translate-x-5' : 'translate-x-0'} inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out`}
+              />
+            </button>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Start of Week
+            </label>
+            <div className="flex rounded-md shadow-sm">
+              <button
+                type="button"
+                onClick={() => setStartOfWeek('sun')}
+                className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${startOfWeek === 'sun' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Sunday
+              </button>
+              <button
+                type="button"
+                onClick={() => setStartOfWeek('mon')}
+                className={`relative -ml-px inline-flex items-center px-4 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${startOfWeek === 'mon' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Monday
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Visible Activities
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              {['application', 'prep', 'company', 'contact', 'story'].map(activityType => (
+                <div key={activityType} className="flex items-center">
+                  <input
+                    id={`activity-${activityType}`}
+                    type="checkbox"
+                    checked={visibleActivities.includes(activityType)}
+                    onChange={() => {
+                      if (visibleActivities.includes(activityType)) {
+                        setVisibleActivities(visibleActivities.filter(a => a !== activityType));
+                      } else {
+                        setVisibleActivities([...visibleActivities, activityType]);
+                      }
+                    }}
+                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                  />
+                  <label htmlFor={`activity-${activityType}`} className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                    {activityType.charAt(0).toUpperCase() + activityType.slice(1)}
+                  </label>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </SettingsModal>
 

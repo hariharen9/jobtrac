@@ -38,6 +38,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [showScrollHint, setShowScrollHint] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useLocalStorage<'scroll' | 'grid'>('kanban-view-mode', 'scroll');
+  const [cardDensity, setCardDensity] = useLocalStorage<'compact' | 'normal'>('kanban-card-density', 'normal');
 
   const columns: KanbanColumn[] = [
     { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
@@ -232,23 +233,44 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
         onClose={() => setIsSettingsModalOpen(false)}
         title="Application Pipeline Settings"
       >
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            View Mode
-          </label>
-          <div className="flex rounded-md shadow-sm">
-            <button
-              type="button"
-              onClick={() => setViewMode('scroll')}
-              className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'scroll' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
-              Scroll
-            </button>
-            <button
-              type="button"
-              onClick={() => setViewMode('grid')}
-              className={`relative -ml-px inline-flex items-center px-4 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
-              Grid
-            </button>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              View Mode
+            </label>
+            <div className="flex rounded-md shadow-sm">
+              <button
+                type="button"
+                onClick={() => setViewMode('scroll')}
+                className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'scroll' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Scroll
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('grid')}
+                className={`relative -ml-px inline-flex items-center px-4 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${viewMode === 'grid' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Grid
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Card Density
+            </label>
+            <div className="flex rounded-md shadow-sm">
+              <button
+                type="button"
+                onClick={() => setCardDensity('normal')}
+                className={`relative inline-flex items-center px-4 py-2 rounded-l-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${cardDensity === 'normal' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Normal
+              </button>
+              <button
+                type="button"
+                onClick={() => setCardDensity('compact')}
+                className={`relative -ml-px inline-flex items-center px-4 py-2 rounded-r-md border border-slate-300 dark:border-slate-600 text-sm font-medium ${cardDensity === 'compact' ? 'bg-indigo-600 text-white' : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-600'}`}>
+                Compact
+              </button>
+            </div>
           </div>
         </div>
       </SettingsModal>
@@ -340,6 +362,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
+                      cardDensity={cardDensity}
                     />
                   ))}
                   
@@ -411,6 +434,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
+                      cardDensity={cardDensity}
                     />
                   ))}
                   {columnApplications.length === 0 && !isDropTarget && (
@@ -447,6 +471,7 @@ interface ApplicationCardProps {
   onDragStart?: (e: React.DragEvent, application: Application) => void;
   onDragEnd?: () => void;
   isDragging: boolean;
+  cardDensity: 'compact' | 'normal';
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({
@@ -455,30 +480,33 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onDelete,
   onDragStart,
   onDragEnd,
-  isDragging
+  isDragging,
+  cardDensity
 }) => {
+  const isCompact = cardDensity === 'compact';
+
   return (
     <div
       draggable={!!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, application) : undefined}
       onDragEnd={onDragEnd}
-      className={`bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
+      className={`bg-white dark:bg-dark-card amoled:bg-amoled-card ${isCompact ? 'p-2' : 'p-4'} rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
         isDragging ? 'opacity-50 rotate-2 scale-105 relative' : 'hover:scale-[1.02]'
       } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''}`}
       style={isDragging ? { 
         zIndex: 99999
       } : {}}
     >
-      <div className="flex justify-between items-start mb-3">
+      <div className={`flex justify-between items-start ${isCompact ? 'mb-1' : 'mb-3'}`}>
         <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
+          <h4 className={`font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate ${isCompact ? 'text-sm' : 'text-base'}`}>
             {application.company}
           </h4>
           <a
             href={application.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-sm text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 mt-1"
+            className={`text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1 ${isCompact ? 'text-xs mt-0.5' : 'text-sm mt-1'}`}
             onClick={(e) => e.stopPropagation()}
           >
             {application.role}
@@ -510,41 +538,43 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         </div>
       </div>
 
-      <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
-        <div className="flex justify-between">
-          <span>Applied:</span>
-          <span className="font-medium">{application.date}</span>
-        </div>
-        
-        {application.location && (
+      {!isCompact && (
+        <div className="space-y-2 text-sm text-slate-600 dark:text-slate-400">
           <div className="flex justify-between">
-            <span>Location:</span>
-            <span className="font-medium">{application.location}</span>
+            <span>Applied:</span>
+            <span className="font-medium">{application.date}</span>
           </div>
-        )}
-        
-        {application.referral === 'Y' && (
-          <div className="flex items-center gap-2">
-            <span className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 text-xs px-2 py-1 rounded-full">
-              Referral
-            </span>
-          </div>
-        )}
-        
-        {application.nextStep && (
-          <div className="mt-3 p-2 bg-slate-50 dark:bg-slate-600 rounded text-xs">
-            <span className="font-medium">Next: </span>
-            {application.nextStep}
-          </div>
-        )}
-        
-        {application.notes && (
-          <div className="mt-3 p-2 bg-slate-50 dark:bg-slate-600 rounded text-xs">
-            <div className="font-medium mb-1">Notes:</div>
-            <div className="line-clamp-2">{application.notes}</div>
-          </div>
-        )}
-      </div>
+          
+          {application.location && (
+            <div className="flex justify-between">
+              <span>Location:</span>
+              <span className="font-medium">{application.location}</span>
+            </div>
+          )}
+          
+          {application.referral === 'Y' && (
+            <div className="flex items-center gap-2">
+              <span className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 text-xs px-2 py-1 rounded-full">
+                Referral
+              </span>
+            </div>
+          )}
+          
+          {application.nextStep && (
+            <div className="mt-3 p-2 bg-slate-50 dark:bg-slate-600 rounded text-xs">
+              <span className="font-medium">Next: </span>
+              {application.nextStep}
+            </div>
+          )}
+          
+          {application.notes && (
+            <div className="mt-3 p-2 bg-slate-50 dark:bg-slate-600 rounded text-xs">
+              <div className="font-medium mb-1">Notes:</div>
+              <div className="line-clamp-2">{application.notes}</div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
