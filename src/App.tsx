@@ -36,6 +36,8 @@ import { ProfileModal } from './features/profile';
 import UserProfileModal from './features/auth/components/UserProfileModal';
 import { Helmet } from 'react-helmet-async';
 
+import SimpleTooltip from './components/shared/SimpleTooltip';
+
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
 const MemoizedCompanyResearch = React.memo(CompanyResearch);
@@ -821,49 +823,61 @@ function App() {
               </p>
             </div>
             <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsCommandPaletteOpen(true)}
-                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
-              >
-                <Search className="w-4 h-4" />
-                <span className="hidden sm:inline">Command</span>
-                <kbd className="hidden sm:inline text-xs px-1 py-0.5 bg-gray-100 dark:bg-gray-700 amoled:bg-gray-700 rounded">⌘K</kbd>
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setIsHelpOpen(true)}
-                className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
-              >
-                <HelpCircle className="w-4 h-4" />
-                <span className="hidden sm:inline">Help</span>
-              </motion.button>
-              
-              {/* Quick Start Button */}
-              {onboarding.hasCompletedWelcome && getProgressPercentage() < 100 && (
+              <SimpleTooltip content="Command Palette (⌘K)">
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowQuickStart(true)}
-                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-blue-50 border border-blue-200 rounded-md sm:gap-2 sm:px-3 sm:text-sm text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                  onClick={() => setIsCommandPaletteOpen(true)}
+                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
                 >
-                  <Target className="w-4 h-4" />
-                  <span className="hidden sm:inline">Quick Start</span>
+                  <Search className="w-4 h-4" />
+                  <span className="hidden sm:inline">Command</span>
+                  <kbd className="hidden sm:inline text-xs px-1 py-0.5 bg-gray-100 dark:bg-gray-700 amoled:bg-gray-700 rounded">⌘K</kbd>
                 </motion.button>
+              </SimpleTooltip>
+              <SimpleTooltip content="Help & Guide">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsHelpOpen(true)}
+                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span className="hidden sm:inline">Help</span>
+                </motion.button>
+              </SimpleTooltip>
+              
+              {/* Quick Start Button */}
+              {onboarding.hasCompletedWelcome && getProgressPercentage() < 100 && (
+                <SimpleTooltip content="Complete quick start guide">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setShowQuickStart(true)}
+                    className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-blue-50 border border-blue-200 rounded-md sm:gap-2 sm:px-3 sm:text-sm text-blue-700 dark:bg-blue-900/20 dark:border-blue-800 dark:text-blue-300 hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                  >
+                    <Target className="w-4 h-4" />
+                    <span className="hidden sm:inline">Quick Start</span>
+                  </motion.button>
+                </SimpleTooltip>
               )}
               
-              <ThemeToggle />
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={openProfileModal} 
-                className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card dark:border-dark-border amoled:border-amoled-border dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
-              >
-                <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
-              </motion.button>
-              <AuthButton />
+              <SimpleTooltip content="Toggle Theme">
+                <ThemeToggle />
+              </SimpleTooltip>
+              <SimpleTooltip content="Profile & Analytics">
+                <motion.button 
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={openProfileModal} 
+                  className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card dark:border-dark-border amoled:border-amoled-border dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
+                >
+                  <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+                </motion.button>
+              </SimpleTooltip>
+              <SimpleTooltip content="Sign Out">
+                <AuthButton />
+              </SimpleTooltip>
             </div>
           </div>
         </motion.header>

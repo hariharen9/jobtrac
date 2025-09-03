@@ -4,6 +4,7 @@ import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import SettingsModal from '../../../components/shared/SettingsModal';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -212,12 +213,14 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
             <MoreHorizontal className="w-5 h-5" />
             Application Pipeline
           </h2>
-          <button
-            onClick={() => setIsSettingsModalOpen(true)}
-            className="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-          >
-            <Settings className="w-5 h-5 text-slate-500 dark:text-slate-400" />
-          </button>
+          <SimpleTooltip content="Pipeline Settings">
+            <button
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="p-1 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+            >
+              <Settings className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+            </button>
+          </SimpleTooltip>
         </div>
         <button
           onClick={onAddApplication}
@@ -556,26 +559,30 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         </div>
         
         <div className="flex items-center gap-1 ml-2">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(application);
-            }}
-            className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1"
-            aria-label="Edit application"
-          >
-            <Pencil className="w-4 h-4" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(application.id);
-            }}
-            className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors p-1"
-            aria-label="Delete application"
-          >
-            <Trash2 className="w-4 h-4" />
-          </button>
+          <SimpleTooltip content="Edit" position="top">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(application);
+              }}
+              className="text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-1"
+              aria-label="Edit application"
+            >
+              <Pencil className="w-4 h-4" />
+            </button>
+          </SimpleTooltip>
+          <SimpleTooltip content="Delete" position="top">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(application.id);
+              }}
+              className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors p-1"
+              aria-label="Delete application"
+            >
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </SimpleTooltip>
         </div>
       </div>
 
