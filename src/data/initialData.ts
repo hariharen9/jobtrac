@@ -71,7 +71,8 @@ export const initialCompanyResearch: CompanyResearch[] = [
     values: 'Customer success, innovation.',
     why: 'Strong GoLang usage, direct relevance to my network overlay experience.',
     questions: 'What are the biggest scaling challenges for the OCI networking team right now?',
-    news: 'OCI announced new AI-focused data centers.'
+    news: 'OCI announced new AI-focused data centers.',
+    date: '2025-08-20'
   }
 ];
 
@@ -95,7 +96,8 @@ export const initialStarStories: StarStory[] = [
     situation: 'Manual testing for K8s deployments was slow, error-prone, and inconsistent across multiple teams.',
     task: 'My task was to create a unified solution to automate the entire resource management and testing process.',
     action: 'I led the development of a Python-based automation framework that handled resource creation, test execution, and cleanup. I documented the tool and onboarded other teams to use it.',
-    result: 'This reduced testing times by a massive 90% and eliminated manual configuration errors, significantly improving developer productivity and release velocity.'
+    result: 'This reduced testing times by a massive 90% and eliminated manual configuration errors, significantly improving developer productivity and release velocity.',
+    date: '2025-09-01'
   },
   {
     id: '2',
@@ -103,7 +105,8 @@ export const initialStarStories: StarStory[] = [
     situation: 'Legacy cleanup scripts were unreliable and frequently failed, leaving orphaned network resources in our production and staging cloud environments, causing resource leakage.',
     task: 'I needed to build a robust, native solution to handle the resource lifecycle automatically and reliably.',
     action: 'I designed and developed a garbage collection system from scratch using GoLang, implementing the controller/operator pattern. This controller watched for specific resources and ensured their entire lifecycle was managed correctly.',
-    result: 'This new system completely eliminated all orphaned objects, ensuring 100% resource compliance and improving the high availability and stability of our core infrastructure.'
+    result: 'This new system completely eliminated all orphaned objects, ensuring 100% resource compliance and improving the high availability and stability of our core infrastructure.',
+    date: '2025-09-02'
   }
 ];
 

@@ -47,6 +47,7 @@ export interface CompanyResearch {
   why: string;
   questions: string;
   news: string;
+  date: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -71,6 +72,7 @@ export interface StarStory {
   task: string;
   action: string;
   result: string;
+  date: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }

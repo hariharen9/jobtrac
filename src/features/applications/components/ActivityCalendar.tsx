@@ -71,7 +71,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           id: company.id,
           type: 'company',
           title: `Research: ${company.company}`,
-          date: company.createdAt,
+          date: company.date || company.createdAt.toDate().toISOString().split('T')[0],
           icon: Building,
           color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
         });
@@ -97,7 +97,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           id: story.id,
           type: 'story',
           title: story.title,
-          date: story.createdAt,
+          date: story.date || story.createdAt.toDate().toISOString().split('T')[0],
           icon: Star,
           color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300'
         });

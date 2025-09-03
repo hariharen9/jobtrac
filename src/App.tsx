@@ -577,8 +577,8 @@ function App() {
         return (
           <CompanyForm
             onSubmit={editingItem
-              ? (data: Partial<CompanyResearchType>) => handleUpdate(updateCompany, { ...editingItem, ...data })
-              : (data: Omit<CompanyResearchType, 'id'>) => handleFormSubmit(addCompany, data)
+              ? (data: Partial<CompanyResearchType>) => handleUpdate(updateCompany, { ...editingItem, ...data, date: new Date().toISOString().split('T')[0] })
+              : (data: Omit<CompanyResearchType, 'id'>) => handleFormSubmit(addCompany, { ...data, date: new Date().toISOString().split('T')[0] })
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -601,8 +601,8 @@ function App() {
         return (
           <StarForm
             onSubmit={editingItem
-              ? (data: Partial<StarStory>) => handleUpdate(updateStory, { ...editingItem, ...data })
-              : (data: Omit<StarStory, 'id'>) => handleFormSubmit(addStory, data)
+              ? (data: Partial<StarStory>) => handleUpdate(updateStory, { ...editingItem, ...data, date: new Date().toISOString().split('T')[0] })
+              : (data: Omit<StarStory, 'id'>) => handleFormSubmit(addStory, { ...data, date: new Date().toISOString().split('T')[0] })
             }
             onCancel={closeModal}
             initialData={editingItem}
