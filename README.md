@@ -121,8 +121,55 @@
 <br>
 <sub><b>JobTrac</b></sub>
 <br><br>
+
+<table align="center">
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/web%20page.gif" alt="General UI" width="100%"><br>
+      <sub><b>General UI</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/auth.gif" alt="Authentication" width="100%"><br>
+      <sub><b>Authentication</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/onboarding.gif" alt="Onboarding" width="100%"><br>
+      <sub><b>Onboarding</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/kanban.gif" alt="Kanban Board" width="100%"><br>
+      <sub><b>Kanban Board</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/applications&calander.gif" alt="Calendar View" width="100%"><br>
+      <sub><b>Calendar View</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/prep.gif" alt="Prep Log" width="100%"><br>
+      <sub><b>Prep Log</b></sub>
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="33%">
+      <img src="assets/gifs/company,network&STAR.gif" alt="Research, Networking, STAR" width="100%"><br>
+      <sub><b>Research, Networking, STAR</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/command%20pallet.gif" alt="Command Palette" width="100%"><br>
+      <sub><b>Command Palette</b></sub>
+    </td>
+    <td align="center" width="33%">
+      <img src="assets/gifs/theme%20and%20profile%20modal.gif" alt="Theming and Profile" width="100%"><br>
+      <sub><b>Theming and Profile</b></sub>
+    </td>
+  </tr>
+</table>
+
+<br/>
 <details>
-<summary><h2>🖼️ Click to expand more Screenshots</h2></summary>
+<summary><h3>🖼️ Click to expand more Screenshots</h3></summary>
 <br>
 
 <img src="assets/screenshots/Landing.png" alt="Landing" width="100%">
@@ -232,53 +279,6 @@
 | **Networking Management**| ✅ Contact system                      | ❌ Phone contacts   | 🚯 Separate app   |
 | **Analytics & Insights** | ✅ Visual dashboard                    | ❌ Manual charts    | ⛔️ Basic stats    |
 | **Mobile Experience**    | ✅ Native-like                         | ❌ Desktop only     | 🚫 Poor mobile    |
-
-<br>
-
-<table align="center">
-  <tr>
-    <td align="center" width="33%">
-      <img src="assets/gifs/web%20page.gif" alt="General UI" width="100%"><br>
-      <sub><b>General UI</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/auth.gif" alt="Authentication" width="100%"><br>
-      <sub><b>Authentication</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/onboarding.gif" alt="Onboarding" width="100%"><br>
-      <sub><b>Onboarding</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <img src="assets/gifs/kanban.gif" alt="Kanban Board" width="100%"><br>
-      <sub><b>Kanban Board</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/applications&calander.gif" alt="Calendar View" width="100%"><br>
-      <sub><b>Calendar View</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/prep.gif" alt="Prep Log" width="100%"><br>
-      <sub><b>Prep Log</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="33%">
-      <img src="assets/gifs/company,network&STAR.gif" alt="Research, Networking, STAR" width="100%"><br>
-      <sub><b>Research, Networking, STAR</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/command%20pallet.gif" alt="Command Palette" width="100%"><br>
-      <sub><b>Command Palette</b></sub>
-    </td>
-    <td align="center" width="33%">
-      <img src="assets/gifs/theme%20and%20profile%20modal.gif" alt="Theming and Profile" width="100%"><br>
-      <sub><b>Theming and Profile</b></sub>
-    </td>
-  </tr>
-</table>
 
 ---
 
