@@ -300,6 +300,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     onEdit={onEditApplication}
                     onDelete={onDeleteApplication}
                     isDragging={false}
+                    cardDensity={cardDensity}
                   />
                 ))}
                 
@@ -484,19 +485,59 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   cardDensity
 }) => {
   const isCompact = cardDensity === 'compact';
+  const [showMobileTooltip, setShowMobileTooltip] = useState(false);
+  const longPressTimer = useRef<NodeJS.Timeout>();
+
+  const handlePressStart = () => {
+    // This is for mobile view only, where onDragStart is not provided.
+    if (!onDragStart) {
+      longPressTimer.current = setTimeout(() => {
+        setShowMobileTooltip(true);
+      }, 400);
+    }
+  };
+
+  const handlePressEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
+  };
+
+  useEffect(() => {
+    if (showMobileTooltip) {
+      const hideTimer = setTimeout(() => {
+        setShowMobileTooltip(false);
+      }, 2500);
+      return () => clearTimeout(hideTimer);
+    }
+  }, [showMobileTooltip]);
+
+  const isMobileView = !onDragStart;
 
   return (
     <div
       draggable={!!onDragStart}
       onDragStart={onDragStart ? (e) => onDragStart(e, application) : undefined}
       onDragEnd={onDragEnd}
-      className={`bg-white dark:bg-dark-card amoled:bg-amoled-card ${isCompact ? 'p-2' : 'p-4'} rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
-        isDragging ? 'opacity-50 rotate-2 scale-105 relative' : 'hover:scale-[1.02]'
+      onMouseDown={handlePressStart}
+      onMouseUp={handlePressEnd}
+      onMouseLeave={handlePressEnd}
+      onTouchStart={handlePressStart}
+      onTouchEnd={handlePressEnd}
+      onTouchCancel={handlePressEnd}
+      className={`relative bg-white dark:bg-dark-card amoled:bg-amoled-card ${isCompact ? 'p-2' : 'p-4'} rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
+        isDragging ? 'opacity-50 rotate-2 scale-105' : 'hover:scale-[1.02]'
       } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''}`}
       style={isDragging ? { 
         zIndex: 99999
       } : {}}
     >
+      {isMobileView && showMobileTooltip && (
+        <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max max-w-xs bg-gray-800 text-white text-xs rounded-md px-3 py-1.5 z-10 shadow-lg">
+          Drag & drop is disabled on mobile. <br/> Please EDIT to move applications. 
+          <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-gray-800"></div>
+        </div>
+      )}
       <div className={`flex justify-between items-start ${isCompact ? 'mb-1' : 'mb-3'}`}>
         <div className="flex-1 min-w-0">
           <h4 className={`font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate ${isCompact ? 'text-sm' : 'text-base'}`}>
