@@ -89,11 +89,14 @@ const CompetitiveAdvantageSection = () => {
 
         {/* Market Context - Subtle */}
         <motion.div
-          className="text-center"
+          className="text-center mt-12 sm:mt-16"
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : {}}
           transition={{ delay: 0.8, duration: 0.8 }}
         >
+          <h3 className="text-lg sm:text-xl font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-4">
+            The Job Search Landscape
+          </h3>
           <div className="inline-flex items-center space-x-8 px-8 py-4 bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20">
             <div className="text-center">
               <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400">$4.5B</div>

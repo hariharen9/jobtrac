@@ -311,7 +311,7 @@ const Pricing = () => {
           transition={{ delay: 0.8, duration: 0.8 }}
         >
           <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-            Core features licensed under MIT License. 
+            Core features licensed under Apache License 2.0. 
             <a 
               href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE" 
               target="_blank" 
