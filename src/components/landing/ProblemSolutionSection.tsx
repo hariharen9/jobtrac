@@ -1,9 +1,12 @@
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { useRef, useState, useEffect, useCallback } from 'react';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 
 const ProblemSolutionSection = () => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const challenges = [
     { icon: '📊', title: 'Scattered Information', description: 'Applications, notes, and research spread across multiple tools' },
@@ -11,6 +14,56 @@ const ProblemSolutionSection = () => {
     { icon: '🔍', title: 'Lost Opportunities', description: 'Missed follow-ups and forgotten networking connections' },
     { icon: '📈', title: 'No Progress Insight', description: 'Unclear what strategies are working or need improvement' },
   ];
+
+  const testimonials = [
+    {
+      quote: "JobTrac turned my chaotic job search into a strategic campaign. I went from scattered applications to organized success in weeks, not months.",
+      author: "Manassa Varshni",
+      role: "Software Engineer",
+      company: "IBM"
+    },
+    {
+      quote: "As a career switcher, JobTrac's comprehensive platform helped me manage every aspect of my transition - from tracking over 100 applications to preparing confident interview responses. The structured approach gave me clarity and momentum when I needed it most.",
+      author: "Thriambika Kumar",
+      role: "Security Analyst",
+      company: "Accenture"
+    },
+    {
+      quote: "The Company Research feature helped me understand organizational cultures and tailor my applications accordingly, while the Prep Log transformed my interview preparation with structured STAR stories. Together, they increased my callback rate by 3x and interview confidence significantly.",
+      author: "Sajal I",
+      role: "HR Data Analyst",
+      company: "Reliance"
+    },
+    {
+      quote: "JobTrac's intuitive interface and comprehensive feature set streamlined my entire job search process. The ability to track applications, prepare for interviews, and research companies all in one place saved me countless hours and ultimately helped me land my dream role.",
+      author: "Balaganesh S",
+      role: "RFSW Engineer",
+      company: "Qualcomm"
+    }
+  ];
+
+  // Auto-rotate testimonials every 3 seconds, pause on hover
+  useEffect(() => {
+    if (!isHovered) {
+      intervalRef.current = setInterval(() => {
+        setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+      }, 3000);
+    }
+    
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isHovered, testimonials.length]);
+
+  const nextTestimonial = useCallback(() => {
+    setCurrentTestimonial((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1));
+  }, [testimonials.length]);
+
+  const prevTestimonial = useCallback(() => {
+    setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
+  }, [testimonials.length]);
 
   return (
     <section ref={ref} className="py-16 sm:py-32 px-6">
@@ -52,7 +105,7 @@ const ProblemSolutionSection = () => {
 
         {/* Solution Statement */}
         <motion.div
-          className="text-center p-8 bg-gradient-to-r from-indigo-50/50 via-purple-50/50 to-pink-50/50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 amoled:from-indigo-900/30 amoled:via-purple-900/30 amoled:to-pink-900/30 backdrop-blur-sm rounded-3xl border border-indigo-200/50 dark:border-indigo-700/30 amoled:border-indigo-700/50"
+          className="text-center p-8 bg-gradient-to-r from-indigo-50/50 via-purple-50/50 to-pink-50/50 dark:from-indigo-900/20 dark:via-purple-900/20 dark:to-pink-900/20 amoled:from-indigo-900/30 amoled:via-purple-900/30 amoled:to-pink-900/30 backdrop-blur-sm rounded-3xl border border-indigo-200/50 dark:border-indigo-700/30 amoled:border-indigo-700/50 mb-16"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ delay: 0.5, duration: 0.8 }}
@@ -70,6 +123,72 @@ const ProblemSolutionSection = () => {
           <p className="text-lg text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary max-w-2xl mx-auto">
             One unified platform for tracking applications, preparing for interviews, researching companies, managing networking, and analyzing your progress—all with beautiful design and real-time sync.
           </p>
+        </motion.div>
+
+        {/* Testimonial Carousel */}
+        <motion.div
+          className="max-w-4xl mx-auto bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20 relative overflow-hidden"
+          initial={{ opacity: 0, y: 30 }}
+          animate={isInView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.7, duration: 0.8 }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <div className="relative h-60 sm:h-52">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentTestimonial}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="absolute inset-0 flex flex-col justify-center"
+              >
+                <blockquote className="text-xl sm:text-2xl italic text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-6 text-center">
+                  "{testimonials[currentTestimonial].quote}"
+                </blockquote>
+                <cite className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 text-center">
+                  - {testimonials[currentTestimonial].author}, {testimonials[currentTestimonial].role}, {testimonials[currentTestimonial].company}
+                </cite>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+          
+          {/* Navigation Dots */}
+          <div className="flex justify-center space-x-2 mt-8">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentTestimonial(index)}
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                  index === currentTestimonial 
+                    ? 'bg-indigo-600 dark:bg-indigo-400 amoled:bg-indigo-400 w-6' 
+                    : 'bg-slate-300 dark:bg-slate-600 amoled:bg-slate-600'
+                }`}
+                aria-label={`View testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
+          
+          {/* Navigation Arrows */}
+          <button 
+            onClick={prevTestimonial}
+            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300"
+            aria-label="Previous testimonial"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button 
+            onClick={nextTestimonial}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300"
+            aria-label="Next testimonial"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
         </motion.div>
       </div>
     </section>
