@@ -105,39 +105,39 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 sm:p-6">
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20, rotateX: 2 }}
         animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
         exit={{ opacity: 0, scale: 0.95, y: 10, rotateX: -2 }}
         transition={{ duration: 0.3, ease: "easeOut" }}
-        className="bg-white/90 dark:bg-dark-card/90 amoled:bg-amoled-card/90 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-md border border-gray-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50 overflow-hidden"
+        className="bg-white/90 dark:bg-dark-card/90 amoled:bg-amoled-card/90 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-2xl w-full max-w-md border border-gray-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50 overflow-hidden mx-2 sm:mx-4 my-4 sm:my-6"
         style={{
           backdropFilter: 'blur(20px)',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.1)'
         }}
       >
         {/* Header */}
-        <div className="p-6 border-b border-gray-200/30 dark:border-dark-border/30 amoled:border-amoled-border/30 bg-gradient-to-r from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 amoled:from-indigo-900/10 amoled:to-purple-900/10">
+        <div className="p-4 sm:p-6 border-b border-gray-200/30 dark:border-dark-border/30 amoled:border-amoled-border/30 bg-gradient-to-r from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 amoled:from-indigo-900/10 amoled:to-purple-900/10">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <motion.div 
                 initial={{ scale: 0, rotate: -10 }}
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-                className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg"
+                className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg"
                 style={{
                   boxShadow: '0 10px 25px -5px rgba(99, 102, 241, 0.4)'
                 }}
               >
-                <User className="w-6 h-6 text-white" />
+                <User className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </motion.div>
               <div>
                 <motion.h2 
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text"
+                  className="text-lg sm:text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text"
                 >
                   Welcome to JobTrac! 🎉
                 </motion.h2>
@@ -145,7 +145,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary"
+                  className="text-xs sm:text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary"
                 >
                   Help us personalize your experience
                 </motion.p>
@@ -155,7 +155,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-6 bg-gradient-to-b from-white/50 to-white/30 dark:from-dark-card/50 dark:to-dark-card/30 amoled:from-amoled-card/50 amoled:to-amoled-card/30">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6 bg-gradient-to-b from-white/50 to-white/30 dark:from-dark-card/50 dark:to-dark-card/30 amoled:from-amoled-card/50 amoled:to-amoled-card/30">
           {/* Name Field */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -171,7 +171,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-xl bg-white/70 dark:bg-dark-bg/70 amoled:bg-amoled-bg/70 backdrop-blur-sm text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-500 dark:placeholder-dark-text-secondary amoled:placeholder-amoled-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 hover:bg-white/80 dark:hover:bg-dark-bg/80 amoled:hover:bg-amoled-bg/80 ${
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 border rounded-lg sm:rounded-xl bg-white/70 dark:bg-dark-bg/70 amoled:bg-amoled-bg/70 backdrop-blur-sm text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-500 dark:placeholder-dark-text-secondary amoled:placeholder-amoled-text-secondary focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500/50 transition-all duration-300 hover:bg-white/80 dark:hover:bg-dark-bg/80 amoled:hover:bg-amoled-bg/80 ${
                   errors.name 
                     ? 'border-red-300 dark:border-red-600 focus:ring-red-500/50' 
                     : 'border-slate-300/50 dark:border-dark-border/50 amoled:border-amoled-border/50'
@@ -205,7 +205,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <select
                 value={formData.ageRange}
                 onChange={(e) => handleInputChange('ageRange', e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
                   errors.ageRange 
                     ? 'border-red-300 dark:border-red-600' 
                     : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border'
@@ -233,7 +233,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <select
                 value={formData.gender}
                 onChange={(e) => handleInputChange('gender', e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
+                className={`w-full pl-10 pr-4 py-2.5 sm:py-3 border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ${
                   errors.gender 
                     ? 'border-red-300 dark:border-red-600' 
                     : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border'
@@ -261,7 +261,7 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <select
                 value={formData.country}
                 onChange={(e) => handleInputChange('country', e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
+                className="w-full pl-10 pr-4 py-2.5 sm:py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
                 disabled={isSubmitting}
               >
                 <option value="">Select your country</option>
@@ -279,21 +279,19 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
             </p>
           </div>
 
-
-
           {/* Action Buttons */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.9 }}
-            className="flex flex-col gap-4 pt-4"
+            className="flex flex-col gap-3 sm:gap-4 pt-4"
           >
             <motion.button
               type="submit"
               disabled={isSubmitting}
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="relative w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:hover:shadow-lg overflow-hidden group"
+              className="relative w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-semibold py-3 px-4 sm:py-4 sm:px-6 rounded-lg sm:rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl disabled:hover:shadow-lg overflow-hidden group"
               style={{
                 boxShadow: isSubmitting ? '0 4px 15px rgba(0,0,0,0.2)' : '0 10px 25px -5px rgba(99, 102, 241, 0.4), 0 8px 10px -6px rgba(99, 102, 241, 0.3)'
               }}
@@ -302,20 +300,11 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               <div className="relative flex items-center justify-center gap-2">
                 {isSubmitting ? (
                   <>
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                    <span>Setting up your profile...</span>
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    <span className="text-sm sm:text-base">Setting up your profile...</span>
                   </>
                 ) : (
-                  <>
-                    <span>Complete Setup</span>
-                    <motion.div
-                      initial={{ x: 0 }}
-                      animate={{ x: [0, 4, 0] }}
-                      transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                    >
-                      ✨
-                    </motion.div>
-                  </>
+                  <span className="text-sm sm:text-base">Complete Profile</span>
                 )}
               </div>
             </motion.button>
@@ -326,9 +315,9 @@ const UserProfileModal: React.FC<UserProfileModalProps> = ({
               disabled={isSubmitting}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              className="text-xs text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-700 dark:hover:text-dark-text amoled:hover:text-amoled-text transition-all duration-300 underline decoration-dotted underline-offset-2 hover:decoration-solid py-2"
+              className="w-full py-2.5 sm:py-3 px-4 text-sm sm:text-base font-medium text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg sm:rounded-xl hover:bg-slate-50 dark:hover:bg-dark-border amoled:hover:bg-amoled-border transition-colors shadow-sm"
             >
-              Skip for now
+              Skip for Now
             </motion.button>
           </motion.div>
         </form>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -18,7 +17,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, title, c
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-slate-900 bg-opacity-50 flex justify-center items-center p-2 sm:p-4 z-50"
+          className="fixed inset-0 bg-slate-900 bg-opacity-50 flex justify-center items-center p-4 sm:p-6 z-50"
           onClick={onClose}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
@@ -27,7 +26,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose, title, c
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.9, opacity: 0, y: 50 }}
             transition={{ duration: 0.3, ease: 'easeOut' }}
-            className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg shadow-lg p-6 w-full max-w-md"
+            className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg shadow-lg p-4 sm:p-6 w-full max-w-md mx-2 sm:mx-4 my-4 sm:my-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-4">
