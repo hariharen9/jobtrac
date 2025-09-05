@@ -110,7 +110,7 @@ const LandingPage = () => {
         <WhyJobTracSection />
         <ProblemSolutionSection />
         <CompetitiveAdvantageSection />
-        <SuccessMetricsSection />
+        {/* <SuccessMetricsSection /> */}
         <TechnologyStackSection />
         <PricingSection />
         <CTASection />
