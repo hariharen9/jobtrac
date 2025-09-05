@@ -19,6 +19,7 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [needsProfileSetup, setNeedsProfileSetup] = useState(false);
+  const [showGuestLogoutModal, setShowGuestLogoutModal] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -162,41 +163,10 @@ export function useAuth() {
     try {
       if (auth.currentUser) {
         if (auth.currentUser.isAnonymous) {
-          const confirmation = window.confirm(
-            'You are signed in as a guest, It is intended to just let users try out the application. Signing out will permanently delete all your data( To avoid this, make sure you are connected with Google :). Are you sure you want to continue?'
-          );
-          if (!confirmation) {
-            return;
-          }
-
-          try {
-            // Re-authenticate anonymous user to refresh token before deletion
-            await signInAnonymously(auth);
-            console.log('Anonymous user re-authenticated successfully.');
-          } catch (reauthError) {
-            console.error('Error re-authenticating anonymous user:', reauthError);
-            toast.error('Failed to re-authenticate guest user. Please try again.');
-            return; // Stop if re-authentication fails
-          }
-
-          try {
-            await deleteUserData(auth.currentUser.uid);
-            console.log('User data deleted from Firestore.');
-          } catch (dataDeleteError) {
-            console.error('Error deleting user data:', dataDeleteError);
-            toast.error('Failed to delete user data. Please try again.');
-            return; // Stop if data deletion fails
-          }
-
-          try {
-            await deleteUser(auth.currentUser);
-            toast.success('User account deleted successfully.');
-            console.log('User account deleted from Firebase Auth.');
-          } catch (authDeleteError) {
-            console.error('Error deleting user account from Auth:', authDeleteError);
-            toast.error('Failed to delete user account. Please try again.');
-            return; // Stop if auth deletion fails
-          }
+          // Instead of using window.confirm, we'll show our custom modal
+          setShowGuestLogoutModal(true);
+          // The actual logout logic will be handled in confirmGuestLogout
+          return;
         }
       }
       await signOut(auth);
@@ -204,6 +174,53 @@ export function useAuth() {
       console.error('Error signing out:', error);
       throw error;
     }
+  };
+
+  const confirmGuestLogout = async () => {
+    if (!auth.currentUser || !auth.currentUser.isAnonymous) {
+      setShowGuestLogoutModal(false);
+      return;
+    }
+
+    try {
+      // Re-authenticate anonymous user to refresh token before deletion
+      await signInAnonymously(auth);
+      console.log('Anonymous user re-authenticated successfully.');
+    } catch (reauthError) {
+      console.error('Error re-authenticating anonymous user:', reauthError);
+      toast.error('Failed to re-authenticate guest user. Please try again.');
+      setShowGuestLogoutModal(false);
+      return; // Stop if re-authentication fails
+    }
+
+    try {
+      await deleteUserData(auth.currentUser.uid);
+      console.log('User data deleted from Firestore.');
+    } catch (dataDeleteError) {
+      console.error('Error deleting user data:', dataDeleteError);
+      toast.error('Failed to delete user data. Please try again.');
+      setShowGuestLogoutModal(false);
+      return; // Stop if data deletion fails
+    }
+
+    try {
+      await deleteUser(auth.currentUser);
+      toast.success('User account deleted successfully.');
+      console.log('User account deleted from Firebase Auth.');
+    } catch (authDeleteError) {
+      console.error('Error deleting user account from Auth:', authDeleteError);
+      toast.error('Failed to delete user account. Please try again.');
+      setShowGuestLogoutModal(false);
+      return; // Stop if auth deletion fails
+    }
+
+    // Close the modal and sign out
+    setShowGuestLogoutModal(false);
+    await signOut(auth);
+  };
+
+  const cancelGuestLogout = () => {
+    setShowGuestLogoutModal(false);
   };
 
   const deleteAccount = async () => {
@@ -280,11 +297,14 @@ export function useAuth() {
     user,
     loading,
     needsProfileSetup,
+    showGuestLogoutModal,
     signInWithGoogle,
     signInAnonymous,
     signUpWithEmail,
     signInWithEmail,
     logout,
+    confirmGuestLogout,
+    cancelGuestLogout,
     deleteAccount,
     saveUserProfile,
     skipProfileSetup
