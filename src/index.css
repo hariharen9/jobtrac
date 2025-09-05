@@ -2,49 +2,169 @@
 @tailwind components;
 @tailwind utilities;
 
-.glassmorphism {
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%);
-  border: 1px solid rgba(209, 213, 219, 0.3);
+/* Custom scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
-.dark .glassmorphism {
-  background: rgba(22, 27, 34, 0.75);
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-.amoled .glassmorphism {
-  background: rgba(0, 0, 0, 0.75);
+::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
 }
 
-/* Mobile optimizations */
+::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.amoled ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+
+.amoled ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* Hide scrollbar for jump navigation */
 .scrollbar-hide {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
-  display: none;  /* Chrome, Safari and Opera */
+  display: none;
 }
 
-/* Touch-friendly interactions */
-@media (hover: none) and (pointer: coarse) {
-  button, a, [role="button"] {
-    min-height: 44px; /* Apple's recommended minimum touch target */
+/* Glass effect for modals */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dark .glass-effect {
+  background: rgba(30, 41, 59, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.amoled .glass-effect {
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Custom animations */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
   }
 }
 
-/* Smooth scrolling for better UX */
-html {
-  scroll-behavior: smooth;
+.float-animation {
+  animation: float 6s ease-in-out infinite;
 }
 
-/* Prevent text selection on interactive elements on mobile */
-@media (pointer: coarse) {
-  button, .tab, [role="tab"] {
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
+/* Responsive text adjustments */
+@media (max-width: 640px) {
+  .responsive-text-lg {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
   }
+  
+  .responsive-text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  .responsive-text-2xl {
+    font-size: 1.5rem;
+    line-height: 2rem;
+  }
+  
+  .responsive-text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .responsive-text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  
+  .responsive-text-5xl {
+    font-size: 2.5rem;
+    line-height: 1;
+  }
+  
+  .responsive-text-6xl {
+    font-size: 2.75rem;
+    line-height: 1;
+  }
+}
+
+/* Custom styles for specific components */
+.custom-text-style {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Border gradient effect */
+.border-gradient {
+  border: double 2px transparent;
+  border-radius: 6px;
+  background-image: linear-gradient(white, white), radial-gradient(circle at top left, #8b5cf6, #ec4899);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+.dark .border-gradient {
+  background-image: linear-gradient(#0f172a, #0f172a), radial-gradient(circle at top left, #8b5cf6, #ec4899);
+}
+
+.amoled .border-gradient {
+  background-image: linear-gradient(#020617, #020617), radial-gradient(circle at top left, #8b5cf6, #ec4899);
+}
+
+/* Card hover effect */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+.amoled .card-hover:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
 }

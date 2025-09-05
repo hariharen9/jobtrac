@@ -7,6 +7,8 @@ const ProblemSolutionSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartRef = useRef(0);
+  const touchEndRef = useRef(0);
 
   const challenges = [
     { icon: '📊', title: 'Scattered Information', description: 'Applications, notes, and research spread across multiple tools' },
@@ -64,6 +66,28 @@ const ProblemSolutionSection = () => {
   const prevTestimonial = useCallback(() => {
     setCurrentTestimonial((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1));
   }, [testimonials.length]);
+
+  // Handle swipe gestures for mobile
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndRef.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartRef.current || !touchEndRef.current) return;
+    const distance = touchStartRef.current - touchEndRef.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe) {
+      nextTestimonial();
+    } else if (isRightSwipe) {
+      prevTestimonial();
+    }
+  };
 
   return (
     <section ref={ref} className="py-16 sm:py-32 px-6">
@@ -127,14 +151,17 @@ const ProblemSolutionSection = () => {
 
         {/* Testimonial Carousel */}
         <motion.div
-          className="max-w-4xl mx-auto bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl p-8 sm:p-12 border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20 relative overflow-hidden"
+          className="max-w-4xl mx-auto bg-white/10 dark:bg-dark-card/10 amoled:bg-amoled-card/10 backdrop-blur-sm rounded-2xl p-6 sm:p-8 md:p-12 border border-white/20 dark:border-dark-border/20 amoled:border-amoled-border/20 relative overflow-hidden"
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ delay: 0.7, duration: 0.8 }}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          <div className="relative h-60 sm:h-52">
+          <div className="relative h-52 sm:h-60 md:h-56">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentTestimonial}
@@ -144,10 +171,10 @@ const ProblemSolutionSection = () => {
                 transition={{ duration: 0.5, ease: "easeInOut" }}
                 className="absolute inset-0 flex flex-col justify-center"
               >
-                <blockquote className="text-xl sm:text-2xl italic text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-6 text-center">
+                <blockquote className="text-base sm:text-xl md:text-2xl italic text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-6 sm:mb-6 text-center px-2 sm:px-4">
                   "{testimonials[currentTestimonial].quote}"
                 </blockquote>
-                <cite className="text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 text-center">
+                <cite className="text-sm sm:text-base md:text-lg font-semibold text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 text-center">
                   - {testimonials[currentTestimonial].author}, {testimonials[currentTestimonial].role}, {testimonials[currentTestimonial].company}
                 </cite>
               </motion.div>
@@ -155,14 +182,14 @@ const ProblemSolutionSection = () => {
           </div>
           
           {/* Navigation Dots */}
-          <div className="flex justify-center space-x-2 mt-8">
+          <div className="flex justify-center space-x-2 mt-6 sm:mt-8">
             {testimonials.map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentTestimonial(index)}
-                className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
                   index === currentTestimonial 
-                    ? 'bg-indigo-600 dark:bg-indigo-400 amoled:bg-indigo-400 w-6' 
+                    ? 'bg-indigo-600 dark:bg-indigo-400 amoled:bg-indigo-400 w-4 sm:w-6' 
                     : 'bg-slate-300 dark:bg-slate-600 amoled:bg-slate-600'
                 }`}
                 aria-label={`View testimonial ${index + 1}`}
@@ -170,22 +197,22 @@ const ProblemSolutionSection = () => {
             ))}
           </div>
           
-          {/* Navigation Arrows */}
+          {/* Navigation Arrows - Hidden on mobile, visible on larger screens */}
           <button 
             onClick={prevTestimonial}
-            className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300"
+            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300 hidden sm:block"
             aria-label="Previous testimonial"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button 
             onClick={nextTestimonial}
-            className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300"
+            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors duration-300 hidden sm:block"
             aria-label="Next testimonial"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
