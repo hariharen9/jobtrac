@@ -7,7 +7,7 @@ import React, {
   useRef,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { AlertTriangle, ExternalLink } from "lucide-react";
+import { AlertTriangle, ExternalLink, CheckCircle } from "lucide-react";
 
 interface OfflineContextProps {
   isOffline: boolean;
@@ -28,14 +28,29 @@ export const useOfflineWarning = () => {
   return context;
 };
 
-export const OfflineWarningProvider: React.FC<{
-  children: React.ReactNode;
+export const OfflineWarningProvider: React.FC<{ 
+  children: React.ReactNode; 
 }> = ({ children }) => {
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
   const [showModal, setShowModal] = useState(false);
   const [showIssueButton, setShowIssueButton] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
   const offlineTimerRef = useRef<NodeJS.Timeout | null>(null);
   const connectionCheckTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleOnline = useCallback(() => {
+    setIsRestoring(true);
+    setShowIssueButton(false);
+    if (offlineTimerRef.current) clearTimeout(offlineTimerRef.current);
+    if (connectionCheckTimerRef.current)
+      clearInterval(connectionCheckTimerRef.current);
+
+    setTimeout(() => {
+      setIsOffline(false);
+      setShowModal(false);
+      setIsRestoring(false);
+    }, 3000); // Show success message for 3 seconds
+  }, []);
 
   const checkConnection = useCallback(async () => {
     try {
@@ -47,29 +62,15 @@ export const OfflineWarningProvider: React.FC<{
         }
       );
       if (response.ok) {
-        setIsOffline(false);
-        setShowModal(false);
-        setShowIssueButton(false);
-        if (offlineTimerRef.current) clearTimeout(offlineTimerRef.current);
-        if (connectionCheckTimerRef.current)
-          clearInterval(connectionCheckTimerRef.current);
+        handleOnline();
       }
     } catch (error) {
       // Still offline
     }
-  }, []);
+  }, [handleOnline]);
 
   useEffect(() => {
-    const handleOnline = () => {
-      setIsOffline(false);
-      setShowModal(false);
-      setShowIssueButton(false);
-      if (offlineTimerRef.current) clearTimeout(offlineTimerRef.current);
-      if (connectionCheckTimerRef.current)
-        clearInterval(connectionCheckTimerRef.current);
-    };
-
-    const handleOffline = () => {
+    const handleOfflineEvent = () => {
       setIsOffline(true);
       setShowModal(true);
       offlineTimerRef.current = setTimeout(() => {
@@ -79,16 +80,16 @@ export const OfflineWarningProvider: React.FC<{
     };
 
     window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener("offline", handleOfflineEvent);
 
     return () => {
       window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener("offline", handleOfflineEvent);
       if (offlineTimerRef.current) clearTimeout(offlineTimerRef.current);
       if (connectionCheckTimerRef.current)
         clearInterval(connectionCheckTimerRef.current);
     };
-  }, [checkConnection]);
+  }, [checkConnection, handleOnline]);
 
   const showOfflineModal = useCallback(() => {
     if (isOffline) {
@@ -109,26 +110,39 @@ export const OfflineWarningProvider: React.FC<{
             exit={{ opacity: 0, y: -50 }}
             className="fixed top-5 right-5 z-50"
           >
-            <div className="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-200 p-4 rounded-lg shadow-lg">
+            <div
+              className={`p-4 rounded-lg shadow-lg ${
+                isRestoring
+                  ? "bg-green-100 dark:bg-green-900 border-l-4 border-green-500 text-green-700 dark:text-green-200"
+                  : "bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-200"
+              }`}
+            >
               <div className="flex items-center">
                 <div className="mr-3">
-                  <AlertTriangle className="w-6 h-6 text-yellow-500" />
+                  {isRestoring ? (
+                    <CheckCircle className="w-6 h-6 text-green-500" />
+                  ) : (
+                    <AlertTriangle className="w-6 h-6 text-yellow-500" />
+                  )}
                 </div>
                 <div>
                   <p className="font-bold">
-                    Houston, we have a connection problem! ❌
+                    {isRestoring
+                      ? "And... we're back online! ✅"
+                      : "Houston, we have a connection problem! ❌"}
                   </p>
                   <p className="text-sm">
-                    You've gone incognito from the web. But fear not! We've
-                    tucked your changes away safely until you reconnect.
+                    {isRestoring
+                      ? "Welcome back! You can now beam your changes up to the cloud."
+                      : "You've gone incognito from the web. But fear not! I've tucked your changes away safely until you reconnect."}
                   </p>
                 </div>
               </div>
-              {showIssueButton && (
+              {showIssueButton && !isRestoring && (
                 <div className="mt-4 pt-4 border-t border-yellow-400 dark:border-yellow-700">
                   <p className="text-sm">
                     Is the Wi-Fi icon still ghosting you? <br/> If a classic 'turn it
-                    off and on again' doesn't work, the gremlins might be on our
+                    off and on again' doesn't work and the problem persists, the gremlins might be on our
                     end.
                   </p>
                   <a
