@@ -8,6 +8,7 @@ import LicensePage from "../pages/LicensePage";
 import OverviewPage from "../pages/OverviewPage";
 import FAQPage from "../pages/FAQPage";
 import CreatorPage from "../pages/CreatorPage";
+import { OfflineWarningProvider } from "../components/shared/OfflineWarning";
 
 export const router = createBrowserRouter([
     {
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <ErrorBoundary><App /></ErrorBoundary>
+                element: <ErrorBoundary><OfflineWarningProvider><App /></OfflineWarningProvider></ErrorBoundary>
             }
         ]
     },

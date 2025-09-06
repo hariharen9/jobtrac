@@ -13,6 +13,7 @@ import {
   Timestamp
 } from 'firebase/firestore';
 import { db } from '../lib/firebase';
+import { useOfflineWarning } from '../components/shared/OfflineWarning';
 
 interface FirestoreDocument {
   createdAt: Timestamp;
@@ -28,6 +29,7 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { isOffline, showOfflineModal } = useOfflineWarning();
 
   const getCollectionRef = useCallback(() => {
     if (!userId) return null;
@@ -108,6 +110,11 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
   }, [collectionName, userId, getCollectionRef, usePolling, pollingInterval]);
 
   const addItem = useCallback(async (item: Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'userId'>) => {
+    if (isOffline) {
+      showOfflineModal();
+      toast.error('You are offline. Please check your connection.');
+      throw new Error('Offline');
+    }
     if (!userId) throw new Error('User must be authenticated to add an item.');
     
     const collectionRef = getCollectionRef();
@@ -130,9 +137,14 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
       toast.error('Failed to add item.');
       throw err;
     }
-  }, [collectionName, userId, getCollectionRef]);
+  }, [collectionName, userId, getCollectionRef, isOffline, showOfflineModal]);
 
   const updateItem = useCallback(async (id: string, updates: Partial<Omit<T, 'id'>>) => {
+    if (isOffline) {
+      showOfflineModal();
+      toast.error('You are offline. Please check your connection.');
+      throw new Error('Offline');
+    }
     if (!userId) throw new Error('User must be authenticated to update an item.');
 
     const collectionRef = getCollectionRef();
@@ -154,9 +166,14 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
       toast.error('Failed to update item.');
       throw err;
     }
-  }, [collectionName, userId, getCollectionRef]);
+  }, [collectionName, userId, getCollectionRef, isOffline, showOfflineModal]);
 
   const deleteItem = useCallback(async (id: string) => {
+    if (isOffline) {
+      showOfflineModal();
+      toast.error('You are offline. Please check your connection.');
+      throw new Error('Offline');
+    }
     if (!userId) throw new Error('User must be authenticated to delete an item.');
     
     const collectionRef = getCollectionRef();
@@ -173,7 +190,7 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
       toast.error('Failed to delete item.');
       throw err;
     }
-  }, [collectionName, userId, getCollectionRef]);
+  }, [collectionName, userId, getCollectionRef, isOffline, showOfflineModal]);
 
   return {
     data,
