@@ -108,10 +108,10 @@ export const OfflineWarningProvider: React.FC<{
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            className="fixed top-5 right-5 z-50"
+            className="fixed inset-x-0 top-5 z-50 flex justify-center sm:justify-end sm:right-5 sm:left-auto"
           >
             <div
-              className={`p-4 rounded-lg shadow-lg ${
+              className={`p-3 sm:p-4 rounded-lg shadow-lg w-11/12 sm:w-auto ${
                 isRestoring
                   ? "bg-green-100 dark:bg-green-900 border-l-4 border-green-500 text-green-700 dark:text-green-200"
                   : "bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 text-yellow-700 dark:text-yellow-200"
@@ -120,18 +120,18 @@ export const OfflineWarningProvider: React.FC<{
               <div className="flex items-center">
                 <div className="mr-3">
                   {isRestoring ? (
-                    <CheckCircle className="w-6 h-6 text-green-500" />
+                    <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-500" />
                   ) : (
-                    <AlertTriangle className="w-6 h-6 text-yellow-500" />
+                    <AlertTriangle className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-500" />
                   )}
                 </div>
                 <div>
-                  <p className="font-bold">
+                  <p className="font-bold text-sm sm:text-base">
                     {isRestoring
                       ? "And... we're back online! ✅"
                       : "Houston, we have a connection problem! ❌"}
                   </p>
-                  <p className="text-sm">
+                  <p className="text-xs sm:text-sm">
                     {isRestoring
                       ? "Welcome back! You can now beam your changes up to the cloud."
                       : "You've gone incognito from the web. But fear not! I've tucked your changes away safely until you reconnect."}
@@ -139,8 +139,8 @@ export const OfflineWarningProvider: React.FC<{
                 </div>
               </div>
               {showIssueButton && !isRestoring && (
-                <div className="mt-4 pt-4 border-t border-yellow-400 dark:border-yellow-700">
-                  <p className="text-sm">
+                <div className="mt-3 pt-3 border-t border-yellow-400 dark:border-yellow-700">
+                  <p className="text-xs sm:text-sm">
                     Is the Wi-Fi icon still ghosting you? <br/> If a classic 'turn it
                     off and on again' doesn't work and the problem persists, the gremlins might be on our
                     end.
