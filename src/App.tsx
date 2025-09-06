@@ -54,7 +54,7 @@ import './features/auth/components/SignInBackground.css';
 
 function App() {
   const { user, loading: authLoading, needsProfileSetup, saveUserProfile, skipProfileSetup } = useAuth();
-  useTheme();
+  const { theme, toggleTheme } = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
   
   // User profile setup modal state
@@ -95,8 +95,6 @@ function App() {
 
   const openProfileModal = () => setProfileModalOpen(true);
   
-  // Theme and notes toggle functions
-  const { toggleTheme } = useTheme();
   const toggleNotes = () => setIsNotesExpanded(prev => !prev);
   
   // Initialize keyboard shortcuts
@@ -895,7 +893,7 @@ function App() {
               const isActive = activeTab === tab.id;
               return (
                 <motion.button
-                  key={tab.id}
+                  key={`${tab.id}-${theme}`}
                   onClick={() => setActiveTab(tab.id as TabType)}
                   className={`relative whitespace-nowrap py-3 sm:py-4 px-2 sm:px-3 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1 sm:gap-2 flex-shrink-0 ${
                     isActive
