@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link, Trash2, RotateCcw, Target, Database, MessageCircle } from 'lucide-react';
+import { CheckCircle, Link, Trash2, RotateCcw, Target, Database, MessageCircle, Globe } from 'lucide-react';
+import { FaPaypal, FaCoffee, FaLinkedin, FaTwitter, FaGithub, FaMedium } from 'react-icons/fa';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
 import { toast } from 'react-hot-toast';
@@ -254,7 +255,8 @@ const ProfileModal = ({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-dark-card/70 amoled:bg-amoled-card/70 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-slate-700 dark:text-dark-text amoled:text-amoled-text"
                 >
-                  🌐 Portfolio
+                  <Globe className="w-4 h-4" />
+                  Portfolio
                 </a>
                 <a 
                   href="https://linkedin.com/in/hariharen9" 
@@ -262,7 +264,8 @@ const ProfileModal = ({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-blue-100/70 dark:bg-blue-900/30 amoled:bg-blue-900/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-blue-700 dark:text-blue-300"
                 >
-                  💼 LinkedIn
+                  <FaLinkedin className="w-4 h-4" />
+                  LinkedIn
                 </a>
                 <a 
                   href="https://twitter.com/thisishariharen" 
@@ -270,7 +273,8 @@ const ProfileModal = ({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-sky-100/70 dark:bg-sky-900/30 amoled:bg-sky-900/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-sky-700 dark:text-sky-300"
                 >
-                  🐦 Twitter
+                  <FaTwitter className="w-4 h-4" />
+                  Twitter
                 </a>
                 <a 
                   href="https://github.com/hariharen9" 
@@ -278,7 +282,8 @@ const ProfileModal = ({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-gray-100/70 dark:bg-gray-700/30 amoled:bg-gray-700/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-gray-700 dark:text-gray-300"
                 >
-                  💻 GitHub
+                  <FaGithub className="w-4 h-4" />
+                  GitHub
                 </a>
                 <a 
                   href="https://medium.com/@hariharen" 
@@ -286,7 +291,8 @@ const ProfileModal = ({
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-green-100/70 dark:bg-green-900/30 amoled:bg-green-900/30 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-green-700 dark:text-green-300"
                 >
-                  📝 Medium
+                  <FaMedium className="w-4 h-4" />
+                  Medium
                 </a>
               </div>
 
@@ -302,7 +308,8 @@ const ProfileModal = ({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform"
                   >
-                    ☕ Buy Me a Coffee
+                    <FaCoffee className="w-5 h-5" />
+                    Buy Me a Coffee
                   </a>
                   <a 
                     href="https://paypal.me/thisishariharen" 
@@ -310,7 +317,8 @@ const ProfileModal = ({
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 transform"
                   >
-                    💳 PayPal
+                    <FaPaypal className="w-5 h-5" />
+                    PayPal
                   </a>
                 </div>
               </div>
