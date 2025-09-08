@@ -261,3 +261,34 @@ export type EventType =
   | 'goal_set'
   | 'application_offer_received'
   | 'data_exported';
+
+// Gamification Data Structures
+export interface Badge {
+  id: string;
+  name: string;
+  description: string;
+  icon: string; // Icon name from a library like lucide-react
+  color: string; // Tailwind CSS color class
+}
+
+export interface EarnedBadge {
+  badgeId: string;
+  earnedAt: Timestamp;
+}
+
+export interface UserGamificationProfile {
+  points: number;
+  level: number;
+  badges: EarnedBadge[];
+  progress: {
+    [key: string]: number; // e.g., 'applications_submitted': 10
+  };
+  streaks: {
+    [key: string]: {
+      current: number;
+      longest: number;
+      lastActivityDate: string; // YYYY-MM-DD
+    };
+  };
+}
+

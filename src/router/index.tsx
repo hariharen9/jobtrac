@@ -9,6 +9,7 @@ import OverviewPage from "../pages/OverviewPage";
 import FAQPage from "../pages/FAQPage";
 import CreatorPage from "../pages/CreatorPage";
 import { OfflineWarningProvider } from "../components/shared/OfflineWarning";
+import GamificationPage from "../pages/GamificationPage";
 
 export const router = createBrowserRouter([
     {
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
             {
                 path: "",
                 element: <ErrorBoundary><OfflineWarningProvider><App /></OfflineWarningProvider></ErrorBoundary>
+            },
+            {
+                path: "game",
+                element: <ErrorBoundary><OfflineWarningProvider><GamificationPage /></OfflineWarningProvider></ErrorBoundary>
             }
         ]
     },

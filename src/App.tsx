@@ -53,10 +53,21 @@ import { Toaster, toast } from 'react-hot-toast';
 
 import './features/auth/components/SignInBackground.css';
 
+import useGamification from './hooks/useGamification';
+
 function App() {
   const { user, loading: authLoading, needsProfileSetup, saveUserProfile, skipProfileSetup } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
+  const { trackProgress, trackAppOpen } = useGamification(user?.uid);
+
+  React.useEffect(() => {
+    if (user?.uid) {
+      trackAppOpen();
+    }
+  }, [user?.uid, trackAppOpen]);
+  
+  
   
   // User profile setup modal state
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
@@ -231,18 +242,26 @@ function App() {
         switch (modalType) {
           case 'applications':
             AnalyticsService.trackEvent('application_created', user.uid);
+            trackProgress('applications');
             break;
           case 'prep':
             AnalyticsService.trackEvent('prep_entry_created', user.uid);
+            trackProgress('prepEntries');
+            if ('time' in data && typeof (data as any).time === 'number') {
+              trackProgress('prepTime', (data as any).time);
+            }
             break;
           case 'star':
             AnalyticsService.trackEvent('star_story_created', user.uid);
+            trackProgress('stories');
             break;
           case 'research':
             AnalyticsService.trackEvent('company_research_created', user.uid);
+            trackProgress('companies');
             break;
           case 'networking':
             AnalyticsService.trackEvent('networking_contact_created', user.uid);
+            trackProgress('contacts');
             break;
         }
       }
