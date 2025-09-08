@@ -82,12 +82,19 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
         </div>
       </td>
       <ConfirmationModal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setConfirmModalOpen(false)}
-        onConfirm={handleConfirmDelete}
-        title="Delete Application"
-        message={`Are you sure you want to delete the application for ${app.role} at ${app.company}? This action cannot be undone.`}
-      />
+  isOpen={isConfirmModalOpen}
+  onClose={() => setConfirmModalOpen(false)}
+  onConfirm={handleConfirmDelete}
+  title="Delete Application"
+  message={
+    <>
+      Are you sure you want to delete the application for{" "}
+      <strong>{app.role}</strong> at <strong>{app.company}</strong>? This action
+      cannot be undone.
+    </>
+  }
+/>
+
     </>
   );
 };
