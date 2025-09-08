@@ -1,9 +1,10 @@
 import React, { Component, ReactNode } from 'react';
-import { AlertTriangle, ExternalLink, RefreshCw } from 'lucide-react';
+import { AlertTriangle, ExternalLink, RefreshCw, Clipboard } from 'lucide-react';
 
 interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
+  isCopied: boolean;
 }
 
 interface ErrorBoundaryProps {
@@ -13,16 +14,31 @@ interface ErrorBoundaryProps {
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { hasError: false };
+    this.state = { hasError: false, isCopied: false };
   }
 
   static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+    return { hasError: true, error, isCopied: false };
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
   }
+
+  handleCopy = () => {
+    const errorReport = `**Error:**\n\
+\
+${this.state.error?.message}\n\
+\
+**Stack Trace:**\n\
+\
+${this.state.error?.stack}\n\
+\
+`;
+    navigator.clipboard.writeText(errorReport);
+    this.setState({ isCopied: true });
+    setTimeout(() => this.setState({ isCopied: false }), 2000);
+  };
 
   render() {
     if (this.state.hasError) {
@@ -54,15 +70,24 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               <p className="text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                 You can help us resolve this issue faster by creating a bug report on GitHub. This allows us to track, investigate, and fix the problem.
               </p>
-              <a
-                href={issueUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-md hover:bg-slate-900 dark:hover:bg-slate-300 transition-colors font-semibold text-sm"
-              >
-                <ExternalLink className="w-4 h-4" />
-                Create GitHub Issue
-              </a>
+              <div className="flex items-center gap-4">
+                <a
+                  href={issueUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-900 rounded-md hover:bg-slate-900 dark:hover:bg-slate-300 transition-colors font-semibold text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                  Create GitHub Issue
+                </a>
+                <button
+                  onClick={this.handleCopy}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-dark-card border border-slate-200 dark:border-dark-border rounded-md hover:bg-slate-200 dark:hover:bg-dark-border transition-colors font-semibold text-sm text-slate-700 dark:text-dark-text-secondary"
+                >
+                  <Clipboard className="w-4 h-4" />
+                  {this.state.isCopied ? 'Copied!' : 'Copy Error'}
+                </button>
+              </div>
             </div>
 
             <div className="border-t dark:border-dark-border amoled:border-amoled-border my-6"></div>
@@ -76,7 +101,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                     Refresh Page
                 </button>
                 <p className="text-xs text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary text-center sm:text-left">
-                    P.S. If you speak \'developer\', the console might have some juicy gossip for you. 😉
+                    P.S. If you speak 'developer', the console might have some juicy gossip for you. 😉
                 </p>
             </div>
           </div>
