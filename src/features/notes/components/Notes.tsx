@@ -10,6 +10,7 @@ import {
   Book,
   Trash2,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useNotes } from '../hooks/useNotes';
 import MDEditor from '@uiw/react-md-editor';
 import { useTheme } from '../../../hooks/shared/useTheme';
@@ -135,6 +136,26 @@ export default function Notes({ userId, isExpanded: controlledExpanded, onToggle
     setEditingTitle(null);
     setTitleInput('');
   };
+
+  useEffect(() => {
+    const handleKeyDown = async (e: KeyboardEvent) => {
+      const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+      const isSaveShortcut = (isMac ? e.metaKey : e.ctrlKey) && e.key === 's';
+
+      if (isNotesExpanded && isSaveShortcut) {
+        e.preventDefault();
+        await handleSaveContent();
+        toast.success('Note saved!', {
+          position: 'bottom-center',
+        });
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isNotesExpanded, handleSaveContent]);
 
   if (loading) {
     return (
