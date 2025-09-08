@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Trash2, Pencil, FileText } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 
 interface ApplicationRowProps {
   app: Application;
@@ -12,6 +13,17 @@ interface ApplicationRowProps {
 }
 
 const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication, onDeleteApplication, onViewJD }) => {
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeleteApplication(app.id);
+    setConfirmModalOpen(false);
+  };
+
   return (
     <>
       <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</td>
@@ -61,7 +73,7 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => onDeleteApplication(app.id)}
+            onClick={handleDeleteClick}
             className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             aria-label="Delete application"
           >
@@ -69,6 +81,13 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
           </motion.button>
         </div>
       </td>
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Application"
+        message={`Are you sure you want to delete the application for ${app.role} at ${app.company}? This action cannot be undone.`}
+      />
     </>
   );
 };

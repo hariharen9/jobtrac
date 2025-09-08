@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trash2, Pencil } from 'lucide-react';
 import { StarStory } from '../../../types';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 
 interface StarStoryCardProps {
   story: StarStory;
@@ -10,54 +11,74 @@ interface StarStoryCardProps {
 }
 
 const StarStoryCard: React.FC<StarStoryCardProps> = ({ story, onEditStory, onDeleteStory }) => {
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeleteStory(story.id as string);
+    setConfirmModalOpen(false);
+  };
+
   return (
-    <motion.div 
-      className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-      whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
-      transition={{ type: 'spring', stiffness: 400, damping: 15 }}
-    >
-      <div className="bg-slate-50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 p-4 flex justify-between items-center relative">
-        <h3 className="font-bold text-xl text-slate-900 dark:text-dark-text amoled:text-amoled-text">{story.title}</h3>
-        <div className="flex items-center gap-2 z-10">
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => onEditStory(story)}
-            className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
-            aria-label="Edit story"
-          >
-            <Pencil className="w-5 h-5" />
-          </motion.button>
-          <motion.button 
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            onClick={() => onDeleteStory(story.id as string)}
-            className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
-            aria-label="Delete story"
-          >
-            <Trash2 className="w-5 h-5" />
-          </motion.button>
+    <>
+      <motion.div 
+        className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
+        whileHover={{ scale: 1.02, boxShadow: '0px 2px 10px rgba(0,0,0,0.05)' }}
+        transition={{ type: 'spring', stiffness: 400, damping: 15 }}
+      >
+        <div className="bg-slate-50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 p-4 flex justify-between items-center relative">
+          <h3 className="font-bold text-xl text-slate-900 dark:text-dark-text amoled:text-amoled-text">{story.title}</h3>
+          <div className="flex items-center gap-2 z-10">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => onEditStory(story)}
+              className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors p-2"
+              aria-label="Edit story"
+            >
+              <Pencil className="w-5 h-5" />
+            </motion.button>
+            <motion.button 
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={handleDeleteClick}
+              className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 transition-colors p-2"
+              aria-label="Delete story"
+            >
+              <Trash2 className="w-5 h-5" />
+            </motion.button>
+          </div>
         </div>
-      </div>
-      <div className="p-4 space-y-4 text-base">
-        <div>
-          <strong className="text-blue-600 dark:text-blue-400 font-semibold">Situation:</strong>
-          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.situation}</p>
+        <div className="p-4 space-y-4 text-base">
+          <div>
+            <strong className="text-blue-600 dark:text-blue-400 font-semibold">Situation:</strong>
+            <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.situation}</p>
+          </div>
+          <div>
+            <strong className="text-purple-600 dark:text-purple-400 font-semibold">Task:</strong>
+            <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.task}</p>
+          </div>
+          <div>
+            <strong className="text-orange-600 dark:text-orange-400 font-semibold">Action:</strong>
+            <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.action}</p>
+          </div>
+          <div>
+            <strong className="text-green-600 dark:text-green-400 font-semibold">Result:</strong>
+            <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.result}</p>
+          </div>
         </div>
-        <div>
-          <strong className="text-purple-600 dark:text-purple-400 font-semibold">Task:</strong>
-          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.task}</p>
-        </div>
-        <div>
-          <strong className="text-orange-600 dark:text-orange-400 font-semibold">Action:</strong>
-          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.action}</p>
-        </div>
-        <div>
-          <strong className="text-green-600 dark:text-green-400 font-semibold">Result:</strong>
-          <p className="mt-1 text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">{story.result}</p>
-        </div>
-      </div>
-    </motion.div>
+      </motion.div>
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete STAR Story"
+        message={`Are you sure you want to delete the story "${story.title}"? This action cannot be undone.`}
+      />
+    </>
   );
 };
 

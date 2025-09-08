@@ -13,6 +13,7 @@ import {
 import { useNotes } from '../hooks/useNotes';
 import MDEditor from '@uiw/react-md-editor';
 import { useTheme } from '../../../hooks/shared/useTheme';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 import './Notes.css';
 
 interface NotesProps {
@@ -87,15 +88,25 @@ export default function Notes({ userId, isExpanded: controlledExpanded, onToggle
     }
   }, [addPage]);
 
-  const handleDeletePage = useCallback(async (pageId: string) => {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      await deletePage(pageId);
-      if (activePageId === pageId) {
-        const remainingPages = notes?.filter((p) => p.id !== pageId);
-        setActivePageId(remainingPages?.[0]?.id || null);
-      }
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [pageToDelete, setPageToDelete] = useState<string | null>(null);
+
+  const handleDeleteClick = (pageId: string) => {
+    setPageToDelete(pageId);
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!pageToDelete) return;
+
+    await deletePage(pageToDelete);
+    if (activePageId === pageToDelete) {
+      const remainingPages = notes?.filter((p) => p.id !== pageToDelete);
+      setActivePageId(remainingPages?.[0]?.id || null);
     }
-  }, [deletePage, notes, activePageId]);
+    setConfirmModalOpen(false);
+    setPageToDelete(null);
+  }, [deletePage, notes, activePageId, pageToDelete]);
 
   const handleContentChange = (content: string | undefined) => {
     setNoteContent(content);
@@ -267,7 +278,7 @@ export default function Notes({ userId, isExpanded: controlledExpanded, onToggle
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleDeletePage(page.id);
+                            handleDeleteClick(page.id);
                           }}
                           className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-100 dark:hover:bg-red-900/20 rounded-full transition-colors opacity-0 group-hover:opacity-100"
                           title="Delete note"
@@ -305,6 +316,13 @@ export default function Notes({ userId, isExpanded: controlledExpanded, onToggle
           </motion.div>
         )}
       </AnimatePresence>
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Note"
+        message={`Are you sure you want to delete the note "${notes?.find(p => p.id === pageToDelete)?.title || ''}"? This action cannot be undone.`}
+      />
     </>
   );
 }

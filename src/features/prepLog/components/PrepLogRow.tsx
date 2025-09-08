@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ExternalLink, Star, Trash2, Pencil } from 'lucide-react';
 import { PrepEntry } from '../../../types';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 
 interface PrepLogRowProps {
   entry: PrepEntry;
@@ -10,6 +11,17 @@ interface PrepLogRowProps {
 }
 
 const PrepLogRow: React.FC<PrepLogRowProps> = ({ entry, onEditPrepEntry, onDeletePrepEntry }) => {
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeletePrepEntry(entry.id as string);
+    setConfirmModalOpen(false);
+  };
+
   const renderConfidenceStars = (confidence: number) => {
     return (
       <div className="flex items-center gap-0.5">
@@ -59,7 +71,7 @@ const PrepLogRow: React.FC<PrepLogRowProps> = ({ entry, onEditPrepEntry, onDelet
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => onDeletePrepEntry(entry.id as string)}
+            onClick={handleDeleteClick}
             className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             aria-label="Delete prep entry"
           >
@@ -67,6 +79,13 @@ const PrepLogRow: React.FC<PrepLogRowProps> = ({ entry, onEditPrepEntry, onDelet
           </motion.button>
         </div>
       </td>
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Prep Entry"
+        message={`Are you sure you want to delete the prep entry for ${entry.topic}? This action cannot be undone.`}
+      />
     </>
   );
 };

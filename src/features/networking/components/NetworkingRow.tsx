@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { CheckCircle, XCircle, Pencil, Trash2 } from 'lucide-react';
 import { NetworkingContact } from '../../../types';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 
 interface NetworkingRowProps {
   contact: NetworkingContact;
@@ -10,6 +11,17 @@ interface NetworkingRowProps {
 }
 
 const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, onDeleteContact }) => {
+  const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+
+  const handleDeleteClick = () => {
+    setConfirmModalOpen(true);
+  };
+
+  const handleConfirmDelete = () => {
+    onDeleteContact(contact.id as string);
+    setConfirmModalOpen(false);
+  };
+
   return (
     <>
       <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{contact.name}</td>
@@ -46,7 +58,7 @@ const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, o
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={() => onDeleteContact(contact.id as string)}
+            onClick={handleDeleteClick}
             className="text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
             aria-label="Delete contact"
           >
@@ -54,6 +66,13 @@ const NetworkingRow: React.FC<NetworkingRowProps> = ({ contact, onEditContact, o
           </motion.button>
         </div>
       </td>
+      <ConfirmationModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setConfirmModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        title="Delete Contact"
+        message={`Are you sure you want to delete the contact ${contact.name}? This action cannot be undone.`}
+      />
     </>
   );
 };
