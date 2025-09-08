@@ -1,7 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Star, User } from 'lucide-react';
+import { ArrowRight, Github, Coffee } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
+import { FaPaypal } from 'react-icons/fa';
 
 const CreatorPage: React.FC = () => {
   return (
@@ -42,7 +43,6 @@ const CreatorPage: React.FC = () => {
                 </p>
                 
                 <div className="space-y-4">
-                  {/* Primary CTA */}
                   <motion.a 
                     href="https://hariharen9.site/" 
                     target="_blank" 
@@ -55,18 +55,45 @@ const CreatorPage: React.FC = () => {
                     <ArrowRight className="w-5 h-5" />
                   </motion.a>
 
-                  {/* Secondary CTA */}
                   <motion.a 
                     href="https://github.com/hariharen9/jobtrac" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
-                    className="flex items-center justify-between w-full px-6 py-4 font-bold transition-all duration-300 bg-slate-200/50 dark:bg-dark-bg amoled:bg-amoled-bg rounded-lg hover:bg-slate-200 dark:hover:bg-dark-border"
+                    className="flex items-center justify-between w-full px-6 py-4 font-bold transition-all duration-300 bg-slate-800 text-white rounded-lg hover:bg-slate-900"
                   >
                     <span>Star the Project on GitHub</span>
-                    <Star className="w-5 h-5 text-yellow-500" />
+                    <Github className="w-5 h-5" />
                   </motion.a>
+                </div>
+
+                <div className="mt-8 pt-6 border-t border-slate-200/80 dark:border-dark-border/80">
+                  <h3 className="text-center text-lg font-semibold text-slate-700 dark:text-slate-300 mb-4">Thank You for Using JobTrac!</h3>
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <motion.a 
+                      href="https://www.buymeacoffee.com/hariharen" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 font-semibold text-black transition-colors bg-[#FFDD00] rounded-lg hover:bg-[#FBCB00]"
+                    >
+                      <Coffee />
+                      <span>Buy Me a Coffee</span>
+                    </motion.a>
+                    <motion.a 
+                      href="https://paypal.me/thisishariharen" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
+                      className="flex-1 flex items-center justify-center gap-2 px-4 py-3 font-semibold text-white transition-colors bg-[#00457C] rounded-lg hover:bg-[#003057]"
+                    >
+                      <FaPaypal />
+                      <span>Support with PayPal</span>
+                    </motion.a>
+                  </div>
                 </div>
               </div>
             </div>
