@@ -52,16 +52,26 @@ const Header = () => {
         <div className="flex items-center">
           <ThemeToggle />
         </div>
-        <motion.a
-          href="https://github.com/hariharen9/jobtrac"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="p-1.5 sm:p-2 rounded-lg bg-white/50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 backdrop-blur-sm border border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30 hover:bg-white/70 dark:hover:bg-dark-card/70 amoled:hover:bg-amoled-card/70 transition-all duration-300 flex items-center justify-center"
-          whileHover={{ scale: 1.1, rotate: 5 }}
-          whileTap={{ scale: 0.9 }}
+        <div
+          className="relative group"
         >
-          <Github className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
-        </motion.a>
+          <motion.a
+            href="https://github.com/hariharen9/jobtrac"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-1.5 sm:p-2 rounded-lg bg-white/50 dark:bg-dark-card/50 amoled:bg-amoled-card/50 backdrop-blur-sm border border-white/20 dark:border-dark-border/30 amoled:border-amoled-border/30 hover:bg-white/70 dark:hover:bg-dark-card/70 amoled:hover:bg-amoled-card/70 transition-all duration-300 flex items-center justify-center"
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+          >
+            <Github className="w-4 h-4 sm:w-5 sm:h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+          </motion.a>
+          <div
+            className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-max bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-md px-3 py-1.5 z-10 shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+          >
+            Star us on GitHub! ⭐
+            <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0 h-0 border-b-4 border-b-yellow-400 border-l-4 border-l-transparent border-r-4 border-r-transparent"></div>
+          </div>
+        </div>
         <motion.div
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

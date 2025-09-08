@@ -37,6 +37,7 @@ import UserProfileModal from './features/auth/components/UserProfileModal';
 import { Helmet } from 'react-helmet-async';
 
 import SimpleTooltip from './components/shared/SimpleTooltip';
+import StarTooltip from './components/shared/StarTooltip';
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -960,16 +961,58 @@ function App() {
 
         {/* Footer */}
         <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
-          <div className="text-center text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-            Built with 💖 by{' '}
-            <a 
-              href="https://hariharen9.site/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
-            >
-              Hariharen
-            </a>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
+            <div className="text-center md:text-left">
+              <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+                Built with 💖 by{' '}
+                <a 
+                  href="https://hariharen9.site/" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
+                >
+                  Hariharen
+                </a>
+              </p>
+              <p className="text-xs text-slate-500 mt-2">
+                JobTrac is open source. Contributions are welcome!
+              </p>
+            </div>
+            <div className="md:col-span-2">
+              <h4 className="font-semibold mb-2 text-slate-700 dark:text-dark-text amoled:text-amoled-text text-center md:text-right">Quick Links</h4>
+              <ul className="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2">
+                {[
+                  { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
+                  { name: 'Report an Issue', url: 'https://github.com/hariharen9/jobtrac/issues' },
+                  { name: 'License', url: 'https://github.com/hariharen9/jobtrac/blob/main/LICENSE' },
+                  { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },
+                ].map((link) => (
+                  <li key={link.name}>
+                    {link.name === 'Source Code' ? (
+                      <StarTooltip content="Star us on GitHub! ⭐" position="top">
+                        <a
+                          href={link.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors"
+                        >
+                          {link.name}
+                        </a>
+                      </StarTooltip>
+                    ) : (
+                      <a
+                        href={link.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors"
+                      >
+                        {link.name}
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </footer>
 
