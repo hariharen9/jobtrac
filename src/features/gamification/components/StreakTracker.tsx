@@ -1,70 +1,83 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Flame, Briefcase, BookOpen, Users, Building, Star, Calendar } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { UserGamificationProfile } from '../../../types';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 
 const streakIcons: { [key: string]: React.ReactElement } = {
-  appOpen: <Calendar className="w-5 h-5" />,
-  applications: <Briefcase className="w-5 h-5" />,
-  prepEntries: <BookOpen className="w-5 h-5" />,
-  contacts: <Users className="w-5 h-5" />,
-  companies: <Building className="w-5 h-5" />,
-  stories: <Star className="w-5 h-5" />,
+  appOpen: <LucideIcons.CalendarCheck className="w-8 h-8" />,
+  applications: <LucideIcons.Briefcase className="w-8 h-8" />,
+  prepEntries: <LucideIcons.BookOpen className="w-8 h-8" />,
+  contacts: <LucideIcons.Users className="w-8 h-8" />,
+  companies: <LucideIcons.Building2 className="w-8 h-8" />,
+  stories: <LucideIcons.Star className="w-8 h-8" />,
 };
 
 const streakNames: { [key: string]: string } = {
-    appOpen: 'Daily Visits',
-    applications: 'Application Streak',
-    prepEntries: 'Prep Streak',
-    contacts: 'Networking Streak',
-    companies: 'Research Streak',
-    stories: 'STAR Story Streak',
+  appOpen: 'Daily Visit',
+  applications: 'Application',
+  prepEntries: 'Prep',
+  contacts: 'Networking',
+  companies: 'Research',
+  stories: 'STAR Story',
 };
 
-const StreakTracker = ({ streaks }: { streaks: UserGamificationProfile['streaks'] }) => {
-  const streakItems = Object.keys(streaks).map(key => ({
-    name: streakNames[key] || key,
-    ...streaks[key],
-    icon: streakIcons[key] || <Flame className="w-5 h-5" />,
-  }));
+const Path = (props: any) => (
+  <motion.path
+    fill="none"
+    strokeWidth="4"
+    stroke="rgba(255, 255, 255, 0.1)"
+    strokeLinecap="round"
+    initial={{ pathLength: 0 }}
+    animate={{ pathLength: 1 }}
+    transition={{ duration: 2, ease: "easeInOut" }}
+    {...props}
+  />
+);
 
-  if (streakItems.length === 0) {
+const StreakTracker = ({ streaks }: { streaks: UserGamificationProfile['streaks'] }) => {
+  const activeStreaks = Object.entries(streaks)
+    .map(([key, value]) => ({ id: key, name: streakNames[key] || key, ...value, icon: streakIcons[key] || <LucideIcons.Flame className="w-8 h-8" /> }))
+    .filter(s => s.current > 0)
+    .sort((a, b) => b.current - a.current);
+
+  if (activeStreaks.length === 0) {
     return (
-        <div className="text-center p-8 bg-slate-100 dark:bg-dark-card rounded-lg">
-            <p className="text-slate-500 dark:text-dark-text-secondary">No streaks started yet. Perform an activity to start a streak!</p>
-        </div>
+      <div className="text-center p-12 bg-white/5 rounded-2xl border border-dashed border-white/20">
+        <h3 className="text-2xl font-bold text-white">No Active Streaks</h3>
+        <p className="text-white/60 mt-2">Open the app tomorrow or complete an activity to start a new streak!</p>
+      </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {streakItems.map((streak, index) => (
-        <SimpleTooltip key={index} content={`Longest streak: ${streak.longest} days`}>
-            <motion.div 
-                className="bg-white dark:bg-dark-card p-4 rounded-lg border border-slate-200 dark:border-dark-border"
-                whileHover={{ y: -5 }}
+    <div className="relative w-full flex items-center justify-center p-10">
+      <svg width="100%" height="100" viewBox="0 0 1000 100" preserveAspectRatio="none" className="absolute top-0 left-0">
+        <Path d="M 0 50 Q 125 0, 250 50 T 500 50 T 750 50 T 1000 50" />
+      </svg>
+      <div className="relative w-full flex justify-around">
+        {activeStreaks.map((streak, index) => (
+          <SimpleTooltip key={streak.id} content={`Longest: ${streak.longest} day${streak.longest > 1 ? 's' : ''}`}>
+            <motion.div
+              className="flex flex-col items-center text-center cursor-pointer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 + index * 0.2 }}
+              whileHover={{ scale: 1.1 }}
             >
-            <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+              <motion.div 
+                className="w-24 h-24 rounded-full bg-gradient-to-br from-cyan-500/20 to-blue-600/20 flex items-center justify-center border-2 border-cyan-400/50 shadow-lg backdrop-blur-md"
+                whileHover={{ boxShadow: '0px 0px 25px rgba(0, 255, 255, 0.5)' }}
+              >
                 {streak.icon}
-                <h3 className="font-medium text-slate-900 dark:text-dark-text">{streak.name}</h3>
-                </div>
-                <div className="flex items-center gap-1 text-orange-500">
-                <Flame className="w-5 h-5" />
-                <span className="font-bold text-lg">{streak.current}</span>
-                </div>
-            </div>
-            <div className="mt-3 w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
-                <motion.div 
-                className="bg-gradient-to-r from-orange-400 to-red-500 h-2.5 rounded-full"
-                initial={{ width: 0 }}
-                animate={{ width: `${(streak.current / (streak.longest || 1)) * 100}%` }}
-                />
-            </div>
+              </motion.div>
+              <p className="mt-4 font-semibold text-lg">{streak.name}</p>
+              <p className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-400">{streak.current}</p>
+              <p className="text-sm text-white/60">Day Streak</p>
             </motion.div>
-        </SimpleTooltip>
-      ))}
+          </SimpleTooltip>
+        ))}
+      </div>
     </div>
   );
 };
