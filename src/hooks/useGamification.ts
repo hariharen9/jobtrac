@@ -98,8 +98,11 @@ const useGamification = (userId?: string) => {
       [`progress.${progressType}`]: increment(value),
     });
 
-    // Update streak for this activity
-    updateStreak(progressType);
+    // Update streak for this activity, if it's a streakable one
+    const streakableActivities = ['applications', 'prepEntries', 'contacts', 'companies', 'stories'];
+    if (streakableActivities.includes(progressType)) {
+      updateStreak(progressType);
+    }
 
     // Check for new badges
     const triggers = badgeTriggers[progressType];
@@ -132,7 +135,17 @@ const useGamification = (userId?: string) => {
     updateStreak('appOpen');
   }, [updateStreak]);
 
-  return { profile, loading, trackProgress, trackAppOpen };
+  const trackThemeChange = useCallback((theme: string) => {
+    if (theme === 'dark' || theme === 'amoled') {
+      trackProgress('theme_dark');
+    }
+  }, [trackProgress]);
+
+  const trackQuickStartComplete = useCallback(() => {
+    trackProgress('quick_start_done');
+  }, [trackProgress]);
+
+  return { profile, loading, trackProgress, trackAppOpen, trackThemeChange, trackQuickStartComplete };
 };
 
 export default useGamification;

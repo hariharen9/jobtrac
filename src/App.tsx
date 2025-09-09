@@ -385,6 +385,10 @@ function App() {
 
   const handleQuickStartComplete = async (taskId: string) => {
     await completeQuickStartTask(taskId);
+    const allTasksCompleted = onboarding.quickStartTasks.every(t => t.completed || t.id === taskId);
+    if (allTasksCompleted) {
+        trackQuickStartComplete();
+    }
   };
 
   const handleStartTooltipTour = () => {

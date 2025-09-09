@@ -55,7 +55,7 @@ const GameFooter = () => (
         className="relative z-10 py-12"
     >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-slate-500 dark:text-white/40 amoled:text-gray-500">
-            <p className="mb-4">Built with 💖 by Hariharen</p>
+            <p className="mb-4">Built with 💖 by <a href="https://hariharen9.site" target="_blank" rel="noopener noreferrer" className="font-semibold hover:text-slate-800 dark:hover:text-white amoled:hover:text-gray-300 transition-colors">Hariharen</a></p>
             <div className="flex justify-center items-center gap-6">
                 <a href="https://github.com/hariharen9/jobtrac" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-slate-700 dark:hover:text-white amoled:hover:text-gray-300 transition-colors"><Github className="w-4 h-4" /> Source Code</a>
                 <a href="https://github.com/hariharen9/jobtrac/issues" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-slate-700 dark:hover:text-white amoled:hover:text-gray-300 transition-colors"><Bug className="w-4 h-4" /> Report an Issue</a>

@@ -23,6 +23,20 @@ export const allBadges: Badge[] = [
     icon: 'Award',
     color: 'text-purple-500'
   },
+  {
+    id: 'app_finalist',
+    name: 'The Finalist',
+    description: 'Reach the final interview round',
+    icon: 'Trophy',
+    color: 'text-amber-400'
+  },
+  {
+    id: 'app_offer',
+    name: 'The Offer',
+    description: 'Receive your first job offer!',
+    icon: 'PartyPopper',
+    color: 'text-pink-500'
+  },
 
   // Interview Preparation
   {
@@ -38,6 +52,13 @@ export const allBadges: Badge[] = [
     description: 'Log 10 hours of preparation',
     icon: 'Clock',
     color: 'text-blue-500'
+  },
+  {
+    id: 'prep_confidence',
+    name: 'Confidence Boost',
+    description: 'Log a prep session with 80% or higher confidence',
+    icon: 'Sparkles',
+    color: 'text-yellow-400'
   },
 
   // Networking Achievements
@@ -55,25 +76,49 @@ export const allBadges: Badge[] = [
     icon: 'Network',
     color: 'text-blue-500'
   },
-
-  // Research & Learning
   {
-    id: 'research_5',
-    name: 'Company Researcher',
-    description: 'Research 5 companies',
-    icon: 'Building2',
-    color: 'text-blue-500'
+    id: 'net_referral',
+    name: 'Referral Rockstar',
+    description: 'Log a contact who gave you a referral',
+    icon: 'Handshake',
+    color: 'text-teal-500'
+  },
+
+  // Detail & Quality
+  {
+    id: 'detail_notes',
+    name: 'Detail Oriented',
+    description: 'Add notes to 10 applications',
+    icon: 'FileText',
+    color: 'text-indigo-400'
   },
   {
-    id: 'star_3',
-    name: 'STAR Storyteller',
-    description: 'Create 3 STAR stories',
-    icon: 'Star',
-    color: 'text-yellow-500'
+    id: 'detail_jd',
+    name: 'Archivist',
+    description: 'Save the job description for 5 applications',
+    icon: 'Archive',
+    color: 'text-orange-500'
+  },
+
+  // Meta & Power-User
+  {
+    id: 'meta_dark_mode',
+    name: 'Night Owl',
+    description: 'Embrace the darkness and switch to dark mode',
+    icon: 'Moon',
+    color: 'text-purple-400'
+  },
+  {
+    id: 'meta_quick_start',
+    name: 'Quick Starter',
+    description: 'Complete the Quick Start checklist',
+    icon: 'CheckCircle',
+    color: 'text-green-600'
   },
 ];
 
 export const badgeTriggers = {
+  // Progress metrics that are simple counts
   applications: [
     { progress: 1, badgeId: 'app_1' },
     { progress: 10, badgeId: 'app_10' },
@@ -89,10 +134,13 @@ export const badgeTriggers = {
     { progress: 1, badgeId: 'net_1' },
     { progress: 10, badgeId: 'net_10' },
   ],
-  companies: [
-    { progress: 5, badgeId: 'research_5' },
-  ],
-  stories: [
-    { progress: 3, badgeId: 'star_3' },
-  ],
+  // These will need custom tracking logic
+  app_status_final: [{ progress: 1, badgeId: 'app_finalist' }],
+  app_status_offer: [{ progress: 1, badgeId: 'app_offer' }],
+  prep_confidence_high: [{ progress: 1, badgeId: 'prep_confidence' }],
+  net_referrals: [{ progress: 1, badgeId: 'net_referral' }],
+  app_notes_added: [{ progress: 10, badgeId: 'detail_notes' }],
+  app_jd_saved: [{ progress: 5, badgeId: 'detail_jd' }],
+  theme_dark: [{ progress: 1, badgeId: 'meta_dark_mode' }],
+  quick_start_done: [{ progress: 1, badgeId: 'meta_quick_start' }],
 };
