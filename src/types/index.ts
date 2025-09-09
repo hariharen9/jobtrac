@@ -169,6 +169,7 @@ export interface UserProfile {
   ageRange: '18-25' | '26-35' | '36-45' | '46-55' | '56+';
   gender: 'Male' | 'Female' | 'Other' | 'Prefer not to say';
   country?: string;
+  publicUsername?: string;
   profileCompleted: boolean;
   profileCompletedAt?: Timestamp;
 }

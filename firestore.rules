@@ -1,1 +1,42 @@
-😎 Updated to impenetrable rules with AI
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all reads and writes unless explicitly allowed
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Allow users to manage their own user document
+    match /users/{userId} {
+      allow read, delete: if request.auth != null && request.auth.uid == userId;
+      // Allow creation and allow updating the publicUsername field
+      allow write: if request.auth != null && request.auth.uid == userId;
+
+      // Rules for user subcollections (applications, etc.)
+      match /{collection}/{docId} {
+        allow read, write, delete: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+
+    // Allow users to manage their own gamification profile
+    match /gamification/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Rules for the public leaderboard scores
+    match /leaderboard_scores/{docId} {
+        allow read: if request.auth != null;
+        // Users can only create/update their own score document.
+        // The document ID must be a composite of {userId}_{leaderboardId}
+        // We also validate the data being written to ensure integrity.
+        allow write: if request.auth != null 
+                     && docId.startsWith(request.auth.uid)
+                     && request.resource.data.userId == request.auth.uid
+                     && request.resource.data.score is number
+                     && request.resource.data.username is string
+                     && request.resource.data.username.size() < 30;
+    }
+  }
+}
