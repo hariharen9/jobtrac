@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AnalyticsService } from '../../services/analyticsService';
 import { useAuth } from '../../features/auth/hooks/useAuth';
-import useGamification from '../useGamification';
 
 export function useTheme() {
   const [theme, setTheme] = useState(() => {
@@ -11,7 +10,6 @@ export function useTheme() {
   });
   
   const { user } = useAuth();
-  const { trackThemeChange } = useGamification(user?.uid);
 
   useEffect(() => {
     localStorage.setItem('theme', theme);
@@ -26,12 +24,11 @@ export function useTheme() {
       
       if (user?.uid) {
         AnalyticsService.trackEvent('theme_changed', user.uid, { theme_name: newTheme });
-        trackThemeChange(newTheme);
       }
       
       return newTheme;
     });
-  }, [user?.uid, trackThemeChange]);
+  }, [user?.uid]);
 
   return { theme, toggleTheme };
 }

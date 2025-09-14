@@ -53,19 +53,15 @@ import { Toaster, toast } from 'react-hot-toast';
 
 import './features/auth/components/SignInBackground.css';
 
-import useGamification from './hooks/useGamification';
+
 
 function App() {
   const { user, loading: authLoading, needsProfileSetup, saveUserProfile, skipProfileSetup } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const isMobile = useMediaQuery('(max-width: 768px)');
-  const { trackProgress, trackAppOpen } = useGamification(user?.uid);
 
-  React.useEffect(() => {
-    if (user?.uid) {
-      trackAppOpen();
-    }
-  }, [user?.uid, trackAppOpen]);
+
+
   
   
   
@@ -242,26 +238,18 @@ function App() {
         switch (modalType) {
           case 'applications':
             AnalyticsService.trackEvent('application_created', user.uid);
-            trackProgress('applications');
             break;
           case 'prep':
             AnalyticsService.trackEvent('prep_entry_created', user.uid);
-            trackProgress('prepEntries');
-            if ('time' in data && typeof (data as any).time === 'number') {
-              trackProgress('prepTime', (data as any).time);
-            }
             break;
           case 'star':
             AnalyticsService.trackEvent('star_story_created', user.uid);
-            trackProgress('stories');
             break;
           case 'research':
             AnalyticsService.trackEvent('company_research_created', user.uid);
-            trackProgress('companies');
             break;
           case 'networking':
             AnalyticsService.trackEvent('networking_contact_created', user.uid);
-            trackProgress('contacts');
             break;
         }
       }
@@ -386,9 +374,7 @@ function App() {
   const handleQuickStartComplete = async (taskId: string) => {
     await completeQuickStartTask(taskId);
     const allTasksCompleted = onboarding.quickStartTasks.every(t => t.completed || t.id === taskId);
-    if (allTasksCompleted) {
-        trackQuickStartComplete();
-    }
+    // Note: gamification tracking was removed
   };
 
   const handleStartTooltipTour = () => {

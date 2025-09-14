@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link as LinkIcon, Trash2, RotateCcw, Target, Database, MessageCircle, Globe, Trophy } from 'lucide-react';
+import { CheckCircle, Link as LinkIcon, Trash2, RotateCcw, Target, Database, MessageCircle, Globe } from 'lucide-react';
 import { FaPaypal, FaCoffee, FaLinkedin, FaTwitter, FaGithub, FaMedium } from 'react-icons/fa';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
@@ -12,8 +12,7 @@ import { Application, NetworkingContact, PrepEntry, StarStory, CompanyResearch }
 import DataImportExportModal from '../../../components/shared/DataImportExportModal';
 import { useDataImportExport } from '../../../hooks/useDataImportExport';
 import { Link } from 'react-router-dom';
-import useGamification from '../../../hooks/useGamification';
-import ProfileStreakDisplay from '../../gamification/components/ProfileStreakDisplay';
+
 
 const GoogleIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5">
@@ -43,7 +42,7 @@ const ProfileModal = ({
   quickStartProgress?: number 
 }) => {
   const { user, deleteAccount } = useAuth();
-  const { profile: gamificationProfile } = useGamification(user?.uid);
+
   const { importData } = useDataImportExport(user?.uid);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showFinalDeleteConfirmation, setShowFinalDeleteConfirmation] = useState(false);
@@ -238,34 +237,7 @@ const ProfileModal = ({
             </div>
           </div>
 
-          {/* Gamification Section */}
-          <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-amber-900/20 dark:to-yellow-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-amber-200 dark:border-amber-700/50">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-amber-100 dark:bg-amber-900/30 amoled:bg-amber-900/30 rounded-lg flex-shrink-0">
-                  <Trophy className="w-5 h-5 text-amber-600 dark:text-amber-400 amoled:text-amber-400" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-                    Achievements & Stats
-                  </h3>
-                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
-                    🏆 Track your progress, earn badges, and view your stats.
-                  </p>
-                  <div className="mt-4">
-                    {gamificationProfile && <ProfileStreakDisplay streaks={gamificationProfile.streaks} />}
-                  </div>
-                </div>
-              </div>
-              <Link
-                to="/app/game"
-                className="flex items-center gap-2 px-4 py-2 bg-amber-500 text-white rounded-lg font-semibold text-sm hover:bg-amber-600 transition-colors shadow-md hover:shadow-lg flex-shrink-0 self-start sm:self-center"
-              >
-                <Trophy className="w-4 h-4" />
-                <span className="whitespace-nowrap">View Achievements</span>
-              </Link>
-            </div>
-          </div>
+
 
           {/* Thanks Section */}
           <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 amoled:from-amoled-card amoled:via-amoled-card amoled:to-amoled-card border-2 border-gradient-to-r from-indigo-200 to-purple-200 dark:border-indigo-700/50">
