@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
+import RangeSlider from '../../../components/shared/RangeSlider';
 
 interface ApplicationFormProps {
-  onSubmit: (application: Omit<Application, 'id' | 'nextStep'>) => void;
+  onSubmit: (application: Omit<Application, 'id' | 'createdAt' | 'updatedAt' | 'nextStep'>) => void;
   onCancel: () => void;
   initialData?: Application | null;
   loading?: boolean;
@@ -20,7 +21,10 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
     recruiter: '',
     referral: 'N' as 'Y' | 'N',
     location: '',
-    notes: ''
+    notes: '',
+    salaryRange: '50-100',
+    priority: 'Medium' as 'High' | 'Medium' | 'Low',
+    interviewDate: ''
   });
 
   useEffect(() => {
@@ -36,7 +40,10 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
         recruiter: initialData.recruiter || '',
         referral: initialData.referral || 'N',
         location: initialData.location || '',
-        notes: initialData.nextStep ? `${initialData.nextStep}\n\n${initialData.notes}` : initialData.notes || ''
+        notes: initialData.notes || '',
+        salaryRange: initialData.salaryRange || '50-100',
+        priority: initialData.priority || 'Medium',
+        interviewDate: initialData.interviewDate || ''
       });
     }
   }, [initialData]);
@@ -48,13 +55,17 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
   };
 
   const statusOptions: ApplicationStatus[] = [
-    'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 
+    'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 'Round 2',
     'Manager Round', 'Final Round', 'Offer', 'Rejected', 'Ghosted'
   ];
 
   const sourceOptions: ApplicationSource[] = [
     'LinkedIn', 'Indeed', 'Glassdoor', 'Naukri', 'Company Website', 'Referral', 'Other'
   ];
+
+  const priorityOptions: ('High' | 'Medium' | 'Low')[] = ['High', 'Medium', 'Low'];
+
+  const salaryValue = formData.salaryRange.split('-').map(Number) as [number, number];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -150,16 +161,52 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
+        {/* Referral and Salary Range in same row */}
+        <div className="sm:col-span-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Referral?</label>
+              <select
+                value={formData.referral}
+                onChange={(e) => setFormData({ ...formData, referral: e.target.value as 'Y' | 'N' })}
+                className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              >
+                <option value="N">No</option>
+                <option value="Y">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Salary Range</label>
+              <RangeSlider
+                min={0}
+                max={500}
+                step={10}
+                value={salaryValue}
+                onChange={(value) => setFormData({ ...formData, salaryRange: value.join('-') })}
+              />
+            </div>
+          </div>
+        </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Referral?</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Priority</label>
           <select
-            value={formData.referral}
-            onChange={(e) => setFormData({ ...formData, referral: e.target.value as 'Y' | 'N' })}
+            value={formData.priority}
+            onChange={(e) => setFormData({ ...formData, priority: e.target.value as 'High' | 'Medium' | 'Low' })}
             className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="N">No</option>
-            <option value="Y">Yes</option>
+            {priorityOptions.map(priority => (
+              <option key={priority} value={priority}>{priority}</option>
+            ))}
           </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Interview Date</label>
+          <input
+            type="date"
+            value={formData.interviewDate}
+            onChange={(e) => setFormData({ ...formData, interviewDate: e.target.value })}
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          />
         </div>
       </div>
       <div>

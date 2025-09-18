@@ -6,6 +6,7 @@ export const statusColors: Record<ApplicationStatus, string> = {
   'HR Screen': 'bg-purple-100 text-purple-800',
   'Tech Screen': 'bg-fuchsia-100 text-fuchsia-800',
   'Round 1': 'bg-pink-100 text-pink-800',
+  'Round 2': 'bg-pink-100 text-pink-800',
   'Manager Round': 'bg-rose-100 text-rose-800',
   'Final Round': 'bg-yellow-100 text-yellow-800',
   'Offer': 'bg-green-100 text-green-800',

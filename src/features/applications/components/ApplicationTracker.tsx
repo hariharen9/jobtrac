@@ -6,7 +6,7 @@ import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
 import EmptyState from '../../../components/shared/EmptyState';
 
-type SortField = 'date' | 'company' | 'role' | 'status' | 'source';
+type SortField = 'date' | 'company' | 'role' | 'status' | 'source' | 'priority' | 'salaryRange' | 'interviewDate';
 type SortDirection = 'asc' | 'desc';
 
 interface FilterOptions {
@@ -64,7 +64,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   });
 
   const statusOptions: ApplicationStatus[] = [
-    'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 
+    'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 'Round 2',
     'Manager Round', 'Final Round', 'Offer', 'Rejected', 'Ghosted'
   ];
 
@@ -95,6 +95,18 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           aValue = (a.source === 'Other' ? a.sourceOther : a.source) || '';
           bValue = (b.source === 'Other' ? b.sourceOther : b.source) || '';
           break;
+        case 'priority':
+            aValue = a.priority || 'Medium';
+            bValue = b.priority || 'Medium';
+            break;
+        case 'salaryRange':
+            aValue = a.salaryRange || '';
+            bValue = b.salaryRange || '';
+            break;
+        case 'interviewDate':
+            aValue = a.interviewDate || '';
+            bValue = b.interviewDate || '';
+            break;
         default:
           return 0;
       }
@@ -309,6 +321,31 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               </div>
             </div>
 
+            {/* Sorting Options */}
+            <div className="mt-4 pt-4 border-t border-slate-300 dark:border-slate-600">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                Additional Sorting Options
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {(['source', 'priority', 'salaryRange', 'interviewDate'] as SortField[]).map(field => (
+                  <button
+                    key={field}
+                    onClick={() => handleSort(field)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium transition-colors flex items-center gap-1 ${
+                      sortField === field
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600'
+                    }`}
+                  >
+                    {field.charAt(0).toUpperCase() + field.slice(1)}
+                    {sortField === field && (
+                      sortDirection === 'asc' ? <SortAsc className="w-3 h-3" /> : <SortDesc className="w-3 h-3" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Clear Filters */}
             {hasActiveFilters && (
               <div className="flex justify-end mt-4">
@@ -328,7 +365,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
       {/* Sort Controls */}
       <div className="hidden sm:flex items-center gap-2 mb-4 text-sm">
         <span className="text-slate-600 dark:text-slate-400">Sort by:</span>
-        {(['date', 'company', 'role', 'status', 'source'] as SortField[]).map(field => (
+        {(['date', 'company', 'role', 'status'] as SortField[]).map(field => (
           <button
             key={field}
             onClick={() => handleSort(field)}
@@ -344,6 +381,12 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
             )}
           </button>
         ))}
+        <button
+          onClick={() => setShowFilters(!showFilters)}
+          className="flex items-center gap-1 px-3 py-1 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700"
+        >
+          More Options...
+        </button>
       </div>
       
       {/* Mobile Card View */}
@@ -438,7 +481,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </button>
               </th>
               <th scope="col" className="px-6 py-3">Source</th>
-              
+              <th scope="col" className="px-6 py-3">Salary</th>
+              <th scope="col" className="px-6 py-3">Interview Date</th>
               <th scope="col" className="px-6 py-3">Location</th>
               <th scope="col" className="px-6 py-3">Notes</th>
               <th scope="col" className="px-6 py-3"><span className="sr-only">Actions</span></th>

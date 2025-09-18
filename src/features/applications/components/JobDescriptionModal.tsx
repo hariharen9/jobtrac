@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import MDEditor from '@uiw/react-md-editor';
 import { Application } from '../../../types';
 import { motion } from 'framer-motion';
@@ -12,10 +12,19 @@ interface JobDescriptionModalProps {
 
 const JobDescriptionModal: React.FC<JobDescriptionModalProps> = ({ isOpen, onClose, application, onSave }) => {
   const [jd, setJd] = useState(application?.jobDescription || '');
+  const [keywords, setKeywords] = useState('');
 
   useEffect(() => {
     setJd(application?.jobDescription || '');
   }, [application]);
+
+  const highlightedJd = useMemo(() => {
+    if (!keywords) return jd;
+    const keywordList = keywords.split(',').map(k => k.trim()).filter(Boolean);
+    if (keywordList.length === 0) return jd;
+    const regex = new RegExp(`(${keywordList.join('|')})`, 'gi');
+    return jd.replace(regex, '<mark>$1</mark>');
+  }, [jd, keywords]);
 
   if (!isOpen) return null;
 
@@ -34,9 +43,18 @@ const JobDescriptionModal: React.FC<JobDescriptionModalProps> = ({ isOpen, onClo
         className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-2xl mx-2 sm:mx-4 my-4 sm:my-6"
       >
         <h2 className="text-lg sm:text-xl font-semibold mb-4 text-slate-900 dark:text-dark-text amoled:text-amoled-text">Job Description for {application?.role} at {application?.company}</h2>
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Enter keywords to highlight, separated by commas..."
+            value={keywords}
+            onChange={(e) => setKeywords(e.target.value)}
+            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+          />
+        </div>
         <div data-color-mode="light">
           <MDEditor
-            value={jd}
+            value={highlightedJd}
             onChange={(value) => setJd(value || '')}
             height={300}
             className="text-sm"

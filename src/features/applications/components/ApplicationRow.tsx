@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil, FileText } from 'lucide-react';
+import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
@@ -24,9 +24,20 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
     setConfirmModalOpen(false);
   };
 
+  const priorityColor = {
+    High: 'text-red-500',
+    Medium: 'text-yellow-500',
+    Low: 'text-green-500',
+  };
+
   return (
     <>
-      <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</td>
+      <td className="px-6 py-6 font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+        <div className="flex items-center gap-2">
+          {app.priority && <Flame className={`w-4 h-4 ${priorityColor[app.priority]}`} />}
+          {app.company}
+        </div>
+      </td>
       <td className="px-6 py-6">
         <a
           href={app.link}
@@ -56,7 +67,17 @@ const ApplicationRow: React.FC<ApplicationRowProps> = ({ app, onEditApplication,
         </span>
       </td>
       <td className="px-6 py-6">{app.source === 'Other' ? app.sourceOther : app.source}</td>
-      
+      <td className="px-6 py-6">{app.salaryRange ? `${app.salaryRange}K` : 'N/A'}</td>
+      <td className="px-6 py-6">
+        {app.interviewDate ? (
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4" />
+            {app.interviewDate}
+          </div>
+        ) : (
+          'N/A'
+        )}
+      </td>
       <td className="px-6 py-6">{app.location}</td>
       <td className="px-6 py-6 max-w-xs truncate">{app.notes}</td>
       <td className="px-6 py-6 text-right">

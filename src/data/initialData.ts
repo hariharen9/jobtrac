@@ -270,7 +270,10 @@ export const enhancedSampleApplications: Application[] = [
     referral: 'Y',
     location: 'Mountain View, CA',
     notes: 'System Design Interview - Friday 2PM. Referral from John (ex-colleague). Discussed distributed systems experience.',
-    jobDescription: 'We are looking for a Senior Software Engineer to join our Cloud Infrastructure team...'
+    jobDescription: 'We are looking for a Senior Software Engineer to join our Cloud Infrastructure team...',
+    salaryRange: '150-200',
+    priority: 'High',
+    interviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days from now
   },
   {
     id: 'sample-2',
@@ -284,7 +287,10 @@ export const enhancedSampleApplications: Application[] = [
     referral: 'N',
     location: 'Seattle, WA',
     notes: 'Wait for response (applied Tuesday). Applied through LinkedIn. Strong match for Kubernetes experience.',
-    jobDescription: 'Join the Azure Compute team to build the next generation of container orchestration...'
+    jobDescription: 'Join the Azure Compute team to build the next generation of container orchestration...',
+    salaryRange: '180-250',
+    priority: 'Medium',
+    interviewDate: '',
   },
   {
     id: 'sample-3',
@@ -299,7 +305,10 @@ export const enhancedSampleApplications: Application[] = [
     referral: 'Y',
     location: 'Los Gatos, CA',
     notes: 'Complete application by end of week. Reached out to hiring manager via LinkedIn. Focus on streaming infrastructure.',
-    jobDescription: 'We need a Staff Engineer to lead our video streaming optimization initiatives...'
+    jobDescription: 'We need a Staff Engineer to lead our video streaming optimization initiatives...',
+    salaryRange: '200-300',
+    priority: 'High',
+    interviewDate: '',
   },
   {
     id: 'sample-4',
@@ -313,7 +322,10 @@ export const enhancedSampleApplications: Application[] = [
     referral: 'N',
     location: 'San Francisco, CA',
     notes: 'Executive interview with CTO next Monday. Great cultural fit. Team is excited about my fintech background.',
-    jobDescription: 'Lead a team of 8 engineers building payment processing infrastructure...'
+    jobDescription: 'Lead a team of 8 engineers building payment processing infrastructure...',
+    salaryRange: '220-280',
+    priority: 'Low',
+    interviewDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5 days from now
   }
 ];
 

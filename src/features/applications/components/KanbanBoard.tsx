@@ -1,10 +1,11 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
-import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings } from 'lucide-react';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import SettingsModal from '../../../components/shared/SettingsModal';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
+import Modal from '../../../components/shared/Modal';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -40,6 +41,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [viewMode, setViewMode] = useLocalStorage<'scroll' | 'grid'>('kanban-view-mode', 'scroll');
   const [cardDensity, setCardDensity] = useLocalStorage<'compact' | 'normal'>('kanban-card-density', 'normal');
+  const [movingApplication, setMovingApplication] = useState<Application | null>(null);
 
   const columns: KanbanColumn[] = [
     { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
@@ -47,6 +49,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     { id: 'HR Screen', title: 'HR Screen', color: 'bg-yellow-50 dark:bg-yellow-900/20 amoled:bg-amoled-card' },
     { id: 'Tech Screen', title: 'Tech Screen', color: 'bg-orange-50 dark:bg-orange-900/20 amoled:bg-amoled-card' },
     { id: 'Round 1', title: 'Round 1', color: 'bg-purple-50 dark:bg-purple-900/20 amoled:bg-amoled-card' },
+    { id: 'Round 2', title: 'Round 2', color: 'bg-pink-50 dark:bg-pink-900/20 amoled:bg-amoled-card' },
     { id: 'Manager Round', title: 'Manager Round', color: 'bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-amoled-card' },
     { id: 'Final Round', title: 'Final Round', color: 'bg-pink-50 dark:bg-pink-900/20 amoled:bg-amoled-card' },
     { id: 'Offer', title: 'Offer', color: 'bg-green-50 dark:bg-green-900/20 amoled:bg-amoled-card' },
@@ -182,6 +185,13 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     stopAutoScroll();
   };
 
+  const handleMoveApplication = (newStatus: ApplicationStatus) => {
+    if (movingApplication) {
+      onUpdateStatus(movingApplication.id, newStatus);
+      setMovingApplication(null);
+    }
+  };
+
   if (loading) {
     return (
       <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
@@ -302,6 +312,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     application={app}
                     onEdit={onEditApplication}
                     onDelete={onDeleteApplication}
+                    onMove={setMovingApplication}
                     isDragging={false}
                     cardDensity={cardDensity}
                   />
@@ -329,6 +340,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           {columns.map(column => {
             const columnApplications = applicationsByStatus[column.id] || [];
             const isDropTarget = dragOverColumn === column.id;
+            const totalSalary = columnApplications.reduce((acc, app) => {
+              const [minSalary] = (app.salaryRange || '0-0').split('-').map(Number);
+              return acc + minSalary;
+            }, 0);
             
             return (
               <div
@@ -353,6 +368,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       {columnApplications.length}
                     </span>
                   </div>
+                  {totalSalary > 0 && (
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Total Salary: ${totalSalary.toLocaleString()}K</p>
+                  )}
                 </div>
 
                 {/* Column Content */}
@@ -390,9 +408,6 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
         {/* Scroll Hint during drag */}
         {showScrollHint && (
           <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2 animate-pulse">
-            {/* <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16l4-4m0 0l4 4m-4-4v12" />
-            </svg> */}
             <span className="text-sm font-medium">Drag near edges to scroll</span>
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -408,6 +423,10 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           {columns.map(column => {
             const columnApplications = applicationsByStatus[column.id] || [];
             const isDropTarget = dragOverColumn === column.id;
+            const totalSalary = columnApplications.reduce((acc, app) => {
+              const [minSalary] = (app.salaryRange || '0-0').split('-').map(Number);
+              return acc + minSalary;
+            }, 0);
             return (
               <div 
                 key={column.id} 
@@ -428,6 +447,9 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     {columnApplications.length}
                   </span>
                 </div>
+                {totalSalary > 0 && (
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Total Salary: ${totalSalary.toLocaleString()}K</p>
+                )}
                 <div className="space-y-3 min-h-[200px] relative">
                   {columnApplications.map(app => (
                     <ApplicationCard
@@ -463,6 +485,25 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
           No applications yet. Click "Add Application" to get started!
         </div>
       )}
+
+      {movingApplication && (
+        <Modal isOpen={!!movingApplication} onClose={() => setMovingApplication(null)} title="Move Application">
+          <div className="p-4">
+            <h3 className="text-lg font-semibold mb-4">Move {movingApplication.role} at {movingApplication.company} to:</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {columns.map(column => (
+                <button
+                  key={column.id}
+                  onClick={() => handleMoveApplication(column.id)}
+                  className={`p-4 rounded-lg text-left font-semibold transition-colors ${statusColors[column.id]} hover:opacity-80`}
+                >
+                  {column.title}
+                </button>
+              ))}
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
@@ -472,6 +513,7 @@ interface ApplicationCardProps {
   application: Application;
   onEdit: (application: Application) => void;
   onDelete: (id: string) => void;
+  onMove?: (application: Application) => void;
   onDragStart?: (e: React.DragEvent, application: Application) => void;
   onDragEnd?: () => void;
   isDragging: boolean;
@@ -482,6 +524,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   application,
   onEdit,
   onDelete,
+  onMove,
   onDragStart,
   onDragEnd,
   isDragging,
@@ -517,6 +560,14 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
   const isMobileView = !onDragStart;
 
+  const priorityColor = {
+    High: 'text-red-500',
+    Medium: 'text-yellow-500',
+    Low: 'text-green-500',
+  };
+
+  const isInterviewToday = application.interviewDate && new Date(application.interviewDate).toDateString() === new Date().toDateString();
+
   return (
     <div
       draggable={!!onDragStart}
@@ -530,7 +581,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       onTouchCancel={handlePressEnd}
       className={`relative bg-white dark:bg-dark-card amoled:bg-amoled-card ${isCompact ? 'p-2' : 'p-4'} rounded-lg border border-slate-200 dark:border-slate-600 shadow-sm transition-all duration-200 cursor-pointer hover:shadow-md ${
         isDragging ? 'opacity-50 rotate-2 scale-105' : 'hover:scale-[1.02]'
-      } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''}`}
+      } ${onDragStart ? 'cursor-grab active:cursor-grabbing' : ''} ${
+        isInterviewToday ? 'ring-2 ring-indigo-500' : ''
+      }`}
       style={isDragging ? { 
         zIndex: 99999
       } : {}}
@@ -543,7 +596,8 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       )}
       <div className={`flex justify-between items-start ${isCompact ? 'mb-1' : 'mb-3'}`}>
         <div className="flex-1 min-w-0">
-          <h4 className={`font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate ${isCompact ? 'text-sm' : 'text-base'}`}>
+          <h4 className={`font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate ${isCompact ? 'text-sm' : 'text-base'} flex items-center gap-2`}>
+            {application.priority && <Flame className={`w-4 h-4 ${priorityColor[application.priority]}`} />}
             {application.company}
           </h4>
           <a
@@ -559,6 +613,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
         </div>
         
         <div className="flex items-center gap-1 ml-2">
+          {onMove && (
+            <SimpleTooltip content="Move" position="top">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onMove(application);
+                }}
+                className="text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors p-1"
+                aria-label="Move application"
+              >
+                <Move className="w-4 h-4" />
+              </button>
+            </SimpleTooltip>
+          )}
           <SimpleTooltip content="Edit" position="top">
             <button
               onClick={(e) => {
@@ -599,19 +667,26 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               <span className="font-medium">{application.location}</span>
             </div>
           )}
+
+          {application.salaryRange && (
+            <div className="flex justify-between">
+              <span>Salary:</span>
+              <span className="font-medium">${application.salaryRange}K</span>
+            </div>
+          )}
+
+          {application.interviewDate && (
+            <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 p-2 rounded-md">
+              <Calendar className="w-4 h-4" />
+              <span>Interview on {application.interviewDate}</span>
+            </div>
+          )}
           
           {application.referral === 'Y' && (
             <div className="flex items-center gap-2">
               <span className="bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300 text-xs px-2 py-1 rounded-full">
                 Referral
               </span>
-            </div>
-          )}
-          
-          {application.nextStep && (
-            <div className="mt-3 p-2 bg-slate-50 dark:bg-slate-600 rounded text-xs">
-              <span className="font-medium">Next: </span>
-              {application.nextStep}
             </div>
           )}
           

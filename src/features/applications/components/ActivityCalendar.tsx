@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { Calendar, ChevronLeft, ChevronRight, Briefcase, BookOpen, Building, Users, Star, Settings } from 'lucide-react';
+import { Calendar, ChevronLeft, ChevronRight, Briefcase, BookOpen, Building, Users, Star, Settings, List } from 'lucide-react';
 import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory } from '../../../types';
 import SettingsModal from '../../../components/shared/SettingsModal';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
@@ -10,6 +10,7 @@ interface ActivityCalendarProps {
   companies: CompanyResearch[];
   contacts: NetworkingContact[];
   stories: StarStory[];
+  onEdit: (item: any, type: string) => void;
 }
 
 interface ActivityItem {
@@ -19,6 +20,7 @@ interface ActivityItem {
   date: string;
   icon: React.ElementType;
   color: string;
+  item: any;
 }
 
 const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
@@ -26,7 +28,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   prepEntries,
   companies,
   contacts,
-  stories
+  stories,
+  onEdit
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
@@ -34,6 +37,7 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
   const [showWeekends, setShowWeekends] = useLocalStorage('calendar-show-weekends', true);
   const [startOfWeek, setStartOfWeek] = useLocalStorage<'sun' | 'mon'>('calendar-start-of-week', 'sun');
   const [visibleActivities, setVisibleActivities] = useLocalStorage<string[]>('calendar-visible-activities', ['application', 'prep', 'company', 'contact', 'story']);
+  const [view, setView] = useLocalStorage<'month' | 'agenda'>('calendar-view', 'month');
 
   // Convert all data to activity items
   const activities = useMemo(() => {
@@ -44,10 +48,11 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
         items.push({
           id: app.id,
           type: 'application',
-          title: `${app.company} - ${app.role}`,
+          title: `${app.company} - ${app.role}${app.salaryRange ? ` (${app.salaryRange}K)` : ''}`,
           date: app.date,
           icon: Briefcase,
-          color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300'
+          color: 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-300',
+          item: app
         });
       });
     }
@@ -60,7 +65,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           title: entry.topic,
           date: entry.date,
           icon: BookOpen,
-          color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
+          color: 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300',
+          item: entry
         });
       });
     }
@@ -73,7 +79,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           title: `Research: ${company.company}`,
           date: company.date || company.createdAt.toDate().toISOString().split('T')[0],
           icon: Building,
-          color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300'
+          color: 'bg-purple-100 text-purple-800 dark:bg-purple-900/20 dark:text-purple-300',
+          item: company
         });
       });
     }
@@ -86,7 +93,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           title: `${contact.name} - ${contact.company}`,
           date: contact.date,
           icon: Users,
-          color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
+          color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300',
+          item: contact
         });
       });
     }
@@ -99,7 +107,8 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
           title: story.title,
           date: story.date || story.createdAt.toDate().toISOString().split('T')[0],
           icon: Star,
-          color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300'
+          color: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900/20 dark:text-indigo-300',
+          item: story
         });
       });
     }
@@ -201,6 +210,10 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
             <Settings className="w-5 h-5 text-slate-500 dark:text-slate-400" />
           </button>
         </div>
+        <div className="flex items-center gap-2 bg-slate-100 dark:bg-slate-700 p-1 rounded-lg">
+            <button onClick={() => setView('month')} className={`p-2 rounded-md ${view === 'month' ? 'bg-white dark:bg-slate-600 text-indigo-600 dark:text-white' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}><Calendar className="w-5 h-5" /></button>
+            <button onClick={() => setView('agenda')} className={`p-2 rounded-md ${view === 'agenda' ? 'bg-white dark:bg-slate-600 text-indigo-600 dark:text-white' : 'text-slate-500 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}`}><List className="w-5 h-5" /></button>
+        </div>
       </div>
 
       <SettingsModal
@@ -273,105 +286,139 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
         </div>
       </SettingsModal>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Calendar Grid */}
-        <div className="lg:col-span-2">
-          {/* Calendar Header */}
-          <div className="flex items-center justify-between mb-4">
-            <button
-              onClick={() => navigateMonth('prev')}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-              {monthName} {year}
-            </h3>
-            <button
-              onClick={() => navigateMonth('next')}
-              className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
-
-          {/* Calendar */}
-          <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
-            {/* Days of week header */}
-            <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} bg-slate-50 dark:bg-slate-700`}>
-              {weekDays.map(day => (
-                <div key={day} className="p-3 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
-                  {day}
-                </div>
-              ))}
+      {view === 'month' ? (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Calendar Grid */}
+          <div className="lg:col-span-2">
+            {/* Calendar Header */}
+            <div className="flex items-center justify-between mb-4">
+              <button
+                onClick={() => navigateMonth('prev')}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              >
+                <ChevronLeft className="w-5 h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+              </button>
+              <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                {monthName} {year}
+              </h3>
+              <button
+                onClick={() => navigateMonth('next')}
+                className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
+              >
+                <ChevronRight className="w-5 h-5 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+              </button>
             </div>
 
-            {/* Calendar days */}
-            <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} `}>
-              {days.map((day, index) => {
-                if (day === null) {
-                  return <div key={`empty-${index}`} className="p-3 h-20 border-r border-b border-slate-200 dark:border-slate-700"></div>;
-                }
-
-                const dateStr = formatDate(year, month, day);
-                const dayActivities = activitiesByDate[dateStr] || [];
-                const isSelected = selectedDate === dateStr;
-                const isToday = dateStr === new Date().toISOString().split('T')[0];
-
-                return (
-                  <div
-                    key={day}
-                    className={`p-2 h-20 border-r border-b border-slate-200 dark:border-slate-700 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 ${
-                      isSelected ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''
-                    }`}
-                    onClick={() => setSelectedDate(dateStr)}
-                  >
-                    <div className={`text-sm font-medium mb-1 ${
-                      isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
-                    }`}>
-                      {day}
-                    </div>
-                    <div className="space-y-1">
-                      {dayActivities.slice(0, 2).map(activity => {
-                        const Icon = activity.icon;
-                        return (
-                          <div
-                            key={activity.id}
-                            className={`text-xs px-1 py-0.5 rounded flex items-center gap-1 ${activity.color}`}
-                          >
-                            <Icon className="w-3 h-3 flex-shrink-0" />
-                            <span className="truncate">{activity.title}</span>
-                          </div>
-                        );
-                      })}
-                      {dayActivities.length > 2 && (
-                        <div className="text-xs text-slate-500 dark:text-slate-400 px-1">
-                          +{dayActivities.length - 2} more
-                        </div>
-                      )}
-                    </div>
+            {/* Calendar */}
+            <div className="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+              {/* Days of week header */}
+              <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} bg-slate-50 dark:bg-slate-700`}>
+                {weekDays.map(day => (
+                  <div key={day} className="p-3 text-center text-sm font-medium text-slate-700 dark:text-slate-300">
+                    {day}
                   </div>
-                );
-              })}
+                ))}
+              </div>
+
+              {/* Calendar days */}
+              <div className={`grid ${showWeekends ? 'grid-cols-7' : 'grid-cols-5'} `}>
+                {days.map((day, index) => {
+                  if (day === null) {
+                    return <div key={`empty-${index}`} className="p-3 h-20 border-r border-b border-slate-200 dark:border-slate-700"></div>;
+                  }
+
+                  const dateStr = formatDate(year, month, day);
+                  const dayActivities = activitiesByDate[dateStr] || [];
+                  const isSelected = selectedDate === dateStr;
+                  const isToday = dateStr === new Date().toISOString().split('T')[0];
+
+                  return (
+                    <div
+                      key={day}
+                      className={`p-2 h-20 border-r border-b border-slate-200 dark:border-slate-700 cursor-pointer transition-colors hover:bg-slate-50 dark:hover:bg-slate-700 ${
+                        isSelected ? 'bg-indigo-50 dark:bg-indigo-900/20' : ''
+                      }`}
+                      onClick={() => setSelectedDate(dateStr)}
+                    >
+                      <div className={`text-sm font-medium mb-1 ${
+                        isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
+                      }`}>
+                        {day}
+                      </div>
+                      <div className="space-y-1">
+                        {dayActivities.slice(0, 2).map(activity => {
+                          const Icon = activity.icon;
+                          return (
+                            <div
+                              key={activity.id}
+                              className={`text-xs px-1 py-0.5 rounded flex items-center gap-1 ${activity.color}`}
+                            >
+                              <Icon className="w-3 h-3 flex-shrink-0" />
+                              <span className="truncate">{activity.title}</span>
+                            </div>
+                          );
+                        })}
+                        {dayActivities.length > 2 && (
+                          <div className="text-xs text-slate-500 dark:text-slate-400 px-1">
+                            +{dayActivities.length - 2} more
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Activity Details */}
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-            {selectedDate ? `Activities for ${new Date(selectedDate).toLocaleDateString()}` : 'Recent Activities'}
-          </h3>
-          
-          <div className="space-y-3 max-h-96 overflow-y-auto">
-            {selectedDate 
-              ? selectedActivities.length > 0 
-                ? selectedActivities.map(activity => {
+          {/* Activity Details */}
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+              {selectedDate ? `Activities for ${new Date(selectedDate).toLocaleDateString()}` : 'Recent Activities'}
+            </h3>
+            
+            <div className="space-y-3 max-h-96 overflow-y-auto">
+              {selectedDate 
+                ? selectedActivities.length > 0 
+                  ? selectedActivities.map(activity => {
+                      const Icon = activity.icon;
+                      return (
+                        <div
+                          key={activity.id}
+                          className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                          onClick={() => onEdit(activity.item, activity.type)}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div className={`p-2 rounded-lg ${activity.color}`}>
+                              <Icon className="w-4 h-4" />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <h4 className="text-sm font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
+                                {activity.title}
+                              </h4>
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                                {new Date(activity.date).toLocaleDateString()}
+                              </p>
+                              <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
+                                {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })
+                  : (
+                    <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                      No activities on this date
+                    </div>
+                  )
+                : activities.slice(0, 10).map(activity => {
                     const Icon = activity.icon;
                     return (
                       <div
                         key={activity.id}
-                        className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+                        className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                        onClick={() => onEdit(activity.item, activity.type)}
                       >
                         <div className="flex items-start gap-3">
                           <div className={`p-2 rounded-lg ${activity.color}`}>
@@ -392,47 +439,53 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                       </div>
                     );
                   })
-                : (
-                  <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                    No activities on this date
-                  </div>
-                )
-              : activities.slice(0, 10).map(activity => {
-                  const Icon = activity.icon;
-                  return (
-                    <div
-                      key={activity.id}
-                      className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-                    >
-                      <div className="flex items-start gap-3">
-                        <div className={`p-2 rounded-lg ${activity.color}`}>
-                          <Icon className="w-4 h-4" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-sm font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
-                            {activity.title}
-                          </h4>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                            {new Date(activity.date).toLocaleDateString()}
-                          </p>
-                          <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
-                            {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
-            }
-            
-            {!selectedDate && activities.length === 0 && (
-              <div className="text-center py-8 text-slate-500 dark:text-slate-400">
-                No activities yet. Start by adding applications, prep entries, or other items!
-              </div>
-            )}
+              }
+              
+              {!selectedDate && activities.length === 0 && (
+                <div className="text-center py-8 text-slate-500 dark:text-slate-400">
+                  No activities yet. Start by adding applications, prep entries, or other items!
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="space-y-4 max-h-[500px] overflow-y-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {Object.entries(activitiesByDate).map(([date, dayActivities]) => (
+              <div key={date}>
+                <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">{new Date(date).toLocaleDateString()}</h3>
+                <div className="space-y-3">
+                  {dayActivities.map(activity => {
+                    const Icon = activity.icon;
+                    return (
+                      <div
+                        key={activity.id}
+                        className="p-3 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors cursor-pointer"
+                        onClick={() => onEdit(activity.item, activity.type)}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={`p-2 rounded-lg ${activity.color}`}>
+                            <Icon className="w-4 h-4" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-sm font-medium text-slate-900 dark:text-dark-text amoled:text-amoled-text truncate">
+                              {activity.title}
+                            </h4>
+                            <span className={`inline-block mt-1 text-xs px-2 py-0.5 rounded-full ${activity.color}`}>
+                              {activity.type.charAt(0).toUpperCase() + activity.type.slice(1)}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

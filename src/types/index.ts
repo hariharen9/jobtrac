@@ -25,6 +25,9 @@ export interface Application {
   jobDescription?: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  salaryRange?: string;
+  priority?: 'High' | 'Medium' | 'Low';
+  interviewDate?: string;
 }
 
 export interface PrepEntry {
@@ -83,6 +86,7 @@ export type ApplicationStatus =
   | 'HR Screen'
   | 'Tech Screen'
   | 'Round 1'
+  | 'Round 2'
   | 'Manager Round'
   | 'Final Round'
   | 'Offer'

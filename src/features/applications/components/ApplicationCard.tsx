@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil, FileText } from 'lucide-react';
+import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
@@ -10,9 +10,10 @@ interface ApplicationCardProps {
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
   onViewJD: (application: Application) => void;
+  isCompact?: boolean; // Added for KanbanBoard to control density
 }
 
-const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication, onViewJD }) => {
+const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplication, onDeleteApplication, onViewJD, isCompact = false }) => {
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
 
   const handleDeleteClick = () => {
@@ -22,6 +23,12 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
   const handleConfirmDelete = () => {
     onDeleteApplication(app.id);
     setConfirmModalOpen(false);
+  };
+
+  const priorityColor = {
+    High: 'text-red-500',
+    Medium: 'text-yellow-500',
+    Low: 'text-green-500',
   };
 
   return (
@@ -34,7 +41,10 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
       >
         <div className="flex justify-between items-start">
           <div className="flex-1">
-            <h3 className="font-semibold text-lg text-slate-900 dark:text-dark-text amoled:text-amoled-text">{app.company}</h3>
+            <h3 className="font-semibold text-lg text-slate-900 dark:text-dark-text amoled:text-amoled-text flex items-center gap-2">
+              {app.priority && <Flame className={`w-4 h-4 ${priorityColor[app.priority]}`} />}
+              {app.company}
+            </h3>
             <a
               href={app.link}
               target="_blank"
@@ -84,6 +94,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({ app, onEditApplicatio
           </div>
         </div>
         
+        {app.salaryRange && (
+          <div className="text-sm">
+            <p className="text-slate-500 dark:text-slate-400">Salary</p>
+            <p className="text-slate-900 dark:text-dark-text amoled:text-amoled-text font-medium">${app.salaryRange}K</p>
+          </div>
+        )}
+        
+        {app.interviewDate && (
+          <div className="text-sm flex items-center gap-2 text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 p-2 rounded-md">
+            <Calendar className="w-4 h-4" />
+            <span>Interview on {app.interviewDate}</span>
+          </div>
+        )}
+
         <div className="flex items-center justify-between">
           <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap ${statusColors[app.status]}`}>
             {app.status}
