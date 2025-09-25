@@ -489,7 +489,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       {movingApplication && (
         <Modal isOpen={!!movingApplication} onClose={() => setMovingApplication(null)} title="Move Application">
           <div className="p-4">
-            <h3 className="text-lg font-semibold mb-4">Move {movingApplication.role} at {movingApplication.company} to:</h3>
+            <h3 className="text-lg font-semibold mb-4 text-slate-900 dark:text-dark-text amoled:text-amoled-text">Move {movingApplication.role} at {movingApplication.company} to:</h3>
             <div className="grid grid-cols-2 gap-2">
               {columns.map(column => (
                 <button

@@ -1,11 +1,13 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2 } from 'lucide-react';
+import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings } from 'lucide-react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
 import EmptyState from '../../../components/shared/EmptyState';
+import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
+import SettingsModal, { ApplicationTrackerSettings } from './SettingsModal';
 
 type SortField = 'date' | 'company' | 'role' | 'status' | 'source' | 'priority' | 'salaryRange' | 'interviewDate';
 type SortDirection = 'asc' | 'desc';
@@ -19,6 +21,8 @@ interface FilterOptions {
     start: string;
     end: string;
   };
+  priority: ('High' | 'Medium' | 'Low')[];
+  referral: ('Y' | 'N')[];
 }
 
 interface ApplicationTrackerProps {
@@ -45,12 +49,20 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
     status: [],
     source: [],
     company: '',
-    dateRange: { start: '', end: '' }
+    dateRange: { start: '', end: '' },
+    priority: [],
+    referral: [],
   });
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isConfirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [settings, setSettings] = useState<ApplicationTrackerSettings>({
+    viewMode: 'compact',
+    showStats: false,
+  });
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const statusOptions: ApplicationStatus[] = [
     'To Apply', 'Applied', 'HR Screen', 'Tech Screen', 'Round 1', 'Round 2',
@@ -69,6 +81,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
         if (filters.company && !app.company.toLowerCase().includes(filters.company.toLowerCase())) return false;
         if (filters.dateRange.start && new Date(app.date) < new Date(filters.dateRange.start)) return false;
         if (filters.dateRange.end && new Date(app.date) > new Date(filters.dateRange.end)) return false;
+        if (filters.priority.length > 0 && !filters.priority.includes(app.priority!)) return false;
+        if (filters.referral.length > 0 && !filters.referral.includes(app.referral)) return false;
         return true;
       })
       .sort((a, b) => {
@@ -131,10 +145,10 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   };
 
   const clearFilters = () => {
-    setFilters({ status: [], source: [], company: '', dateRange: { start: '', end: '' } });
+    setFilters({ status: [], source: [], company: '', dateRange: { start: '', end: '' }, priority: [], referral: [] });
   };
 
-  const hasActiveFilters = filters.status.length > 0 || filters.source.length > 0 || filters.company || filters.dateRange.start || filters.dateRange.end;
+  const hasActiveFilters = filters.status.length > 0 || filters.source.length > 0 || filters.company || filters.dateRange.start || filters.dateRange.end || filters.priority.length > 0 || filters.referral.length > 0;
 
   const QuickStats = () => {
     const total = applications.length;
@@ -164,12 +178,26 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
     );
   };
 
+  React.useEffect(() => {
+    if (isMobile) {
+      setViewMode('grid');
+    } else if (settings.viewMode === 'compact') {
+      setViewMode('list');
+    }
+  }, [isMobile, settings.viewMode]);
+
   if (loading) {
     return <div className="text-center py-12">Loading applications...</div>;
   }
 
   return (
     <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-xl shadow-sm border border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+      <SettingsModal
+        isOpen={isSettingsModalOpen}
+        onClose={() => setIsSettingsModalOpen(false)}
+        settings={settings}
+        onSettingsChange={setSettings}
+      />
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
         <h2 className="text-xl sm:text-2xl font-bold flex items-center gap-3 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
           <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/50">
@@ -178,30 +206,34 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           My Applications
         </h2>
         <div className="flex items-center gap-3">
-          <motion.button 
-            onClick={() => setViewMode('grid')} 
-            className={`p-2.5 rounded-lg transition-all duration-200 ${
-              viewMode === 'grid' 
-                ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-sm' 
-                : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <LayoutGrid className="w-5 h-5" />
-          </motion.button>
-          <motion.button 
-            onClick={() => setViewMode('list')} 
-            className={`p-2.5 rounded-lg transition-all duration-200 ${
-              viewMode === 'list' 
-                ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-sm' 
-                : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <List className="w-5 h-5" />
-          </motion.button>
+          {!isMobile && settings.viewMode === 'comfy' && (
+            <>
+              <motion.button 
+                onClick={() => setViewMode('grid')} 
+                className={`p-2.5 rounded-lg transition-all duration-200 ${
+                  viewMode === 'grid' 
+                    ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-sm' 
+                    : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <LayoutGrid className="w-5 h-5" />
+              </motion.button>
+              <motion.button 
+                onClick={() => setViewMode('list')} 
+                className={`p-2.5 rounded-lg transition-all duration-200 ${
+                  viewMode === 'list' 
+                    ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-sm' 
+                    : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+                }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <List className="w-5 h-5" />
+              </motion.button>
+            </>
+          )}
           <motion.button 
             onClick={() => setShowFilters(!showFilters)} 
             className={`p-2.5 rounded-lg transition-all duration-200 ${
@@ -222,10 +254,20 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           >
             <Plus className="w-4 h-4" /> Add Application
           </motion.button>
+          {!isMobile && (
+            <motion.button 
+              onClick={() => setIsSettingsModalOpen(true)}
+              className="p-2.5 rounded-lg transition-all duration-200 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Settings className="w-5 h-5" />
+            </motion.button>
+          )}
         </div>
       </div>
 
-      <QuickStats />
+      {!isMobile && settings.viewMode === 'comfy' && settings.showStats && <QuickStats />}
 
       <AnimatePresence>
         {showFilters && (
@@ -285,6 +327,46 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                   className="w-full mt-3 p-2.5 border rounded-lg bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition-all" 
                   placeholder="Filter by company..." 
                 />
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Priority</label>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {['High', 'Medium', 'Low'].map(p => (
+                    <motion.button
+                      key={p}
+                      onClick={() => handleFilterChange('priority', filters.priority.includes(p as any) ? filters.priority.filter(i => i !== p) : [...filters.priority, p as any])}
+                      className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
+                        filters.priority.includes(p as any) 
+                          ? 'bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {p}
+                    </motion.button>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Referral</label>
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {['Y', 'N'].map(r => (
+                    <motion.button
+                      key={r}
+                      onClick={() => handleFilterChange('referral', filters.referral.includes(r as any) ? filters.referral.filter(i => i !== r) : [...filters.referral, r as any])}
+                      className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
+                        filters.referral.includes(r as any) 
+                          ? 'bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                      }`}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {r === 'Y' ? 'Yes' : 'No'}
+                    </motion.button>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="flex justify-end mt-4">

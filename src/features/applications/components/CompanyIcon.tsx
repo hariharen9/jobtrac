@@ -194,7 +194,6 @@ const companyIconMap: Record<string, {
   // E-commerce
   'shopify': { icon: FaShopify, color: '#7AB55C', darkColor: '#7AB55C' },
   'etsy': { icon: FaEtsy, color: '#F16521', darkColor: '#F16521' },
-  'flipkart': { icon: SiFlipkart, color: '#2874F0', darkColor: '#2874F0' },
   
   // Development tools
   'github': { icon: FaGithub, color: '#181717', darkColor: '#FFFFFF' },
