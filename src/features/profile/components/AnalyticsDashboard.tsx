@@ -217,7 +217,7 @@ const BenchmarkComparison = ({ applications }: { applications: Application[] }) 
   };
 
   // Define interview-related statuses based on the Kanban board
-  const interviewStatuses = ['Tech Screen', 'Round 1', 'Manager Round', 'Final Round'];
+  const interviewStatuses = ['Tech Screen', 'Round 1', 'Round 2', 'Manager Round', 'Final Round'];
   
   // Count applications with interview-related statuses
   const interviews = applications.filter(app => interviewStatuses.includes(app.status)).length;
@@ -538,7 +538,7 @@ const SuccessMetricsChart = ({ applications }: { applications: Application[] }) 
   // Calculate success metrics
   const totalApplications = applications.length;
   const successfulApplications = applications.filter(app => 
-    app.status === 'Offer' || app.status === 'Final Round'
+    app.status === 'Offer' || app.status === 'Final Round' || app.status === 'Round 2'
   ).length;
   
   const responseRate = totalApplications > 0 
@@ -557,7 +557,7 @@ const SuccessMetricsChart = ({ applications }: { applications: Application[] }) 
   }, [] as { name: string; value: number }[]);
 
   // Filter to only show successful statuses
-  const successfulStatuses = ['Offer', 'Final Round'];
+  const successfulStatuses = ['Offer', 'Final Round', 'Round 2'];
   const successData = statusData.filter(item => successfulStatuses.includes(item.name));
   
   const successRateData = [
