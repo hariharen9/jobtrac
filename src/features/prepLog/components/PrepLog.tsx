@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Subject } from '../../../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen } from 'lucide-react';
+import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target } from 'lucide-react';
 import { PrepEntry } from '../../../types';
 import PrepLogSubjectCard from './PrepLogSubjectCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
@@ -295,6 +295,39 @@ const PrepLog: React.FC<PrepLogProps> = ({
     }
   }, [prepEntries]);
 
+  // Calculate additional stats for the dashboard
+  const currentStreak = useMemo(() => {
+    if (!prepEntries || prepEntries.length === 0) return 0;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    let streak = 0;
+    let currentDate = new Date(today);
+    
+    // Create a set of dates with prep entries
+    const prepDates = new Set(prepEntries.map(entry => {
+      const date = new Date(entry.date);
+      date.setHours(0, 0, 0, 0);
+      return date.getTime();
+    }));
+    
+    // Count consecutive days
+    while (prepDates.has(currentDate.getTime())) {
+      streak++;
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+    
+    return streak;
+  }, [prepEntries]);
+
+  const avgHoursPerDay = useMemo(() => {
+    if (!prepEntries || prepEntries.length === 0) return 0;
+    
+    const uniqueDates = new Set(prepEntries.map(entry => new Date(entry.date).toDateString()));
+    const totalHours = prepEntries.reduce((sum, entry) => sum + entry.time, 0);
+    return uniqueDates.size > 0 ? totalHours / uniqueDates.size : 0;
+  }, [prepEntries]);
+
   if (loading) {
     return <PrepLogSkeleton />;
   }
@@ -362,6 +395,20 @@ const PrepLog: React.FC<PrepLogProps> = ({
             <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Avg. Confidence</span>
           </div>
           <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{averageConfidence}</p>
+        </div>
+        <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Calendar className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Current Streak</span>
+          </div>
+          <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{currentStreak} days</p>
+        </div>
+        <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 rounded-xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm">
+          <div className="flex items-center gap-2 mb-2">
+            <Target className="w-4 h-4 text-green-500 dark:text-green-400" />
+            <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Avg. Hours/Day</span>
+          </div>
+          <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{avgHoursPerDay.toFixed(1)}</p>
         </div>
       </div>
       

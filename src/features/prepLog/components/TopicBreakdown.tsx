@@ -17,26 +17,31 @@ const TopicBreakdown: React.FC<TopicBreakdownProps> = ({ prepEntries }) => {
       return [];
     }
 
-    const timeByTopic = prepEntries.reduce((acc, entry) => {
+    // Group entries by subjectId first
+    const entriesBySubject = prepEntries.reduce((acc, entry) => {
       // Validate entry has required properties
-      if (!entry.topic || typeof entry.time !== 'number') {
+      if (!entry.subjectId || typeof entry.time !== 'number') {
         return acc;
       }
       
-      const topic = entry.topic || 'Uncategorized';
-      acc[topic] = (acc[topic] || 0) + entry.time;
+      if (!acc[entry.subjectId]) {
+        acc[entry.subjectId] = 0;
+      }
+      acc[entry.subjectId] += entry.time;
       return acc;
     }, {} as { [key: string]: number });
 
-    return Object.entries(timeByTopic)
-      .map(([topic, hours]) => ({ topic, hours }))
+    // Convert to array with subject names (using subjectId as fallback)
+    return Object.entries(entriesBySubject)
+      .map(([subjectId, hours]) => ({ topic: subjectId, hours })) // Using subjectId as topic name for now
       .sort((a, b) => b.hours - a.hours)
       .slice(0, 10); // Limit to top 10 topics for better performance
   }, [prepEntries]);
 
   const tickColor = theme === 'light' ? '#64748b' : '#94a3b8';
-  const tooltipBackgroundColor = theme === 'light' ? '#fff' : '#1e293b';
-  const tooltipBorderColor = theme === 'light' ? '#ddd' : '#334155';
+  const tooltipBackgroundColor = theme === 'light' ? '#ffffff' : theme === 'dark' ? '#1e293b' : '#000000';
+  const tooltipBorderColor = theme === 'light' ? '#e2e8f0' : theme === 'dark' ? '#334155' : '#2d2d2d';
+  const tooltipTextColor = theme === 'light' ? '#1e293b' : theme === 'dark' ? '#f1f5f9' : '#f1f5f9';
 
   if (prepEntries.length === 0) {
     return (
@@ -84,12 +89,17 @@ const TopicBreakdown: React.FC<TopicBreakdownProps> = ({ prepEntries }) => {
                 cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }} 
                 contentStyle={{ 
                   backgroundColor: tooltipBackgroundColor, 
-                  border: `1px solid ${tooltipBorderColor}`,
+                  borderColor: tooltipBorderColor,
+                  borderWidth: 1,
+                  borderStyle: 'solid',
                   borderRadius: '0.5rem',
-                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+                  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                  color: tooltipTextColor
                 }} 
                 formatter={(value) => [`${value} hours`, 'Time']}
                 labelFormatter={(label) => `Topic: ${label}`}
+                itemStyle={{ color: tooltipTextColor }}
+                labelStyle={{ color: tooltipTextColor, fontWeight: 'bold' }}
               />
               <Bar 
                 dataKey="hours" 

@@ -38,6 +38,8 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
     subjectId: '1',
+    srsStage: 2,
+    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().split('T')[0],
   },
   {
     id: '2',
@@ -51,6 +53,8 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
     subjectId: '2',
+    srsStage: 1,
+    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0],
   },
   {
     id: '3',
@@ -62,6 +66,8 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
     subjectId: '3',
+    srsStage: 0,
+    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0],
   },
 ];
 

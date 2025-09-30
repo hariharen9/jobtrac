@@ -9,8 +9,8 @@ interface PrepAnalyticsProps {
   prepEntries: PrepEntry[];
 }
 
-// Color palette for charts
-const COLORS = ['#818cf8', '#60a5fa', '#38bdf8', '#22d3ee', '#2dd4bf', '#34d399', '#a3e635', '#facc15', '#fbbf24', '#fb923c'];
+// Color palette for charts - Updated with more diverse colors for Confidence Level Distribution
+const COLORS = ['#ef4444', '#f97316', '#eab308', '#22c55e', '#3b82f6'];
 
 const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -23,14 +23,12 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
       return { 
         days: [], 
         maxHours: 0, 
-        totalHours: 0, 
         streak: 0,
         avgHoursPerDay: 0,
         mostActiveDay: '',
-        topicsCount: 0,
         avgConfidence: 0,
         timeByDayOfWeek: [],
-        timeByTopic: [],
+        timeBySubject: [], // Changed from timeByTopic
         confidenceDistribution: []
       };
     }
@@ -76,10 +74,6 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
     const mostActiveDayIndex = dayOfWeekHours.indexOf(Math.max(...dayOfWeekHours));
     const mostActiveDay = dayOfWeekMap[mostActiveDayIndex] || 'N/A';
 
-    // Calculate topics count
-    const topics = new Set(prepEntries.map(entry => entry.topic));
-    const topicsCount = topics.size;
-
     // Calculate average confidence
     const totalConfidence = prepEntries.reduce((sum, entry) => sum + entry.confidence, 0);
     const avgConfidence = prepEntries.length > 0 ? totalConfidence / prepEntries.length : 0;
@@ -91,17 +85,17 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
       sessions: dayOfWeekCount[index]
     }));
 
-    // Calculate time by topic for chart (top 10)
-    const timeByTopicMap = new Map<string, number>();
+    // Calculate time by subject for chart (top 10)
+    const timeBySubjectMap = new Map<string, number>(); // Changed from timeByTopicMap
     prepEntries.forEach(entry => {
-      const current = timeByTopicMap.get(entry.topic) || 0;
-      timeByTopicMap.set(entry.topic, current + entry.time);
+      const current = timeBySubjectMap.get(entry.subjectId) || 0; // Changed from entry.topic
+      timeBySubjectMap.set(entry.subjectId, current + entry.time); // Changed from entry.topic
     });
     
-    const timeByTopic = Array.from(timeByTopicMap.entries())
-      .map(([topic, hours]) => ({ name: topic, hours }))
+    const timeBySubject = Array.from(timeBySubjectMap.entries()) // Changed from timeByTopic
+      .map(([subjectId, hours]) => ({ name: subjectId, hours })) // Changed from topic
       .sort((a, b) => b.hours - a.hours)
-      .slice(0, 10); // Top 10 topics
+      .slice(0, 10); // Top 10 subjects
 
     // Calculate confidence distribution
     const confidenceCount = Array(5).fill(0);
@@ -158,10 +152,9 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
       streak,
       avgHoursPerDay,
       mostActiveDay,
-      topicsCount,
       avgConfidence,
       timeByDayOfWeek,
-      timeByTopic,
+      timeBySubject, // Changed from timeByTopic
       confidenceDistribution
     };
   }, [prepEntries]);
@@ -185,8 +178,9 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
 
   // Chart styling based on theme
   const tickColor = theme === 'light' ? '#64748b' : '#94a3b8';
-  const tooltipBackgroundColor = theme === 'light' ? '#fff' : '#1e293b';
-  const tooltipBorderColor = theme === 'light' ? '#ddd' : '#334155';
+  const tooltipBackgroundColor = theme === 'light' ? '#ffffff' : theme === 'dark' ? '#1e293b' : '#000000';
+  const tooltipBorderColor = theme === 'light' ? '#e2e8f0' : theme === 'dark' ? '#334155' : '#2d2d2d';
+  const tooltipTextColor = theme === 'light' ? '#1e293b' : theme === 'dark' ? '#f1f5f9' : '#f1f5f9';
   const gridColor = theme === 'light' ? '#e2e8f0' : '#334155';
 
   // Don't render if no data
@@ -218,38 +212,6 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
           <h3 className="font-semibold text-slate-800 dark:text-dark-text amoled:text-amoled-text">
             Prep Analytics
           </h3>
-        </div>
-        
-        {/* Summary Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Clock className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Total Hours</span>
-            </div>
-            <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{analytics.totalHours.toFixed(1)}</p>
-          </div>
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Calendar className="w-4 h-4 text-amber-500 dark:text-amber-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Current Streak</span>
-            </div>
-            <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{analytics.streak} days</p>
-          </div>
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <Target className="w-4 h-4 text-green-500 dark:text-green-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Avg. Hours/Day</span>
-            </div>
-            <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{analytics.avgHoursPerDay.toFixed(1)}</p>
-          </div>
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <div className="flex items-center gap-2 mb-2">
-              <BarChart3 className="w-4 h-4 text-purple-500 dark:text-purple-400" />
-              <span className="text-xs font-medium text-slate-500 dark:text-slate-400 amoled:text-slate-500">Topics</span>
-            </div>
-            <p className="text-xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">{analytics.topicsCount}</p>
-          </div>
         </div>
         
         {/* Activity Heatmap */}
@@ -290,103 +252,48 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
         </div>
         
         {/* Charts Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Time by Day of Week */}
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-3">
-              Activity by Day of Week
-            </h4>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={analytics.timeByDayOfWeek}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis dataKey="name" tick={{ fill: tickColor, fontSize: 12 }} />
-                  <YAxis tick={{ fill: tickColor, fontSize: 12 }} />
-                  <Tooltip 
-                    cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }} 
-                    contentStyle={{ 
-                      backgroundColor: tooltipBackgroundColor, 
-                      border: `1px solid ${tooltipBorderColor}`,
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                    }} 
-                    formatter={(value) => [`${value} hours`, 'Time']}
-                  />
-                  <Bar dataKey="hours" fill="#818cf8" radius={[4, 4, 0, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Time by Topic */}
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
-            <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-3">
-              Time Spent by Topic (Top 10)
-            </h4>
-            <div className="h-64">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={analytics.timeByTopic} layout="vertical">
-                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />
-                  <XAxis type="number" tick={{ fill: tickColor, fontSize: 12 }} />
-                  <YAxis 
-                    type="category" 
-                    dataKey="name" 
-                    width={80} 
-                    tick={{ fill: tickColor, fontSize: 12 }} 
-                    tickFormatter={(value) => value.length > 10 ? `${value.substring(0, 10)}...` : value}
-                  />
-                  <Tooltip 
-                    cursor={{ fill: 'rgba(128, 128, 128, 0.1)' }} 
-                    contentStyle={{ 
-                      backgroundColor: tooltipBackgroundColor, 
-                      border: `1px solid ${tooltipBorderColor}`,
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                    }} 
-                    formatter={(value) => [`${value} hours`, 'Time']}
-                    labelFormatter={(label) => `Topic: ${label}`}
-                  />
-                  <Bar dataKey="hours" fill="#60a5fa" radius={[0, 4, 4, 0]} />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Confidence Distribution */}
-          <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30 lg:col-span-2">
-            <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-3">
-              Confidence Level Distribution
-            </h4>
-            <div className="h-64 flex items-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={analytics.confidenceDistribution}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name}: ${percent ? (percent * 100).toFixed(0) : 0}%`}
-                  >
-                    {analytics.confidenceDistribution.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip 
-                    contentStyle={{ 
-                      backgroundColor: tooltipBackgroundColor, 
-                      border: `1px solid ${tooltipBorderColor}`,
-                      borderRadius: '0.5rem',
-                      boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
-                    }} 
-                    formatter={(value) => [`${value} sessions`, 'Count']}
-                  />
-                  <Legend />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+        
+        {/* Confidence Distribution */}
+        <div className="bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 p-4 rounded-lg border border-slate-200 dark:border-dark-border/30 amoled:border-amoled-border/30">
+          <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-3">
+            Confidence Level Distribution
+          </h4>
+          <div className="h-64 flex items-center">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={analytics.confidenceDistribution}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                  label={({ name, percent }) => `${name}: ${percent ? (percent * 100).toFixed(0) : 0}%`}
+                >
+                  {analytics.confidenceDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: tooltipBackgroundColor, 
+                    borderColor: tooltipBorderColor,
+                    borderWidth: 1,
+                    borderStyle: 'solid',
+                    borderRadius: '0.5rem',
+                    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                    color: tooltipTextColor,
+                    fontSize: '12px',
+                    padding: '8px 12px'
+                  }} 
+                  formatter={(value) => [`${value} sessions`, 'Count']}
+                  itemStyle={{ color: tooltipTextColor }}
+                  labelStyle={{ color: tooltipTextColor, fontWeight: 'bold' }}
+                />
+                <Legend />
+              </PieChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
