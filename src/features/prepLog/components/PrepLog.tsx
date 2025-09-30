@@ -81,6 +81,19 @@ const PrepLog: React.FC<PrepLogProps> = ({
     dateRange: { start: '', end: '' }
   });
   const [error, setError] = useState<string | null>(null);
+  const [hasCreatedDefaultSubject, setHasCreatedDefaultSubject] = useState(false);
+  
+  // Create a default subject if none exist
+  useEffect(() => {
+    if (!hasCreatedDefaultSubject && subjects && subjects.length === 0 && onAddSubject) {
+      console.log('Creating default subject');
+      onAddSubject({
+        name: 'General Prep',
+        description: 'Default subject for general preparation sessions'
+      });
+      setHasCreatedDefaultSubject(true);
+    }
+  }, [subjects, onAddSubject, hasCreatedDefaultSubject]);
   
   // Refs for keyboard navigation
   const filterButtonRef = useRef<HTMLButtonElement>(null);
@@ -686,6 +699,11 @@ const PrepLog: React.FC<PrepLogProps> = ({
                 <p className="text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500">
                   {processedSubjectEntries.length} subject{processedSubjectEntries.length !== 1 ? 's' : ''}
                 </p>
+                {subjects && subjects.length === 0 && (
+                  <p className="text-sm text-amber-600 dark:text-amber-400 amoled:text-amber-500 mt-1">
+                    Create your first subject to organize your prep sessions
+                  </p>
+                )}
               </div>
               
               <div className="flex items-center gap-3">
@@ -746,10 +764,16 @@ const PrepLog: React.FC<PrepLogProps> = ({
             {processedSubjectEntries.length === 0 && (
               <div className="pt-10">
                 <EmptyState
-                  title={hasActiveFilters ? "No Entries Match Filters" : "No Prep Entries Logged"}
-                  message={hasActiveFilters ? "Try adjusting your filters to see more results." : "Log your first prep entry to see it appear here."}
-                  buttonText="Log First Prep Entry"
-                  onButtonClick={onAddPrepEntry}
+                  title={hasActiveFilters ? "No Entries Match Filters" : (subjects && subjects.length === 0 ? "No Subjects Created" : "No Prep Entries Logged")}
+                  message={
+                    hasActiveFilters 
+                      ? "Try adjusting your filters to see more results." 
+                      : (subjects && subjects.length === 0 
+                          ? "Create your first subject to organize your prep sessions." 
+                          : "Log your first prep entry to see it appear here.")
+                  }
+                  buttonText={subjects && subjects.length === 0 ? "Create Subject" : "Log First Prep Entry"}
+                  onButtonClick={subjects && subjects.length === 0 ? () => setShowSubjectManager(true) : onAddPrepEntry}
                   icon={<BookOpen className="w-12 h-12 text-slate-400" />}
                 />
               </div>

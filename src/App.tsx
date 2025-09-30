@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
-import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, Session, SessionFirestore } from './types';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
@@ -177,7 +177,7 @@ function App() {
     addItem: addSession,
     updateItem: updateSession,
     deleteItem: deleteSession
-  } = useFirestore<SessionFirestore>('sessions', user?.uid, true); // Polling
+  } = useFirestore<any>('sessions', user?.uid, true); // Polling
 
   // Notes data for global search
   const { notes } = useNotes(user?.uid);
@@ -634,11 +634,17 @@ function App() {
             preFilledTopic={preFilledPrepTopic || undefined} // Pass pre-filled topic
             loading={isSubmitting}
             applications={applications}
-            subjects={subjects.map(subject => ({
-              ...subject,
-              createdAt: subject.createdAt.toDate(),
-              updatedAt: subject.updatedAt.toDate()
-            }))}
+            subjects={subjects.map(subject => {
+              // Debug log to see what we're converting
+              console.log('Converting subject:', subject);
+              const convertedSubject = {
+                ...subject,
+                createdAt: subject.createdAt.toDate(),
+                updatedAt: subject.updatedAt.toDate()
+              };
+              console.log('Converted subject:', convertedSubject);
+              return convertedSubject;
+            })}
             sessions={sessions.map(session => ({
               ...session,
               date: session.date.toDate(),
