@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { Plus, Edit2, Trash2, X, Check, FolderPlus } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Plus, Edit2, Trash2, X, Check, FolderPlus, BookOpen } from 'lucide-react';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 import SubjectManagerSkeleton from './SubjectManagerSkeleton';
 
@@ -37,6 +37,7 @@ const SubjectManager: React.FC<SubjectManagerProps> = ({
   if (loading) {
     return <SubjectManagerSkeleton />;
   }
+  
   const [isAddingSubject, setIsAddingSubject] = useState(false);
   const [newSubjectName, setNewSubjectName] = useState('');
   const [newSubjectDescription, setNewSubjectDescription] = useState('');
@@ -101,7 +102,6 @@ const SubjectManager: React.FC<SubjectManagerProps> = ({
         description: newSubjectDescription.trim() || undefined
       });
       resetForm();
-      onClose(); // Close modal after adding subject
     }
   };
 
@@ -121,7 +121,6 @@ const SubjectManager: React.FC<SubjectManagerProps> = ({
         updatedAt: new Date()
       });
       resetForm();
-      onClose(); // Close modal after editing subject
     }
   };
 
@@ -140,171 +139,254 @@ const SubjectManager: React.FC<SubjectManagerProps> = ({
   };
 
   return (
-    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm p-5 mb-6">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold text-slate-800 dark:text-dark-text amoled:text-amoled-text">Subjects</h3>
+    <div className="bg-white/90 dark:bg-dark-card/90 amoled:bg-amoled-card/90 backdrop-blur-xl rounded-2xl border border-slate-200/70 dark:border-dark-border/70 amoled:border-amoled-border/70 shadow-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="flex justify-between items-center mb-6">
+        <div className="flex items-center gap-3">
+          <div className="p-3 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 shadow-lg">
+            <BookOpen className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 dark:text-dark-text amoled:text-amoled-text">Manage Subjects</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500">
+              Organize your prep sessions by subject
+            </p>
+          </div>
+        </div>
         <motion.button
-          ref={addButtonRef}
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.98 }}
-          onClick={() => setIsAddingSubject(true)}
-          className="flex items-center gap-1.5 text-sm font-medium text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500 hover:text-indigo-800 dark:hover:text-indigo-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
-          disabled={isAddingSubject}
+          whileHover={{ scale: 1.05, rotate: 90 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={onClose}
+          className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-700/50 transition-colors backdrop-blur-sm"
+          aria-label="Close modal"
         >
-          <FolderPlus className="w-4 h-4" />
-          Add Subject
+          <X className="w-6 h-6 text-slate-500 dark:text-slate-400" />
         </motion.button>
       </div>
 
       {/* Add Subject Form */}
-      {isAddingSubject && (
-        <div className="mb-4 p-4 bg-slate-50 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 rounded-lg border border-slate-200 dark:border-dark-border/50 amoled:border-amoled-border/50">
-          <div className="flex justify-between items-center mb-2">
-            <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary text-sm">New Subject</h4>
-            <button
-              ref={(el) => { if (el) closeButtonsRef.current[0] = el; }}
-              onClick={onClose}
-              className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 amoled:hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
-              aria-label="Cancel adding subject"
+      <motion.div 
+        layout
+        className="mb-6"
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
+            {isAddingSubject ? 'Create New Subject' : 'Subjects'}
+          </h3>
+          {!isAddingSubject && (
+            <motion.button
+              ref={addButtonRef}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setIsAddingSubject(true)}
+              className="flex items-center gap-2 text-sm font-semibold text-white bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-xl px-4 py-2.5 shadow-lg transition-all duration-200"
             >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-          <div className="space-y-3">
-            <div>
-              <input
-                type="text"
-                placeholder="Subject Name"
-                value={newSubjectName}
-                onChange={(e) => setNewSubjectName(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                autoFocus
-              />
-            </div>
-            <div>
-              <textarea
-                placeholder="Description (optional)"
-                value={newSubjectDescription}
-                onChange={(e) => setNewSubjectDescription(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none"
-                rows={2}
-              />
-            </div>
-            <div className="flex justify-end">
-              <button
-                onClick={handleAddSubject}
-                disabled={!newSubjectName.trim()}
-                className={`px-4 py-2 rounded-lg text-sm font-medium flex items-center gap-1.5 ${
-                  newSubjectName.trim()
-                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                    : 'bg-slate-300 dark:bg-slate-700 text-slate-500 dark:text-slate-400 cursor-not-allowed'
-                }`}
-              >
-                <Plus className="w-4 h-4" />
-                Add Subject
-              </button>
-            </div>
-          </div>
+              <FolderPlus className="w-4 h-4" />
+              <span>Add Subject</span>
+            </motion.button>
+          )}
         </div>
-      )}
-
-      {/* Subject List */}
-      <div className="space-y-2 max-h-64 overflow-y-auto pr-1 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-600 scrollbar-track-transparent">
-        {subjects.length === 0 ? (
-          <p className="text-sm text-slate-500 dark:text-slate-400 amoled:text-slate-500 text-center py-4">
-            No subjects created yet. Add your first subject to organize your prep sessions.
-          </p>
-        ) : (
-          subjects && Array.isArray(subjects) ? subjects.map((subject, index) => (
-            <div
-              key={subject.id}
-              ref={(el) => { if (el) subjectItemsRef.current[index] = el; }}
-              data-subject-id={subject.id}
-              tabIndex={0}
-              className={`p-3 rounded-lg border ${
-                selectedSubjectId === subject.id
-                  ? 'border-indigo-300 dark:border-indigo-700 bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-indigo-900/10'
-                  : 'border-slate-200 dark:border-dark-border/50 amoled:border-amoled-border/50 hover:bg-slate-50 dark:hover:bg-dark-bg/30 amoled:hover:bg-amoled-bg/30'
-              } transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500`}
+        
+        <AnimatePresence>
+          {isAddingSubject && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.3 }}
+              className="overflow-hidden mb-6"
             >
-              {editingSubject?.id === subject.id ? (
-                <div className="space-y-2">
-                  <input
-                    type="text"
-                    value={editName}
-                    onChange={(e) => setEditName(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-1.5 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-sm"
-                    autoFocus
-                  />
-                  <textarea
-                    value={editDescription}
-                    onChange={(e) => setEditDescription(e.target.value)}
-                    className="w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-1.5 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 resize-none text-sm"
-                    rows={2}
-                    placeholder="Description (optional)"
-                  />
-                  <div className="flex justify-end gap-2">
+              <div className="p-5 bg-slate-50/70 dark:bg-dark-bg/30 amoled:bg-amoled-bg/30 rounded-xl border border-slate-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50 backdrop-blur-sm shadow-sm">
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                      Subject Name *
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="e.g., Data Structures & Algorithms"
+                      value={newSubjectName}
+                      onChange={(e) => setNewSubjectName(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 px-4 py-3 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 backdrop-blur-sm"
+                      autoFocus
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                      Description (optional)
+                    </label>
+                    <textarea
+                      placeholder="Brief description of what this subject covers..."
+                      value={newSubjectDescription}
+                      onChange={(e) => setNewSubjectDescription(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 px-4 py-3 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all duration-200 backdrop-blur-sm"
+                      rows={3}
+                    />
+                  </div>
+                  <div className="flex justify-end gap-3">
                     <button
                       onClick={resetForm}
-                      className="p-1.5 text-slate-500 hover:text-red-600 dark:hover:text-red-400 amoled:hover:text-red-500 rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-700"
-                      aria-label="Cancel editing"
+                      className="px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
                     >
-                      <X className="w-4 h-4" />
+                      Cancel
                     </button>
                     <button
-                      onClick={saveEditSubject}
-                      disabled={!editName.trim()}
-                      className={`p-1.5 rounded-lg transition-colors ${
-                        editName.trim()
-                          ? 'text-green-600 hover:text-green-700 dark:text-green-500 dark:hover:text-green-400 hover:bg-slate-100 dark:hover:bg-slate-700'
-                          : 'text-slate-400 cursor-not-allowed'
+                      onClick={handleAddSubject}
+                      disabled={!newSubjectName.trim()}
+                      className={`px-4 py-2.5 text-sm font-medium text-white rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                        newSubjectName.trim()
+                          ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md'
+                          : 'bg-slate-300 dark:bg-slate-600 cursor-not-allowed'
                       }`}
-                      aria-label="Save changes"
                     >
-                      <Check className="w-4 h-4" />
+                      Create Subject
                     </button>
                   </div>
                 </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Subjects List */}
+      <div className="space-y-3">
+        {subjects.length === 0 ? (
+          <div className="text-center py-12">
+            <div className="mx-auto w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mb-4">
+              <BookOpen className="w-8 h-8 text-slate-400" />
+            </div>
+            <h3 className="text-lg font-medium text-slate-700 dark:text-slate-300 mb-1">No subjects yet</h3>
+            <p className="text-slate-500 dark:text-slate-400">
+              Create your first subject to get started
+            </p>
+          </div>
+        ) : (
+          subjects.map((subject, index) => (
+            <motion.div
+              key={subject.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className={`rounded-xl border transition-all duration-200 ${
+                selectedSubjectId === subject.id
+                  ? 'border-indigo-500 bg-indigo-50/50 dark:bg-indigo-900/20 amoled:bg-indigo-900/10 shadow-sm'
+                  : 'border-slate-200/50 dark:border-dark-border/50 amoled:border-amoled-border/50 hover:border-slate-300 dark:hover:border-slate-600 amoled:hover:border-slate-700'
+              } bg-white/70 dark:bg-dark-card/70 amoled:bg-amoled-card/70 backdrop-blur-sm`}
+            >
+              {editingSubject?.id === subject.id ? (
+                // Edit Mode
+                <div className="p-5">
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                        Subject Name *
+                      </label>
+                      <input
+                        type="text"
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        className="w-full rounded-xl border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 px-4 py-2.5 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 backdrop-blur-sm"
+                        autoFocus
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                        Description (optional)
+                      </label>
+                      <textarea
+                        value={editDescription}
+                        onChange={(e) => setEditDescription(e.target.value)}
+                        className="w-full rounded-xl border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 px-4 py-2.5 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-none transition-all duration-200 backdrop-blur-sm"
+                        rows={2}
+                      />
+                    </div>
+                    <div className="flex justify-end gap-3">
+                      <button
+                        onClick={resetForm}
+                        className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-slate-500"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={saveEditSubject}
+                        disabled={!editName.trim()}
+                        className={`px-4 py-2 text-sm font-medium text-white rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 flex items-center gap-2 ${
+                          editName.trim()
+                            ? 'bg-gradient-to-r from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700 shadow-md'
+                            : 'bg-slate-300 dark:bg-slate-600 cursor-not-allowed'
+                        }`}
+                      >
+                        <Check className="w-4 h-4" />
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
               ) : (
-                <div onClick={() => handleSelectSubject(subject)}>
+                // View Mode
+                <div 
+                  className="p-5 cursor-pointer"
+                  onClick={() => handleSelectSubject(subject)}
+                  data-subject-id={subject.id}
+                  tabIndex={0}
+                  role="button"
+                  aria-pressed={selectedSubjectId === subject.id}
+                >
                   <div className="flex justify-between items-start">
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-slate-800 dark:text-dark-text amoled:text-amoled-text text-sm truncate">
-                        {subject.name}
-                      </h4>
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-slate-800 dark:text-dark-text amoled:text-amoled-text truncate">
+                          {subject.name}
+                        </h4>
+                        {selectedSubjectId === subject.id && (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-200">
+                            Selected
+                          </span>
+                        )}
+                      </div>
                       {subject.description && (
-                        <p className="text-xs text-slate-500 dark:text-slate-400 amoled:text-slate-500 mt-1 line-clamp-2">
+                        <p className="text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500 mb-3">
                           {subject.description}
                         </p>
                       )}
+                      <div className="flex items-center text-xs text-slate-500 dark:text-slate-400 amoled:text-slate-500">
+                        <span>
+                          Created {new Date(subject.createdAt).toLocaleDateString()}
+                        </span>
+                        {subject.updatedAt > subject.createdAt && (
+                          <span className="ml-2">
+                            • Updated {new Date(subject.updatedAt).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 ml-2">
+                    <div className="flex gap-2 ml-4">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           startEditSubject(subject);
                         }}
-                        className="p-1.5 text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-500 rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                        aria-label={`Edit subject ${subject.name}`}
+                        className="p-2 rounded-lg text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-700/50 transition-colors"
+                        aria-label={`Edit ${subject.name}`}
                       >
-                        <Edit2 className="w-3.5 h-3.5" />
+                        <Edit2 className="w-4 h-4" />
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           confirmDeleteSubject(subject.id);
                         }}
-                        className="p-1.5 text-slate-500 hover:text-red-600 dark:hover:text-red-400 amoled:hover:text-red-500 rounded-lg transition-colors hover:bg-slate-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-red-500"
-                        aria-label={`Delete subject ${subject.name}`}
+                        className="p-2 rounded-lg text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-700/50 transition-colors"
+                        aria-label={`Delete ${subject.name}`}
                       >
-                        <Trash2 className="w-3.5 h-3.5" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </div>
                 </div>
               )}
-            </div>
-          )) : null
+            </motion.div>
+          ))
         )}
       </div>
 
@@ -314,7 +396,7 @@ const SubjectManager: React.FC<SubjectManagerProps> = ({
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={handleDeleteSubject}
         title="Delete Subject"
-        message="This will delete the subject and all of its sessions. Prep entries will not be deleted, but will no longer be associated with this subject or its sessions. Are you sure you want to delete this subject?"
+        message="Are you sure you want to delete this subject? This action cannot be undone and all associated prep logs will be removed."
       />
     </div>
   );
