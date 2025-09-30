@@ -59,7 +59,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const [isConfirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
   const [settings, setSettings] = useState<ApplicationTrackerSettings>({
-    viewMode: 'compact',
+    viewMode: 'comfy',
     showStats: false,
   });
   const isMobile = useMediaQuery('(max-width: 768px)');
