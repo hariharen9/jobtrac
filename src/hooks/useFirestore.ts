@@ -57,7 +57,6 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
         const fetchData = async () => {
           try {
             const snapshot = await getDocs(q);
-            console.log(`Fetched ${snapshot.docs.length} items from ${collectionName} for user ${userId} (polling)`);
             const items = snapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data()
@@ -84,7 +83,6 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
         const unsubscribe = onSnapshot(
           q,
           (snapshot) => {
-            console.log(`Fetched ${snapshot.docs.length} items from ${collectionName} for user ${userId} (real-time)`);
             const items = snapshot.docs.map(doc => ({
               id: doc.id,
               ...doc.data()
@@ -127,7 +125,6 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
         updatedAt: Timestamp.now(),
       };
       const docRef = await addDoc(collectionRef, newItem);
-      console.log(`Added item to ${collectionName} with ID:`, docRef.id);
       toast.success('Item added successfully!');
       return docRef.id;
 
@@ -158,7 +155,6 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
 
     try {
       await updateDoc(docRef, updatedData);
-      console.log(`Updated item in ${collectionName} with ID:`, id);
       toast.success('Item updated successfully!');
     } catch (err) {
       console.error(`Error updating item in ${collectionName}:`, err);
@@ -182,7 +178,6 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
     const docRef = doc(collectionRef, id);
     try {
       await deleteDoc(docRef);
-      console.log(`Deleted item from ${collectionName} with ID:`, id);
       toast.success('Item deleted successfully!');
     } catch (err) {
       console.error(`Error deleting item from ${collectionName}:`, err);

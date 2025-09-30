@@ -634,17 +634,11 @@ function App() {
             preFilledTopic={preFilledPrepTopic || undefined} // Pass pre-filled topic
             loading={isSubmitting}
             applications={applications}
-            subjects={subjects.map(subject => {
-              // Debug log to see what we're converting
-              console.log('Converting subject:', subject);
-              const convertedSubject = {
-                ...subject,
-                createdAt: subject.createdAt.toDate(),
-                updatedAt: subject.updatedAt.toDate()
-              };
-              console.log('Converted subject:', convertedSubject);
-              return convertedSubject;
-            })}
+            subjects={subjects.map(subject => ({
+              ...subject,
+              createdAt: subject.createdAt.toDate(),
+              updatedAt: subject.updatedAt.toDate()
+            }))}
             sessions={sessions.map(session => ({
               ...session,
               date: session.date.toDate(),

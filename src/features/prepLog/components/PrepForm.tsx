@@ -163,12 +163,8 @@ const PrepForm: React.FC<PrepFormProps> = ({ onSubmit, onCancel, initialData, lo
     return <PrepFormSkeleton />;
   }
   
-  // Debug: Log all props
-  console.log('PrepForm props:', { onSubmit, onCancel, initialData, loading, applications, subjects, preFilledTopic });
-  
   // Ensure subjects is always an array
   const safeSubjects = Array.isArray(subjects) ? subjects : [];
-  console.log('Safe subjects:', safeSubjects);
   
   const [formData, setFormData] = useState({
     date: new Date().toISOString().split('T')[0],
@@ -371,17 +367,7 @@ const PrepForm: React.FC<PrepFormProps> = ({ onSubmit, onCancel, initialData, lo
 
   // Debug: Log subjects to see what's being passed
   useEffect(() => {
-    console.log('Subjects passed to PrepForm:', subjects);
-    console.log('Subjects type:', typeof subjects);
-    console.log('Is subjects array:', Array.isArray(subjects));
-    if (Array.isArray(subjects)) {
-      console.log('Subjects length:', subjects.length);
-      if (subjects.length > 0) {
-        console.log('First subject:', subjects[0]);
-        console.log('First subject type:', typeof subjects[0]);
-        console.log('First subject keys:', Object.keys(subjects[0]));
-      }
-    }
+    // Removed debugging logs
   }, [subjects]);
 
   return (

@@ -86,7 +86,6 @@ const PrepLog: React.FC<PrepLogProps> = ({
   // Create a default subject if none exist
   useEffect(() => {
     if (!hasCreatedDefaultSubject && subjects && subjects.length === 0 && onAddSubject) {
-      console.log('Creating default subject');
       onAddSubject({
         name: 'General Prep',
         description: 'Default subject for general preparation sessions'
