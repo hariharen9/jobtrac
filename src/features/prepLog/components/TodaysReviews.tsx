@@ -5,16 +5,26 @@ import { BookOpen, ChevronRight, Calendar, HelpCircle } from 'lucide-react';
 interface TodaysReviewsProps {
   prepEntries: PrepEntry[];
   onEditPrepEntry: (entry: PrepEntry) => void;
+  subjects?: { id: string; name: string }[];
 }
 
-const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEntry }) => {
-  const dueTopics = useMemo(() => {
+const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEntry, subjects = [] }) => {
+  // Create a map of subject IDs to names for quick lookup
+  const subjectMap = useMemo(() => {
+    const map: Record<string, string> = {};
+    subjects.forEach(subject => {
+      map[subject.id] = subject.name;
+    });
+    return map;
+  }, [subjects]);
+
+  const dueEntries = useMemo(() => {
     const today = new Date().toISOString().split('T')[0];
-    const dueEntries = new Map<string, PrepEntry>();
+    const dueList: PrepEntry[] = [];
 
     for (const entry of prepEntries) {
       // Validate that entry has required properties
-      if (!entry.topic || !entry.date) continue;
+      if (!entry.subjectId || !entry.date) continue;
       
       // Validate nextReviewDate exists and is valid
       if (entry.nextReviewDate) {
@@ -30,16 +40,12 @@ const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEn
         
         // Check if review is due (nextReviewDate is today or in the past)
         if (nextReviewDate <= todayDate) {
-          const existing = dueEntries.get(entry.topic);
-          // If there's an existing entry for this topic, keep the more recent one
-          if (!existing || new Date(entry.date) > new Date(existing.date)) {
-            dueEntries.set(entry.topic, entry);
-          }
+          dueList.push(entry);
         }
       }
     }
 
-    return Array.from(dueEntries.values());
+    return dueList;
   }, [prepEntries]);
 
   if (prepEntries.length === 0) {
@@ -77,9 +83,9 @@ const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEn
         <h3 className="font-semibold text-slate-800 dark:text-dark-text amoled:text-amoled-text">
           Today's Reviews
         </h3>
-        {dueTopics.length > 0 && (
+        {dueEntries.length > 0 && (
           <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-indigo-100 text-indigo-800 text-xs font-bold dark:bg-indigo-900/30 dark:text-indigo-200 amoled:bg-indigo-900/20 amoled:text-indigo-300">
-            {dueTopics.length}
+            {dueEntries.length}
           </span>
         )}
         <div className="ml-auto relative group">
@@ -92,16 +98,16 @@ const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEn
         </div>
       </div>
       
-      {dueTopics.length > 0 ? (
+      {dueEntries.length > 0 ? (
         <ul className="space-y-2">
-          {dueTopics.map(entry => (
+          {dueEntries.map(entry => (
             <li 
               key={entry.id} 
               className="flex items-center justify-between p-3 bg-slate-50 dark:bg-dark-bg/50 amoled:bg-amoled-bg/50 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors"
             >
               <div className="min-w-0">
                 <p className="text-sm font-medium text-slate-800 dark:text-dark-text amoled:text-amoled-text truncate">
-                  {entry.topic}
+                  {subjectMap[entry.subjectId] || entry.subjectId}
                 </p>
                 <p className="text-xs text-slate-500 dark:text-slate-400 amoled:text-slate-500 mt-1">
                   Last studied: {new Date(entry.date).toLocaleDateString()}

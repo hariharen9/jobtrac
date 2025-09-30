@@ -258,7 +258,7 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
           <h4 className="font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-3">
             Confidence Level Distribution
           </h4>
-          <div className="h-64 flex items-center">
+          <div className="h-64 flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -283,9 +283,7 @@ const PrepAnalytics: React.FC<PrepAnalyticsProps> = ({ prepEntries }) => {
                     borderStyle: 'solid',
                     borderRadius: '0.5rem',
                     boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                    color: tooltipTextColor,
-                    fontSize: '12px',
-                    padding: '8px 12px'
+                    color: tooltipTextColor
                   }} 
                   formatter={(value) => [`${value} sessions`, 'Count']}
                   itemStyle={{ color: tooltipTextColor }}

@@ -412,9 +412,9 @@ const PrepLog: React.FC<PrepLogProps> = ({
         </div>
       </div>
       
-      <TodaysReviews prepEntries={prepEntries} onEditPrepEntry={onEditPrepEntry} />
+      <TodaysReviews prepEntries={prepEntries} onEditPrepEntry={onEditPrepEntry} subjects={subjects} />
       <PrepAnalytics prepEntries={prepEntries} />
-      <TopicBreakdown prepEntries={prepEntries} />
+      <TopicBreakdown prepEntries={prepEntries} subjects={subjects} />
     </aside>
   );
 
