@@ -1,250 +1,232 @@
-import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, QuickStartTask, TooltipConfig, UserOnboarding, OnboardingStep } from '../types';
+import { Timestamp } from 'firebase/firestore';
+import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, Subject, UserOnboarding, QuickStartTask, TooltipConfig } from '../types';
 
-export const initialApplications: Application[] = [
+export const subjects: Subject[] = [
   {
     id: '1',
-    company: 'Google',
-    role: 'Software Engineer, Cloud',
-    link: '#',
-    date: '2025-09-22',
-    status: 'To Apply',
-    source: 'Referral',
-    recruiter: '',
-    referral: 'Y',
-    location: 'Bangalore',
-    notes: 'Apply via referral. Target team: GKE Networking.'
+    name: 'Data Structures',
+    description: 'Practice problems related to data structures.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '2',
-    company: 'Microsoft',
-    role: 'SDE 2, Azure',
-    link: '#',
-    date: '2025-09-22',
-    status: 'HR Screen',
-    source: 'LinkedIn',
-    recruiter: 'recruiter@ms.com',
-    referral: 'N',
-    location: 'Hyderabad',
-    notes: 'Tech Screen on 28-Sep. Discussed 17LPA expectation.'
+    name: 'System Design',
+    description: 'Concepts and case studies for system design interviews.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
     id: '3',
-    company: 'Atlassian',
-    role: 'Backend Engineer',
-    link: '#',
-    date: '2025-09-23',
-    status: 'Rejected',
-    source: 'Company Website',
-    recruiter: '',
-    referral: 'N',
-    location: 'Bangalore',
-    notes: 'Auto-rejection email.'
-  }
+    name: 'Behavioral Prep',
+    description: 'Preparing for behavioral interview questions.',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
 ];
 
-export const initialPrepEntries: PrepEntry[] = [
+export const enhancedSamplePrepEntries: PrepEntry[] = [
   {
     id: '1',
-    date: '2025-07-21',
-    topic: 'DSA: Arrays & Hashing',
-    problems: 'https://leetcode.com/problems/two-sum/',
+    date: '2025-09-22',
+    resources: [
+      { title: 'NeetCode video on Arrays', url: 'https://www.youtube.com/watch?v=1', completed: true },
+    ],
     time: 2,
-    confidence: 3,
-    notes: 'Two-pointer technique is very useful for sorted arrays.'
+    confidence: 4,
+    notes: 'Practiced two-pointer techniques. Feeling more confident.',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    subjectId: '1',
   },
   {
     id: '2',
-    date: '2025-07-22',
-    topic: 'System Design: Core Concepts',
-    problems: '',
+    date: '2025-09-23',
+    resources: [
+      { title: 'Grokking the System Design Interview', url: 'https://www.educative.io/courses/grokking-the-system-design-interview', completed: false },
+    ],
+    time: 1.5,
+    confidence: 3,
+    notes: 'Read the first two chapters. Need to review the concepts.',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    subjectId: '2',
+  },
+  {
+    id: '3',
+    date: '2025-09-24',
+    resources: [],
     time: 1,
     confidence: 2,
-    notes: 'Watched video on Load Balancers. Learned about Round Robin vs. Least Connections.'
-  }
+    notes: 'Mock interview for behavioral questions. Need to be more concise.',
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+    subjectId: '3',
+  },
+];
+
+export const enhancedSampleApplications: Application[] = [
+    {
+        id: '1',
+        company: 'Netflix',
+        role: 'Software Engineer',
+        link: 'https://careers.netflix.com/',
+        date: '2025-09-20',
+        status: 'Applied',
+        source: 'Company Website',
+        recruiter: 'Jane Doe',
+        referral: 'N',
+        location: 'Mountain View, CA',
+        notes: 'Applied through the company website.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '2',
+        company: 'Facebook',
+        role: 'Frontend Engineer',
+        link: 'https://www.facebook.com/careers/',
+        date: '2025-09-18',
+        status: 'HR Screen',
+        source: 'LinkedIn',
+        recruiter: 'John Doe',
+        referral: 'N',
+        location: 'Menlo Park, CA',
+        notes: 'Passed the initial phone screen.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '3',
+        company: 'Amazon',
+        role: 'Backend Engineer',
+        link: 'https://www.amazon.jobs/',
+        date: '2025-09-15',
+        status: 'Round 2',
+        source: 'Indeed',
+        recruiter: 'Mary Jane',
+        referral: 'Y',
+        location: 'Seattle, WA',
+        notes: 'Failed the technical screen.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '4',
+        company: 'Microsoft',
+        role: 'Data Scientist',
+        link: 'https://careers.microsoft.com/',
+        date: '2025-09-12',
+        status: 'Final Round',
+        source: 'LinkedIn',
+        recruiter: 'Susan Smith',
+        referral: 'N',
+        location: 'Redmond, WA',
+        notes: 'Did not pass the interview.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '5',
+        company: 'Apple',
+        role: 'iOS Developer',
+        link: 'https://www.apple.com/careers/',
+        date: '2025-09-10',
+        status: 'Offer',
+        source: 'LinkedIn',
+        recruiter: 'Jimmy Smith',
+        referral: 'N',
+        location: 'Cupertino, CA',
+        notes: 'Accepted the offer.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    }
 ];
 
 export const initialCompanyResearch: CompanyResearch[] = [
-  {
-    id: '1',
-    company: 'Oracle',
-    whatTheyDo: 'Cloud Infrastructure (OCI), direct competitor to IBM Cloud.',
-    values: 'Customer success, innovation.',
-    why: 'Strong GoLang usage, direct relevance to my network overlay experience.',
-    questions: 'What are the biggest scaling challenges for the OCI networking team right now?',
-    news: 'OCI announced new AI-focused data centers.',
-    date: '2025-08-20'
-  }
+    {
+        id: '1',
+        company: 'Google',
+        whatTheyDo: 'Search engine, cloud computing, advertising technologies',
+        values: 'Focus on the user and all else will follow.',
+        why: 'I want to work on products that impact billions of users.',
+        questions: 'What are the biggest challenges for Google in the next 5 years?',
+        news: 'Google announced a new AI model.',
+        date: '2025-09-19',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '2',
+        company: 'Facebook',
+        whatTheyDo: 'Social media and advertising platform.',
+        values: 'Move fast and break things.',
+        why: 'Interested in their work on React and open source.',
+        questions: 'How does Facebook handle content moderation at scale?',
+        news: 'Facebook is investing heavily in the metaverse.',
+        date: '2025-09-17',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    }
 ];
 
 export const initialNetworkingContacts: NetworkingContact[] = [
-  {
-    id: '1',
-    name: 'John Doe',
-    company: 'Google',
-    role: 'SDE 3',
-    date: '2025-09-20',
-    status: 'Messaged on LinkedIn',
-    referral: 'Y',
-    notes: 'Sent connection request with a personalized note about my interest in GKE.'
-  }
+    {
+        id: '1',
+        name: 'John Smith',
+        company: 'Google',
+        role: 'Software Engineer',
+        date: '2025-09-18',
+        status: 'Connected',
+        referral: 'N',
+        notes: 'Met at a tech conference.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '2',
+        name: 'Jane Doe',
+        company: 'Facebook',
+        role: 'Engineering Manager',
+        date: '2025-09-16',
+        status: 'Contacted',
+        referral: 'N',
+        notes: 'Sent a connection request on LinkedIn.',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    }
 ];
 
-export const initialStarStories: StarStory[] = [
-  {
-    id: '1',
-    title: 'K8s Test Automation',
-    situation: 'Manual testing for K8s deployments was slow, error-prone, and inconsistent across multiple teams.',
-    task: 'My task was to create a unified solution to automate the entire resource management and testing process.',
-    action: 'I led the development of a Python-based automation framework that handled resource creation, test execution, and cleanup. I documented the tool and onboarded other teams to use it.',
-    result: 'This reduced testing times by a massive 90% and eliminated manual configuration errors, significantly improving developer productivity and release velocity.',
-    date: '2025-09-01'
-  },
-  {
-    id: '2',
-    title: 'Orphaned Object Cleanup',
-    situation: 'Legacy cleanup scripts were unreliable and frequently failed, leaving orphaned network resources in our production and staging cloud environments, causing resource leakage.',
-    task: 'I needed to build a robust, native solution to handle the resource lifecycle automatically and reliably.',
-    action: 'I designed and developed a garbage collection system from scratch using GoLang, implementing the controller/operator pattern. This controller watched for specific resources and ensured their entire lifecycle was managed correctly.',
-    result: 'This new system completely eliminated all orphaned objects, ensuring 100% resource compliance and improving the high availability and stability of our core infrastructure.',
-    date: '2025-09-02'
-  }
+export const enhancedSampleStarStories: StarStory[] = [
+    {
+        id: '1',
+        title: 'Led a project to improve API performance',
+        situation: 'The main API was slow, causing a poor user experience.',
+        task: 'I was tasked with improving the API response time by 50%.',
+        action: 'I identified the bottleneck in the database query and optimized it by adding an index.',
+        result: 'The API response time improved by 75%, exceeding the goal.',
+        date: '2025-09-17',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    },
+    {
+        id: '2',
+        title: 'Resolved a critical production bug',
+        situation: 'A critical bug was causing the application to crash for 5% of users.',
+        task: 'I was assigned to find and fix the bug as quickly as possible.',
+        action: 'I used logs and debugging tools to trace the error to a race condition and implemented a fix.',
+        result: 'The bug was resolved within 2 hours, and the crash rate dropped to zero.',
+        date: '2025-09-14',
+        createdAt: Timestamp.now(),
+        updatedAt: Timestamp.now(),
+    }
 ];
 
-// Onboarding Configuration
 export const defaultQuickStartTasks: QuickStartTask[] = [
-  {
-    id: 'add-first-application',
-    title: 'Add Your First Job Application',
-    description: 'Track your first job application to see how the tracker works',
-    actionText: 'Add Application',
-    completed: false,
-    feature: 'applications',
-    icon: 'Briefcase'
-  },
-  {
-    id: 'set-weekly-goal',
-    title: 'Set Your Weekly Goals',
-    description: 'Define targets for applications, networking, and prep to stay on track',
-    actionText: 'Set Goals',
-    completed: false,
-    feature: 'applications',
-    icon: 'Target'
-  },
-  {
-    id: 'add-prep-session',
-    title: 'Log Your First Prep Session',
-    description: 'Track interview preparation to build confidence over time',
-    actionText: 'Log Prep',
-    completed: false,
-    feature: 'prep',
-    icon: 'BookOpen'
-  },
-  {
-    id: 'create-star-story',
-    title: 'Write a STAR Story',
-    description: 'Prepare behavioral interview answers using the proven STAR method',
-    actionText: 'Write Story',
-    completed: false,
-    feature: 'star',
-    icon: 'Star'
-  },
-  {
-    id: 'add-company-research',
-    title: 'Research a Target Company',
-    description: 'Store insights about companies you want to work for',
-    actionText: 'Add Research',
-    completed: false,
-    feature: 'research',
-    icon: 'Building'
-  },
-  {
-    id: 'add-networking-contact',
-    title: 'Add a Networking Contact',
-    description: 'Track professional connections and referral opportunities',
-    actionText: 'Add Contact',
-    completed: false,
-    feature: 'networking',
-    icon: 'Users'
-  }
-];
-
-export const onboardingSteps: OnboardingStep[] = [
-  {
-    id: 'welcome',
-    title: 'Welcome to JobTrac',
-    description: 'Your complete job search command center',
-    component: 'WelcomeStep',
-    completed: false
-  },
-  {
-    id: 'overview',
-    title: 'Feature Overview',
-    description: 'Discover what JobTrac can do for you',
-    component: 'OverviewStep',
-    completed: false
-  },
-  {
-    id: 'demo-data',
-    title: 'Try It Out',
-    description: 'Explore with sample data or start fresh',
-    component: 'DemoDataStep',
-    completed: false
-  },
-  {
-    id: 'quick-start',
-    title: 'Quick Start',
-    description: 'Complete these tasks to get the most value',
-    component: 'QuickStartStep',
-    completed: false
-  }
-];
-
-export const tooltipConfigs: TooltipConfig[] = [
-  {
-    id: 'kanban-board',
-    targetSelector: '[data-tooltip="kanban-board"]',
-    title: 'Kanban Board',
-    content: 'Drag applications between columns to track your progress visually',
-    placement: 'bottom',
-    feature: 'applications',
-    priority: 1
-  },
-  {
-    id: 'add-application',
-    targetSelector: '[data-tooltip="add-application"]',
-    title: 'Add New Application',
-    content: 'Click here to add a new job application and start tracking your progress',
-    placement: 'bottom',
-    feature: 'applications',
-    priority: 2
-  },
-  {
-    id: 'confidence-meter',
-    targetSelector: '[data-tooltip="confidence-meter"]',
-    title: 'Confidence Tracking',
-    content: 'Rate your confidence level after each prep session to track improvement',
-    placement: 'top',
-    feature: 'prep',
-    priority: 3
-  },
-  {
-    id: 'star-method',
-    targetSelector: '[data-tooltip="star-method"]',
-    title: 'STAR Method',
-    content: 'Structure your behavioral interview answers: Situation, Task, Action, Result',
-    placement: 'right',
-    feature: 'star',
-    priority: 4
-  },
-  {
-    id: 'analytics-dashboard',
-    targetSelector: '[data-tooltip="analytics-dashboard"]',
-    title: 'Progress Analytics',
-    content: 'Visualize your job search progress and identify improvement opportunities',
-    placement: 'top',
-    feature: 'applications',
-    priority: 5
-  }
+  { id: 'add-application', title: 'Add your first application', description: 'Track a job you\'ve applied for.', actionText: 'Add Application', completed: false, feature: 'applications', icon: 'FileText' },
+  { id: 'add-prep-entry', title: 'Log a study session', description: 'Keep a record of your interview prep.', actionText: 'Log Prep', completed: false, feature: 'prep', icon: 'BookOpen' },
+  { id: 'add-star-story', title: 'Create a STAR story', description: 'Prepare for behavioral interviews.', actionText: 'Add Story', completed: false, feature: 'star', icon: 'Star' },
+  { id: 'add-contact', title: 'Add a networking contact', description: 'Manage your professional network.', actionText: 'Add Contact', completed: false, feature: 'networking', icon: 'Users' },
 ];
 
 export const defaultOnboarding: UserOnboarding = {
@@ -253,129 +235,7 @@ export const defaultOnboarding: UserOnboarding = {
   completedSteps: [],
   quickStartTasks: defaultQuickStartTasks,
   demoMode: false,
-  createdAt: new Date().toISOString()
+  createdAt: new Date().toISOString(),
 };
 
-// Enhanced sample data with more realistic examples
-export const enhancedSampleApplications: Application[] = [
-  {
-    id: 'sample-1',
-    company: 'Google',
-    role: 'Senior Software Engineer',
-    link: 'https://careers.google.com/jobs/123',
-    date: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 1 week ago
-    status: 'Tech Screen',
-    source: 'Referral',
-    recruiter: 'sarah.chen@google.com',
-    referral: 'Y',
-    location: 'Mountain View, CA',
-    notes: 'System Design Interview - Friday 2PM. Referral from John (ex-colleague). Discussed distributed systems experience.',
-    jobDescription: 'We are looking for a Senior Software Engineer to join our Cloud Infrastructure team...',
-    salaryRange: '150-200',
-    priority: 'High',
-    interviewDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days from now
-  },
-  {
-    id: 'sample-2',
-    company: 'Microsoft',
-    role: 'Principal SDE - Azure',
-    link: 'https://careers.microsoft.com/us/en/job/456',
-    date: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 3 days ago
-    status: 'Applied',
-    source: 'LinkedIn',
-    recruiter: '',
-    referral: 'N',
-    location: 'Seattle, WA',
-    notes: 'Wait for response (applied Tuesday). Applied through LinkedIn. Strong match for Kubernetes experience.',
-    jobDescription: 'Join the Azure Compute team to build the next generation of container orchestration...',
-    salaryRange: '180-250',
-    priority: 'Medium',
-    interviewDate: '',
-  },
-  {
-    id: 'sample-3',
-    company: 'Netflix',
-    role: 'Staff Software Engineer',
-    link: 'https://jobs.netflix.com/jobs/789',
-    date: new Date().toISOString().split('T')[0], // Today
-    status: 'To Apply',
-    source: 'Other',
-    sourceOther: 'Hiring Manager on Naukri',
-    recruiter: '',
-    referral: 'Y',
-    location: 'Los Gatos, CA',
-    notes: 'Complete application by end of week. Reached out to hiring manager via LinkedIn. Focus on streaming infrastructure.',
-    jobDescription: 'We need a Staff Engineer to lead our video streaming optimization initiatives...',
-    salaryRange: '200-300',
-    priority: 'High',
-    interviewDate: '',
-  },
-  {
-    id: 'sample-4',
-    company: 'Stripe',
-    role: 'Engineering Manager',
-    link: 'https://stripe.com/jobs/101112',
-    date: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 weeks ago
-    status: 'Final Round',
-    source: 'Company Website',
-    recruiter: 'talent@stripe.com',
-    referral: 'N',
-    location: 'San Francisco, CA',
-    notes: 'Executive interview with CTO next Monday. Great cultural fit. Team is excited about my fintech background.',
-    jobDescription: 'Lead a team of 8 engineers building payment processing infrastructure...',
-    salaryRange: '220-280',
-    priority: 'Low',
-    interviewDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 5 days from now
-  }
-];
-
-export const enhancedSamplePrepEntries: PrepEntry[] = [
-  {
-    id: 'prep-1',
-    date: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 2 days ago
-    topic: 'System Design: Distributed Caching',
-    problems: 'Designed Twitter-like feed system with Redis clustering',
-    time: 2, // 2 hours
-    confidence: 7,
-    notes: 'Covered Redis Cluster, consistent hashing, and cache eviction policies. Need to review CAP theorem.'
-  },
-  {
-    id: 'prep-2',
-    date: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // Yesterday
-    topic: 'Behavioral: Leadership & Conflict Resolution',
-    problems: '',
-    time: 0.75,
-    confidence: 8,
-    notes: 'Practiced STAR stories for project management scenarios. Feeling confident about team leadership examples.'
-  },
-  {
-    id: 'prep-3',
-    date: new Date().toISOString().split('T')[0], // Today
-    topic: 'Coding: Dynamic Programming',
-    problems: 'LeetCode: Longest Increasing Subsequence, Edit Distance',
-    time: 1.5,
-    confidence: 6,
-    notes: 'DP is still challenging. Need more practice with state transitions and optimization.'
-  }
-];
-
-export const enhancedSampleStarStories: StarStory[] = [
-  {
-    id: 'story-1',
-    title: 'Led Critical System Migration',
-    situation: 'Our legacy payment system was causing frequent outages during peak traffic, affecting millions of transactions daily.',
-    task: 'I was tasked to lead the migration to a new distributed architecture while maintaining zero downtime.',
-    action: 'I designed a phased migration strategy, coordinated with 5 teams, implemented feature flags for gradual rollout, and established comprehensive monitoring. I also mentored junior engineers throughout the 6-month project.',
-    result: 'Successfully migrated 100% of traffic with zero downtime. Reduced payment failures by 99.8% and improved system performance by 300%. The project became a template for future migrations.',
-    createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString() // 5 days ago
-  },
-  {
-    id: 'story-2',
-    title: 'Resolved Team Conflict & Improved Delivery',
-    situation: 'Two senior engineers on my team had a fundamental disagreement about architecture approach, causing delays and team tension.',
-    task: 'As the team lead, I needed to resolve the conflict and get the project back on track without losing either engineer.',
-    action: 'I facilitated separate one-on-ones to understand each perspective, organized a technical design review with external stakeholders, and helped the team reach a compromise solution that incorporated the best ideas from both approaches.',
-    result: 'The team delivered the project 2 weeks ahead of schedule. Both engineers later mentioned improved collaboration, and we adopted the conflict resolution process for future technical disagreements.',
-    createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString() // 10 days ago
-  }
-];
+export const tooltipConfigs: TooltipConfig[] = [];

@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
-import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, Session, SessionFirestore } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
@@ -163,6 +163,22 @@ function App() {
     deleteItem: deleteStory
   } = useFirestore<StarStory>('stories', user?.uid, true); // Polling
 
+  const {
+    data: subjects,
+    loading: subjectsLoading,
+    addItem: addSubject,
+    updateItem: updateSubject,
+    deleteItem: deleteSubject
+  } = useFirestore<SubjectFirestore>('subjects', user?.uid, true); // Polling
+
+  const {
+    data: sessions,
+    loading: sessionsLoading,
+    addItem: addSession,
+    updateItem: updateSession,
+    deleteItem: deleteSession
+  } = useFirestore<SessionFirestore>('sessions', user?.uid, true); // Polling
+
   // Notes data for global search
   const { notes } = useNotes(user?.uid);
 
@@ -178,15 +194,32 @@ function App() {
   const currentTab = useMemo(() => tabs.find(tab => tab.id === activeTab), [activeTab, tabs]);
   const pageTitle = currentTab ? `JobTrac - ${currentTab.label}` : 'JobTrac - Dashboard';
 
+  // State to hold the pre-filled topic for prep entries
+  const [preFilledPrepTopic, setPreFilledPrepTopic] = useState<string | null>(null);
+
   const openModal = useCallback((type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
     setEditingItem(itemToEdit);
+    setIsModalOpen(true);
+    
+    // Clear pre-filled topic when opening any modal
+    if (type !== 'prep') {
+      setPreFilledPrepTopic(null);
+    }
+  }, []);
+
+  // New function to open the prep form with a pre-filled topic
+  const openPrepModalWithTopic = useCallback((topic: string) => {
+    setModalType('prep');
+    setEditingItem(null); // No editing item since we're creating new
+    setPreFilledPrepTopic(topic); // Set the pre-filled topic
     setIsModalOpen(true);
   }, []);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setEditingItem(null);
+    setPreFilledPrepTopic(null); // Clear pre-filled topic when closing modal
   }, []);
 
   // Auto-complete Quick Start tasks based on user actions
@@ -518,7 +551,25 @@ function App() {
             onAddPrepEntry={() => openModal('prep')} 
             onEditPrepEntry={(item) => openModal('prep', item)}
             onDeletePrepEntry={deletePrepEntry}
+            onAddPrepEntryWithTopic={openPrepModalWithTopic}
             loading={prepLoading}
+            subjects={subjects.map(subject => ({
+              ...subject,
+              createdAt: subject.createdAt.toDate(),
+              updatedAt: subject.updatedAt.toDate()
+            }))}
+            onAddSubject={addSubject}
+            onEditSubject={updateSubject}
+            onDeleteSubject={deleteSubject}
+            sessions={sessions.map(session => ({
+              ...session,
+              date: session.date.toDate(),
+              createdAt: session.createdAt.toDate(),
+              updatedAt: session.updatedAt.toDate()
+            }))}
+            onAddSession={addSession}
+            onEditSession={updateSession}
+            onDeleteSession={deleteSession}
           />
         );
       case 'research':
@@ -580,7 +631,20 @@ function App() {
             }
             onCancel={closeModal}
             initialData={editingItem}
+            preFilledTopic={preFilledPrepTopic || undefined} // Pass pre-filled topic
             loading={isSubmitting}
+            applications={applications}
+            subjects={subjects.map(subject => ({
+              ...subject,
+              createdAt: subject.createdAt.toDate(),
+              updatedAt: subject.updatedAt.toDate()
+            }))}
+            sessions={sessions.map(session => ({
+              ...session,
+              date: session.date.toDate(),
+              createdAt: session.createdAt.toDate(),
+              updatedAt: session.updatedAt.toDate()
+            }))}
           />
         );
       case 'research':

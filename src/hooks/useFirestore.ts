@@ -24,7 +24,7 @@ export function useFirestore<T extends { id: string } & FirestoreDocument>(
   collectionName: string,
   userId?: string | null,
   usePolling: boolean = false,
-  pollingInterval: number = 5000 // 5 seconds default
+  pollingInterval: number = 1000 // 1 seconds default
 ) {
   const [data, setData] = useState<T[]>([]);
   const [loading, setLoading] = useState(true);
