@@ -59,10 +59,29 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isConfirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [settings, setSettings] = useState<ApplicationTrackerSettings>({
-    viewMode: 'comfy',
-    showStats: false,
+  const [settings, setSettings] = useState<ApplicationTrackerSettings>(() => {
+    const saved = localStorage.getItem('applicationTrackerSettings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse settings:', e);
+      }
+    }
+    return {
+      viewMode: 'comfy',
+      showStats: false,
+      currency: 'INR',
+      salaryDenomination: 'L',
+    };
   });
+
+  // Save settings to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem('applicationTrackerSettings', JSON.stringify(settings));
+    // Dispatch custom event for same-window updates
+    window.dispatchEvent(new Event('applicationSettingsChanged'));
+  }, [settings]);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const statusOptions: ApplicationStatus[] = [
@@ -418,6 +437,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               onViewJD={onViewJD} 
               isSelected={selectedItems.includes(app.id)}
               onSelectionChange={handleSelectionChange}
+              currency={settings.currency}
+              salaryDenomination={settings.salaryDenomination}
             />
           ))}
         </div>

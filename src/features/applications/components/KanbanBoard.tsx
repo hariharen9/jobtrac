@@ -6,6 +6,7 @@ import SettingsModal from '../../../components/shared/SettingsModal';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import Modal from '../../../components/shared/Modal';
+import { useApplicationSettings } from '../../../hooks/useApplicationSettings';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -14,6 +15,8 @@ interface KanbanBoardProps {
   onDeleteApplication: (id: string) => void;
   onUpdateStatus: (id: string, newStatus: ApplicationStatus) => void;
   loading?: boolean;
+  currency?: 'USD' | 'INR' | 'EUR' | 'GBP';
+  salaryDenomination?: 'K' | 'L';
 }
 
 interface KanbanColumn {
@@ -28,8 +31,15 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onEditApplication,
   onDeleteApplication,
   onUpdateStatus,
+  currency: currencyProp,
+  salaryDenomination: salaryDenominationProp,
   loading = false
 }) => {
+  // Get settings from localStorage
+  const appSettings = useApplicationSettings();
+  const currency = currencyProp || appSettings.currency;
+  const salaryDenomination = salaryDenominationProp || appSettings.salaryDenomination;
+
   const [draggedItem, setDraggedItem] = useState<Application | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<string | null>(null);
   const dragCounter = useRef(0);
@@ -315,6 +325,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     onMove={setMovingApplication}
                     isDragging={false}
                     cardDensity={cardDensity}
+                    currency={currency}
+                    salaryDenomination={salaryDenomination}
                   />
                 ))}
                 
@@ -385,6 +397,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
                       cardDensity={cardDensity}
+                      currency={currency}
+                      salaryDenomination={salaryDenomination}
                     />
                   ))}
                   
@@ -461,6 +475,8 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
                       cardDensity={cardDensity}
+                      currency={currency}
+                      salaryDenomination={salaryDenomination}
                     />
                   ))}
                   {columnApplications.length === 0 && !isDropTarget && (
@@ -518,6 +534,8 @@ interface ApplicationCardProps {
   onDragEnd?: () => void;
   isDragging: boolean;
   cardDensity: 'compact' | 'normal';
+  currency: 'USD' | 'INR' | 'EUR' | 'GBP';
+  salaryDenomination: 'K' | 'L';
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({
@@ -528,7 +546,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onDragStart,
   onDragEnd,
   isDragging,
-  cardDensity
+  cardDensity,
+  currency,
+  salaryDenomination
 }) => {
   const isCompact = cardDensity === 'compact';
   const [showMobileTooltip, setShowMobileTooltip] = useState(false);
@@ -671,7 +691,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           {application.salaryRange && (
             <div className="flex justify-between">
               <span>Salary:</span>
-              <span className="font-medium">${application.salaryRange}K</span>
+              <span className="font-medium">
+                {currency === 'USD' ? '$' : currency === 'INR' ? '₹' : currency === 'EUR' ? '€' : '£'}{application.salaryRange}{salaryDenomination}
+              </span>
             </div>
           )}
 
