@@ -181,33 +181,26 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
               )}
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => setShowFilters(!showFilters)}
-              className={`${hasActiveFilters 
-                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
-                : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
-              } px-4 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 justify-center sm:justify-start`}
+          <div className="flex items-center gap-3">
+            <motion.button 
+              onClick={() => setShowFilters(!showFilters)} 
+              className={`p-2.5 rounded-lg transition-all duration-200 ${
+                hasActiveFilters 
+                  ? 'bg-indigo-100 text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 shadow-sm' 
+                  : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Filter className="w-4 h-4" />
-              Filters
-              {hasActiveFilters && (
-                <span className="bg-indigo-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center">
-                  {(filters.title ? 1 : 0) + (filters.situation ? 1 : 0) + (filters.createdAt.start || filters.createdAt.end ? 1 : 0)}
-                </span>
-              )}
+              <Filter className="w-5 h-5" />
             </motion.button>
-            
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={onAddStory}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto shadow-sm hover:shadow-md"
+            <motion.button 
+              onClick={onAddStory} 
+              className="bg-indigo-600 text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-all duration-200 flex items-center gap-2 shadow-md"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <Plus className="w-4 h-4" />
-              Add Story
+              <Plus className="w-4 h-4" /> Add Story
             </motion.button>
           </div>
         </div>

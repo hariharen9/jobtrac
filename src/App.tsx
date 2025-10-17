@@ -32,7 +32,7 @@ import { useNotes } from './features/notes/hooks/useNotes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
-import { ProfileModal } from './features/profile';
+import { ProfileModal, SettingsPage } from './features/profile';
 import UserProfileModal from './features/auth/components/UserProfileModal';
 import { Helmet } from 'react-helmet-async';
 
@@ -783,10 +783,10 @@ function App() {
         <Modal
           isOpen={isProfileModalOpen}
           onClose={handleProfileModalClose}
-          title="Profile"
-          size="lg"
+          title=""
+          size="xl"
         >
-          <ProfileModal 
+          <SettingsPage 
             applications={applications} 
             contacts={contacts} 
             prepEntries={prepEntries}
@@ -795,6 +795,7 @@ function App() {
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
             onOpenHelp={() => setIsHelpOpen(true)}
+            onClose={handleProfileModalClose}
           />
         </Modal>
         <Modal
@@ -1089,14 +1090,14 @@ function App() {
           {renderModalContent()}
         </Modal>
 
-        {/* Profile Modal */}
+        {/* Settings Modal */}
         <Modal
           isOpen={isProfileModalOpen}
           onClose={handleProfileModalClose}
-          title="Profile"
-          size="lg"
+          title=""
+          size="xl"
         >
-          <ProfileModal 
+          <SettingsPage 
             applications={applications} 
             contacts={contacts} 
             prepEntries={prepEntries}
@@ -1105,6 +1106,7 @@ function App() {
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
             onOpenHelp={() => setIsHelpOpen(true)}
+            onClose={handleProfileModalClose}
           />
         </Modal>
 
