@@ -219,12 +219,12 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="border border-slate-200 dark:border-slate-700 rounded-xl p-6 mb-6 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-700/30"
+            className="border border-slate-200 dark:border-dark-border amoled:border-amoled-border rounded-xl p-4 sm:p-6 mb-6 bg-slate-50 dark:bg-dark-card amoled:bg-amoled-card"
           >
-            <div className="flex flex-col lg:flex-row gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
               {/* Title Filter */}
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                   Title
                 </label>
                 <input
@@ -232,13 +232,13 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
                   placeholder="Filter by title..."
                   value={filters.title}
                   onChange={(e) => setFilters(prev => ({ ...prev, title: e.target.value }))}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2.5 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg text-sm bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-500 dark:placeholder-slate-400 amoled:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all"
                 />
               </div>
 
               {/* Situation Filter */}
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <div>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                   Situation
                 </label>
                 <input
@@ -246,16 +246,16 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
                   placeholder="Filter by situation..."
                   value={filters.situation}
                   onChange={(e) => setFilters(prev => ({ ...prev, situation: e.target.value }))}
-                  className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 placeholder-slate-500 dark:placeholder-slate-400 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="w-full px-3 py-2.5 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg text-sm bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-500 dark:placeholder-slate-400 amoled:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all"
                 />
               </div>
 
               {/* Date Range Filter */}
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                   Date Range
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   <input
                     type="date"
                     placeholder="From"
@@ -264,7 +264,7 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
                       ...prev, 
                       createdAt: { ...prev.createdAt, start: e.target.value }
                     }))}
-                    className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="px-3 py-2.5 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg text-sm bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all"
                   />
                   <input
                     type="date"
@@ -274,24 +274,23 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
                       ...prev, 
                       createdAt: { ...prev.createdAt, end: e.target.value }
                     }))}
-                    className="px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg text-sm bg-white dark:bg-slate-700 text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                    className="px-3 py-2.5 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg text-sm bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all"
                   />
                 </div>
               </div>
             </div>
 
             {/* Clear Filters */}
-            {hasActiveFilters && (
-              <div className="flex justify-end mt-4">
-                <button
-                  onClick={clearFilters}
-                  className="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-200 flex items-center gap-1"
-                >
-                  <X className="w-3 h-3" />
-                  Clear Filters
-                </button>
-              </div>
-            )}
+            <div className="flex justify-end mt-4 pt-4 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+              <motion.button
+                onClick={clearFilters}
+                className="text-sm text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Clear All Filters
+              </motion.button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

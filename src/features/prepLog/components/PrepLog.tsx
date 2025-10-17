@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Subject } from '../../../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target, HelpCircle } from 'lucide-react';
+import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target, HelpCircle, BarChart3, ChevronDown } from 'lucide-react';
 import { PrepEntry } from '../../../types';
 import PrepLogSubjectCard from './PrepLogSubjectCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
@@ -57,6 +57,55 @@ const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
   exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
+};
+
+// Mobile Sidebar Collapsible Component
+const MobileSidebarCollapsible: React.FC<{
+  prepEntries: PrepEntry[];
+  onEditPrepEntry: (entry: PrepEntry) => void;
+  subjects: Subject[];
+}> = ({ prepEntries, onEditPrepEntry, subjects }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  return (
+    <div className="mb-6">
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between p-4 bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm hover:shadow-md transition-all"
+      >
+        <div className="flex items-center gap-2">
+          <BarChart3 className="w-5 h-5 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400" />
+          <span className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+            Review & Analytics
+          </span>
+        </div>
+        <motion.div
+          animate={{ rotate: isExpanded ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
+          <ChevronDown className="w-5 h-5 text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary" />
+        </motion.div>
+      </button>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="mt-4 space-y-4">
+              <TodaysReviews prepEntries={prepEntries} onEditPrepEntry={onEditPrepEntry} subjects={subjects} />
+              <PrepAnalytics prepEntries={prepEntries} />
+              <TopicBreakdown prepEntries={prepEntries} subjects={subjects} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
 };
 
 const PrepLog: React.FC<PrepLogProps> = ({ 
@@ -548,9 +597,11 @@ const PrepLog: React.FC<PrepLogProps> = ({
         </div>
 
         {isMobile && (
-          <div className="mb-6">
-            {dashboardSidebar}
-          </div>
+          <MobileSidebarCollapsible 
+            prepEntries={prepEntries}
+            onEditPrepEntry={onEditPrepEntry}
+            subjects={subjects}
+          />
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-6">
@@ -559,33 +610,15 @@ const PrepLog: React.FC<PrepLogProps> = ({
             <AnimatePresence>
               {showFilters && (
                 <motion.div 
-                  initial={{ opacity: 0, y: -10 }} 
-                  animate={{ opacity: 1, y: 0 }} 
-                  exit={{ opacity: 0, y: -10 }} 
-                  className="bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm p-5"
+                  initial={{ opacity: 0, height: 0 }} 
+                  animate={{ opacity: 1, height: 'auto' }} 
+                  exit={{ opacity: 0, height: 0 }} 
+                  className="border border-slate-200 dark:border-dark-border amoled:border-amoled-border rounded-xl p-4 sm:p-6 mb-6 bg-slate-50 dark:bg-dark-card amoled:bg-amoled-card"
                 >
-                  <div className="flex justify-between items-center mb-4">
-                    <h3 className="font-semibold text-slate-800 dark:text-dark-text amoled:text-amoled-text">Filters</h3>
-                    <div className="flex gap-2">
-                      <button 
-                        onClick={clearFilters}
-                        className="text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 amoled:hover:text-slate-400 hover:underline"
-                      >
-                        Reset
-                      </button>
-                      <button 
-                        onClick={() => setShowFilters(false)}
-                        className="text-sm text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500 hover:text-indigo-800 dark:hover:text-indigo-300 amoled:hover:text-indigo-400 hover:underline"
-                      >
-                        Apply
-                      </button>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     {/* Subject Filter */}
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                      <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                         Subject
                       </label>
                       <div className="relative">
@@ -597,14 +630,14 @@ const PrepLog: React.FC<PrepLogProps> = ({
                           value={filters.subject}
                           onChange={(e) => setFilters(prev => ({ ...prev, subject: e.target.value }))}
                           placeholder="Search subjects..."
-                          className="pl-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+                          className="pl-10 w-full rounded-lg border border-slate-300 dark:border-dark-border amoled:border-amoled-border bg-white dark:bg-dark-bg amoled:bg-amoled-bg px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all"
                         />
                       </div>
                     </div>
                     
                     {/* Confidence Filter */}
                     <div>
-                      <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                      <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                         Confidence Level
                       </label>
                       <div className="flex flex-wrap gap-2">
@@ -615,8 +648,8 @@ const PrepLog: React.FC<PrepLogProps> = ({
                             onClick={() => handleConfidenceFilter(level)}
                             className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium transition-all ${
                               filters.confidence.includes(level)
-                                ? 'bg-indigo-600 text-white shadow-sm'
-                                : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-200 amoled:bg-slate-800 amoled:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600 amoled:hover:bg-slate-700/50'
+                                ? 'bg-indigo-600 dark:bg-indigo-500 amoled:bg-indigo-600 text-white shadow-sm'
+                                : 'bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-900 border border-slate-200 dark:border-dark-border amoled:border-amoled-border'
                             }`}
                             aria-pressed={filters.confidence.includes(level)}
                           >
@@ -627,8 +660,8 @@ const PrepLog: React.FC<PrepLogProps> = ({
                     </div>
                     
                     {/* Date Range Filter */}
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-slate-700 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mb-2">
+                    <div className="sm:col-span-2">
+                      <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
                         Date Range
                       </label>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -657,7 +690,7 @@ const PrepLog: React.FC<PrepLogProps> = ({
                                 setError('Failed to update start date. Please try again.');
                               }
                             }}
-                            className="pl-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-sm"
+                            className="pl-10 w-full rounded-lg border border-slate-300 dark:border-dark-border amoled:border-amoled-border bg-white dark:bg-dark-bg amoled:bg-amoled-bg px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all text-sm"
                           />
                         </div>
                         <div className="relative">
@@ -685,11 +718,21 @@ const PrepLog: React.FC<PrepLogProps> = ({
                                 setError('Failed to update end date. Please try again.');
                               }
                             }}
-                            className="pl-10 w-full rounded-lg border border-slate-300 dark:border-slate-600 amoled:border-slate-700 bg-white dark:bg-dark-card amoled:bg-amoled-card px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors text-sm"
+                            className="pl-10 w-full rounded-lg border border-slate-300 dark:border-dark-border amoled:border-amoled-border bg-white dark:bg-dark-bg amoled:bg-amoled-bg px-3 py-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all text-sm"
                           />
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div className="flex justify-end mt-4 pt-4 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
+                    <motion.button 
+                      onClick={clearFilters} 
+                      className="text-sm text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Clear All Filters
+                    </motion.button>
                   </div>
                 </motion.div>
               )}
