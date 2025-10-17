@@ -178,6 +178,8 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
   const hasActiveFilters = filters.name || filters.company || filters.status.length > 0 || 
     filters.referral !== 'all' || filters.dateRange.start || filters.dateRange.end;
 
+
+
   if (loading) {
     return (
       <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
@@ -196,49 +198,62 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
   }
 
   return (
-    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-4 sm:p-6 rounded-lg shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-lg sm:text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-          <Users className="w-5 h-5" />
-          Networking & Referrals
-          {processedContacts.length !== contacts.length && (
-            <span className="text-sm font-normal text-slate-500 dark:text-slate-400">
-              ({processedContacts.length} of {contacts.length})
-            </span>
-          )}
-        </h2>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          {/* Filter Toggle Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowFilters(!showFilters)}
-            className={`${hasActiveFilters 
-              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
-              : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
-            } px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 justify-center sm:justify-start`}
-          >
-            <Filter className="w-4 h-4" />
-            Filters
-            {hasActiveFilters && (
-              <span className="bg-indigo-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center">
-                {(filters.name ? 1 : 0) + (filters.company ? 1 : 0) + filters.status.length + (filters.referral !== 'all' ? 1 : 0) + (filters.dateRange.start || filters.dateRange.end ? 1 : 0)}
-              </span>
-            )}
-          </motion.button>
-          
-          {/* Add Contact Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onAddContact}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4" />
-            Add Contact
-          </motion.button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">
+              <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 amoled:bg-indigo-900/30">
+                <Users className="w-6 h-6 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500" />
+              </div>
+              Networking & Referrals
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              Build and manage your professional network
+              {processedContacts.length !== contacts.length && (
+                <span className="ml-2 text-sm">
+                  (Showing {processedContacts.length} of {contacts.length})
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowFilters(!showFilters)}
+              className={`${hasActiveFilters 
+                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
+                : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
+              } px-4 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 justify-center sm:justify-start`}
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+              {hasActiveFilters && (
+                <span className="bg-indigo-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center">
+                  {(filters.name ? 1 : 0) + (filters.company ? 1 : 0) + filters.status.length + (filters.referral !== 'all' ? 1 : 0) + (filters.dateRange.start || filters.dateRange.end ? 1 : 0)}
+                </span>
+              )}
+            </motion.button>
+            
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onAddContact}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto shadow-sm hover:shadow-md"
+            >
+              <Plus className="w-4 h-4" />
+              Add Contact
+            </motion.button>
+          </div>
         </div>
+
+
       </div>
+
+      {/* Main Content */}
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
 
       {/* Filter Panel */}
       <AnimatePresence>
@@ -248,7 +263,7 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 mb-4 bg-slate-50 dark:bg-slate-800/50"
+            className="border border-slate-200 dark:border-slate-700 rounded-xl p-6 mb-6 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-700/30"
           >
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Name Filter */}
@@ -528,6 +543,7 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
           </table>
         </div>
       )}
+    </div>
     </div>
   );
 };

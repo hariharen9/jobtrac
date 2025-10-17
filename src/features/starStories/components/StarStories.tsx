@@ -66,8 +66,8 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
           bValue = b.title.toLowerCase();
           break;
         case 'createdAt':
-          aValue = new Date(a.createdAt).getTime();
-          bValue = new Date(b.createdAt).getTime();
+          aValue = ((a.createdAt as any)?.toDate ? (a.createdAt as any).toDate() : new Date(a.createdAt as any)).getTime();
+          bValue = ((b.createdAt as any)?.toDate ? (b.createdAt as any).toDate() : new Date(b.createdAt as any)).getTime();
           break;
         default:
           return 0;
@@ -94,7 +94,7 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
 
       // Date range filter
       if (filters.createdAt.start || filters.createdAt.end) {
-        const storyDate = new Date(story.createdAt);
+        const storyDate = (story.createdAt as any)?.toDate ? (story.createdAt as any).toDate() : new Date(story.createdAt as any);
         if (filters.createdAt.start && storyDate < new Date(filters.createdAt.start)) {
           return false;
         }
@@ -134,6 +134,9 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
   };
 
   const hasActiveFilters = filters.title || filters.situation || filters.createdAt.start || filters.createdAt.end;
+
+
+
   if (loading) {
     return (
       <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
@@ -152,49 +155,62 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
   }
 
   return (
-    <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-lg shadow-sm">
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-3">
-        <h2 className="text-xl font-semibold flex items-center gap-2 text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-          <Star className="w-5 h-5" />
-          Behavioral Story Bank (STAR Method)
-          {processedStories.length !== stories.length && (
-            <span className="text-sm font-normal text-slate-500 dark:text-slate-400">
-              ({processedStories.length} of {stories.length})
-            </span>
-          )}
-        </h2>
-        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-          {/* Filter Toggle Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowFilters(!showFilters)}
-            className={`${hasActiveFilters 
-              ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
-              : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
-            } px-4 py-2 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 justify-center sm:justify-start`}
-          >
-            <Filter className="w-4 h-4" />
-            Filters
-            {hasActiveFilters && (
-              <span className="bg-indigo-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center">
-                {(filters.title ? 1 : 0) + (filters.situation ? 1 : 0) + (filters.createdAt.start || filters.createdAt.end ? 1 : 0)}
-              </span>
-            )}
-          </motion.button>
-          
-          {/* Add Story Button */}
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onAddStory}
-            className="bg-indigo-600 text-white px-4 py-2 rounded-lg font-semibold text-sm hover:bg-indigo-700 transition-colors flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
-          >
-            <Plus className="w-4 h-4" />
-            Add Story
-          </motion.button>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-6 gap-4">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-3 text-slate-900 dark:text-dark-text amoled:text-amoled-text mb-2">
+              <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/50 amoled:bg-indigo-900/30">
+                <Star className="w-6 h-6 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500" />
+              </div>
+              Behavioral Story Bank (STAR Method)
+            </h2>
+            <p className="text-slate-600 dark:text-slate-400">
+              Build compelling stories using the STAR framework
+              {processedStories.length !== stories.length && (
+                <span className="ml-2 text-sm">
+                  (Showing {processedStories.length} of {stories.length})
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => setShowFilters(!showFilters)}
+              className={`${hasActiveFilters 
+                ? 'bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300' 
+                : 'bg-slate-100 text-slate-700 dark:bg-slate-700 dark:text-slate-300'
+              } px-4 py-2.5 rounded-lg font-medium text-sm transition-colors flex items-center gap-2 justify-center sm:justify-start`}
+            >
+              <Filter className="w-4 h-4" />
+              Filters
+              {hasActiveFilters && (
+                <span className="bg-indigo-600 text-white text-xs rounded-full px-1.5 py-0.5 min-w-[1.25rem] h-5 flex items-center justify-center">
+                  {(filters.title ? 1 : 0) + (filters.situation ? 1 : 0) + (filters.createdAt.start || filters.createdAt.end ? 1 : 0)}
+                </span>
+              )}
+            </motion.button>
+            
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={onAddStory}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-lg font-semibold text-sm transition-all flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto shadow-sm hover:shadow-md"
+            >
+              <Plus className="w-4 h-4" />
+              Add Story
+            </motion.button>
+          </div>
         </div>
+
+
       </div>
+
+      {/* Main Content */}
+      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
 
       {/* Filter Panel */}
       <AnimatePresence>
@@ -204,7 +220,7 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="border border-slate-200 dark:border-slate-700 rounded-lg p-4 mb-4 bg-slate-50 dark:bg-slate-800/50"
+            className="border border-slate-200 dark:border-slate-700 rounded-xl p-6 mb-6 bg-gradient-to-br from-slate-50 to-slate-100/50 dark:from-slate-800/50 dark:to-slate-700/30"
           >
             <div className="flex flex-col lg:flex-row gap-4">
               {/* Title Filter */}
@@ -340,6 +356,7 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
           />
         )}
       </motion.div>
+    </div>
     </div>
   );
 };
