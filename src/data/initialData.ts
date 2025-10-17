@@ -1,6 +1,28 @@
 import { Timestamp } from 'firebase/firestore';
 import { Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, Subject, UserOnboarding, QuickStartTask, TooltipConfig } from '../types';
 
+// Utility function to generate dynamic dates within the last week
+const generateDynamicDate = (daysAgo: number): string => {
+  const today = new Date();
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() - daysAgo);
+  return targetDate.toISOString().split('T')[0];
+};
+
+// Generate dates for the last 7 days (0 = today, 1 = yesterday, etc.)
+const getDynamicDates = () => ({
+  today: generateDynamicDate(0),
+  day1: generateDynamicDate(1),
+  day2: generateDynamicDate(2),
+  day3: generateDynamicDate(3),
+  day4: generateDynamicDate(4),
+  day5: generateDynamicDate(5),
+  day6: generateDynamicDate(6),
+  day7: generateDynamicDate(7),
+});
+
+const dynamicDates = getDynamicDates();
+
 export const subjects: Subject[] = [
   {
     id: '1',
@@ -18,20 +40,6 @@ export const subjects: Subject[] = [
   },
   {
     id: '3',
-    name: 'Behavioral Interview Prep',
-    description: 'Preparing for behavioral interview questions using STAR method.',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '4',
-    name: 'JavaScript Fundamentals',
-    description: 'Core JavaScript concepts, ES6+ features, and best practices.',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: '5',
     name: 'React & Frontend',
     description: 'React patterns, state management, and frontend architecture.',
     createdAt: new Date(),
@@ -40,10 +48,10 @@ export const subjects: Subject[] = [
 ];
 
 export const enhancedSamplePrepEntries: PrepEntry[] = [
-  // Data Structures & Algorithms - High confidence
+  // Data Structures & Algorithms - 3 entries with varied confidence levels
   {
     id: '1',
-    date: '2025-09-25',
+    date: dynamicDates.day1,
     resources: [
       { title: 'NeetCode video on Arrays', url: 'https://www.youtube.com/watch?v=1', completed: true },
       { title: 'LeetCode Problem Set', url: 'https://leetcode.com/problemset/all/', completed: false },
@@ -59,7 +67,7 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
   },
   {
     id: '2',
-    date: '2025-09-23',
+    date: dynamicDates.day3,
     resources: [
       { title: 'Binary Search Patterns', url: 'https://example.com/binary-search', completed: true },
     ],
@@ -74,22 +82,22 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
   },
   {
     id: '3',
-    date: '2025-09-20',
+    date: dynamicDates.day7,
     resources: [],
-    time: 2,
-    confidence: 3,
-    notes: 'Struggled with dynamic programming problems. Need to review basic patterns.',
+    time: 3,
+    confidence: 2,
+    notes: 'Spent time on graph algorithms but still struggling with advanced problems. Need to review BFS/DFS fundamentals.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
     subjectId: '1',
-    srsStage: 1,
+    srsStage: 0,
     nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0],
   },
-  
-  // System Design - Medium confidence
+
+  // System Design - 2 entries with progressive learning
   {
     id: '4',
-    date: '2025-09-24',
+    date: dynamicDates.day2,
     resources: [
       { title: 'Grokking the System Design Interview', url: 'https://www.educative.io/courses/grokking-the-system-design-interview', completed: false },
       { title: 'System Design Primer', url: 'https://github.com/donnemartin/system-design-primer', completed: false },
@@ -105,7 +113,7 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
   },
   {
     id: '5',
-    date: '2025-09-21',
+    date: dynamicDates.day5,
     resources: [
       { title: 'Designing Data-Intensive Applications', url: 'https://dataintensive.net', completed: false },
     ],
@@ -118,43 +126,11 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     srsStage: 2,
     nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 4)).toISOString().split('T')[0],
   },
-  
-  // Behavioral Interview Prep - Lower confidence
+
+  // React & Frontend - 2 entries covering different aspects
   {
     id: '6',
-    date: '2025-09-22',
-    resources: [],
-    time: 1,
-    confidence: 2,
-    notes: 'Mock interview for behavioral questions. Need to be more concise and use STAR method properly.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    subjectId: '3',
-    srsStage: 0,
-    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0],
-  },
-  
-  // JavaScript Fundamentals - High confidence
-  {
-    id: '7',
-    date: '2025-09-24',
-    resources: [
-      { title: 'ES6 Features Cheatsheet', url: 'https://example.com/es6', completed: true },
-    ],
-    time: 1.5,
-    confidence: 5,
-    notes: 'Reviewed promises, async/await, and destructuring. Very comfortable with modern JS features.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    subjectId: '4',
-    srsStage: 3,
-    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 7)).toISOString().split('T')[0],
-  },
-  
-  // React & Frontend - Medium confidence
-  {
-    id: '8',
-    date: '2025-09-23',
+    date: dynamicDates.day4,
     resources: [
       { title: 'React Hooks Documentation', url: 'https://reactjs.org/docs/hooks-intro.html', completed: true },
       { title: 'State Management Patterns', url: 'https://example.com/state-mgmt', completed: false },
@@ -164,13 +140,13 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     notes: 'Practiced useEffect and custom hooks. Need to work on context and reducer patterns.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
-    subjectId: '5',
+    subjectId: '3',
     srsStage: 1,
     nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().split('T')[0],
   },
   {
-    id: '9',
-    date: '2025-09-20',
+    id: '7',
+    date: dynamicDates.day6,
     resources: [
       { title: 'Performance Optimization Techniques', url: 'https://example.com/performance', completed: false },
     ],
@@ -179,39 +155,9 @@ export const enhancedSamplePrepEntries: PrepEntry[] = [
     notes: 'Learned about memoization and lazy loading. Applied some optimizations to personal project.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
-    subjectId: '5',
+    subjectId: '3',
     srsStage: 2,
     nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 3)).toISOString().split('T')[0],
-  },
-  
-  // Additional entries for better analytics
-  {
-    id: '10',
-    date: '2025-09-18',
-    resources: [],
-    time: 3,
-    confidence: 2,
-    notes: 'Spent time on graph algorithms but still struggling with advanced problems.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    subjectId: '1',
-    srsStage: 0,
-    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().split('T')[0],
-  },
-  {
-    id: '11',
-    date: '2025-09-19',
-    resources: [
-      { title: 'Microservices Architecture', url: 'https://example.com/microservices', completed: false },
-    ],
-    time: 2,
-    confidence: 3,
-    notes: 'Studied microservices vs monolith trade-offs. Need to understand service discovery better.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-    subjectId: '2',
-    srsStage: 1,
-    nextReviewDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString().split('T')[0],
   },
 ];
 
@@ -223,7 +169,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Google',
     role: 'Senior Frontend Engineer',
     link: 'https://careers.google.com/jobs/Senior-Frontend-Engineer',
-    date: '2025-09-22',
+    date: dynamicDates.day4,
     status: 'Offer',
     source: 'Company Website',
     sourceOther: '',
@@ -236,7 +182,7 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '140-170',
     priority: 'High',
-    interviewDate: '2025-09-20',
+    interviewDate: dynamicDates.day6,
   },
   // Partially completed application - Popular tech company
   {
@@ -244,7 +190,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Microsoft',
     role: 'Data Scientist',
     link: 'https://careers.microsoft.com/us/en/job/123456/Data-Scientist',
-    date: '2025-09-20',
+    date: dynamicDates.day6,
     status: 'Final Round',
     source: 'LinkedIn',
     recruiter: 'Michael Chen',
@@ -255,7 +201,7 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '120-150',
     priority: 'Medium',
-    interviewDate: '2025-09-24',
+    interviewDate: dynamicDates.day2,
   },
   // Minimal application data - Popular tech company
   {
@@ -263,7 +209,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Amazon',
     role: 'Backend Developer',
     link: '', // Required field
-    date: '2025-09-18',
+    date: dynamicDates.day7,
     status: 'Applied',
     source: 'Indeed',
     recruiter: '', // Required field
@@ -274,7 +220,7 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '110-130',
     priority: 'Low',
-    interviewDate: '2025-09-22',
+    interviewDate: dynamicDates.day4,
   },
   // Another fully completed application - Popular tech company
   {
@@ -282,7 +228,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Apple',
     role: 'Full Stack Developer',
     link: 'https://jobs.apple.com/en-us/details/123456/full-stack-developer',
-    date: '2025-09-15',
+    date: dynamicDates.day7,
     status: 'Rejected',
     source: 'Referral',
     sourceOther: 'University alumni network',
@@ -295,7 +241,7 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '130-160',
     priority: 'Medium',
-    interviewDate: '2025-09-18',
+    interviewDate: dynamicDates.day7,
   },
   // Application with ghosted status - Popular tech company
   {
@@ -303,7 +249,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Meta',
     role: 'Software Engineer',
     link: 'https://www.metacareers.com/jobs/Software-Engineer',
-    date: '2025-09-10',
+    date: dynamicDates.day7,
     status: 'Ghosted',
     source: 'Company Website',
     recruiter: 'David Kim',
@@ -315,7 +261,7 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '150-180',
     priority: 'High',
-    interviewDate: '2025-09-12',
+    interviewDate: dynamicDates.day7,
   },
   // Recent application - Popular tech company
   {
@@ -323,7 +269,7 @@ export const enhancedSampleApplications: Application[] = [
     company: 'Netflix',
     role: 'React Developer',
     link: 'https://jobs.netflix.com/jobs/123456',
-    date: '2025-09-24',
+    date: dynamicDates.day2,
     status: 'HR Screen',
     source: 'Naukri',
     sourceOther: '',
@@ -335,194 +281,119 @@ export const enhancedSampleApplications: Application[] = [
     updatedAt: Timestamp.now(),
     salaryRange: '140-170',
     priority: 'High',
-    interviewDate: '2025-09-26',
+    interviewDate: dynamicDates.today,
   },
 ];
 
-// Updated Company Research with realistic data
+// Updated Company Research - 3 detailed entries for major tech companies
 export const initialCompanyResearch: CompanyResearch[] = [
-  // Fully detailed company research
+  // Google - Comprehensive research
   {
     id: 'cr1',
-    company: 'TechFlow Inc.',
-    whatTheyDo: 'Enterprise SaaS platform for workflow automation and team collaboration.',
-    values: 'Innovation, transparency, customer-first approach, and continuous learning.',
-    why: 'Their mission to simplify complex workflows aligns with my passion for creating intuitive user experiences. Excited about their remote-first culture.',
-    questions: 'How do they maintain work-life balance in a fast-paced startup environment? What are their growth plans for the next 3 years?',
-    news: 'Recently raised $50M in Series C funding and expanded to European markets.',
-    date: '2025-09-23',
+    company: 'Google',
+    whatTheyDo: 'Global technology leader specializing in internet-related services and products including search, cloud computing, advertising technologies, and consumer electronics. Known for innovative products like Chrome, Android, YouTube, and Google Cloud Platform.',
+    values: 'Focus the user, democracy on the web, fast is better than slow, great just isn\'t good enough. Emphasis on innovation, collaboration, and making information universally accessible. Strong commitment to diversity, sustainability, and ethical AI development.',
+    why: 'Google\'s mission to organize the world\'s information aligns perfectly with my passion for creating accessible, high-performance web experiences. I\'m particularly excited about their work in web standards, Chrome development, and cloud infrastructure. The opportunity to impact billions of users while working with cutting-edge technologies like WebAssembly and Progressive Web Apps is incredibly appealing.',
+    questions: 'How does Google balance innovation with maintaining backward compatibility across their web platforms? What opportunities exist for contributing to open-source projects like Chromium? How does the team approach performance optimization for global-scale applications? What\'s the career progression path for senior frontend engineers?',
+    news: 'Recently announced major investments in AI infrastructure with Bard integration across products. Launched new sustainability initiatives aiming for carbon-neutral operations by 2030. Chrome team released significant performance improvements with the latest V8 engine updates.',
+    date: dynamicDates.day3,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
-  // Partially completed research (with empty strings for missing fields)
+  // Meta - Detailed research
   {
     id: 'cr2',
-    company: 'DataSphere Analytics',
-    whatTheyDo: 'Big data analytics and business intelligence solutions for Fortune 500 companies.',
-    values: 'Data-driven decision making and customer success.',
-    why: 'Interested in their approach to solving complex data challenges at scale.',
-    questions: '', // Required field
-    news: '', // Required field
-    date: '2025-09-21',
+    company: 'Meta',
+    whatTheyDo: 'Social technology company building the next evolution of social connection through VR, AR, and metaverse technologies. Operates Facebook, Instagram, WhatsApp, and Reality Labs. Leading development in virtual and augmented reality experiences.',
+    values: 'Move fast, be bold, focus on impact, be open, and build social value. Strong emphasis on connecting people globally and building immersive experiences. Commitment to privacy, safety, and responsible innovation in emerging technologies.',
+    why: 'Meta\'s vision for the metaverse represents the future of human interaction and digital experiences. My background in 3D graphics, WebXR, and React aligns perfectly with their technical stack. The opportunity to work on Reality Labs projects and shape the future of virtual collaboration is incredibly exciting. Their investment in React and open-source contributions shows commitment to advancing web technologies.',
+    questions: 'How is Meta approaching the technical challenges of building cross-platform metaverse experiences? What role does web technology play in Meta\'s VR/AR strategy? How does the company balance innovation speed with user privacy and safety? What opportunities exist for frontend engineers to contribute to Reality Labs projects?',
+    news: 'Launched Quest 3 with mixed reality capabilities and improved performance. Announced significant cost reductions while maintaining R&D investment in metaverse technologies. Released Llama 2 AI model as open source, demonstrating commitment to open innovation.',
+    date: dynamicDates.day5,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
-  // Minimal research data (with empty strings for missing fields)
+  // Amazon - Strategic research
   {
     id: 'cr3',
-    company: 'InnovateLab',
-    whatTheyDo: 'AI-powered product development and innovation consulting.',
-    values: '', // Required field
-    why: '', // Required field
-    questions: '', // Required field
-    news: '', // Required field
-    date: '2025-09-19',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Recent research
-  {
-    id: 'cr4',
-    company: 'CloudNet Solutions',
-    whatTheyDo: 'Cloud infrastructure and DevOps services for enterprise clients.',
-    values: 'Reliability, security, and innovation.',
-    why: 'Their focus on cloud-native technologies matches my career interests.',
-    questions: 'What training opportunities do they provide for new cloud technologies?',
-    news: 'Partnered with AWS to deliver enhanced cloud migration services.',
-    date: '2025-09-24',
+    company: 'Amazon',
+    whatTheyDo: 'Global e-commerce and cloud computing giant operating Amazon.com marketplace, Amazon Web Services (AWS), Prime Video, Alexa, and logistics networks. Leading provider of cloud infrastructure services and AI/ML platforms.',
+    values: 'Customer obsession, ownership, invent and simplify, are right a lot, learn and be curious, hire and develop the best, insist on the highest standards, think big, bias for action, frugality, earn trust, dive deep, have backbone; disagree and commit, deliver results. Strong focus on long-term thinking and operational excellence.',
+    why: 'Amazon\'s scale and technical challenges in e-commerce and cloud computing offer unparalleled learning opportunities. Their leadership in AWS aligns with my cloud infrastructure experience, and the chance to work on systems serving millions of customers daily is compelling. The culture of innovation and customer obsession resonates with my approach to building user-centric applications.',
+    questions: 'How does Amazon approach frontend architecture for applications serving millions of concurrent users? What opportunities exist for cross-team collaboration between AWS Console and e-commerce platforms? How does the company balance rapid feature development with system reliability? What\'s the onboarding process for senior engineers joining AWS teams?',
+    news: 'AWS continues to lead cloud market share with new AI/ML services and infrastructure improvements. Amazon announced major sustainability commitments including The Climate Pledge. Significant investments in logistics automation and drone delivery technology.',
+    date: dynamicDates.day2,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
 ];
 
-// Updated Networking Contacts with realistic data
+// Updated Networking Contacts - 3 contacts from well-known companies
 export const initialNetworkingContacts: NetworkingContact[] = [
-  // Fully detailed contact
+  // Google contact - Strong connection with referral potential
   {
     id: 'nc1',
-    name: 'Alex Morgan',
-    company: 'TechFlow Inc.',
-    role: 'Engineering Manager',
-    date: '2025-09-22',
+    name: 'Sarah Chen',
+    company: 'Google',
+    role: 'Senior Engineering Manager',
+    date: dynamicDates.day4,
     status: 'Connected',
     referral: 'Y',
-    notes: 'Connected through LinkedIn. Provided valuable insights about the engineering culture at TechFlow. Offered to refer for the Senior Frontend Engineer position.',
+    notes: 'Met Sarah at the React Conference 2024. She was impressed by my presentation on performance optimization techniques. We discussed Google\'s engineering culture and she offered to refer me for senior frontend positions. She mentioned they\'re actively hiring for the Chrome team and Google Cloud Console. Planning to send her my updated resume this week.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
-  // Partially completed contact
+  // Meta contact - Recent connection through mutual contact
   {
     id: 'nc2',
-    name: 'Jamie Smith',
-    company: 'DataSphere Analytics',
-    role: 'Lead Data Scientist',
-    date: '2025-09-20',
-    status: 'Contacted',
-    referral: 'N',
-    notes: 'Sent connection request with personalized message about shared interest in machine learning.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Minimal contact data (with empty string for missing notes)
-  {
-    id: 'nc3',
-    name: 'Taylor Kim',
-    company: 'StartupXYZ',
-    role: 'CTO',
-    date: '2025-09-15',
+    name: 'Michael Rodriguez',
+    company: 'Meta',
+    role: 'Staff Software Engineer',
+    date: dynamicDates.day6,
     status: 'Meeting Scheduled',
     referral: 'N',
-    notes: '', // Required field
+    notes: 'Connected through my former colleague at Amazon. Michael leads the React Native infrastructure team at Meta. We have a coffee chat scheduled for next week to discuss opportunities in the Reality Labs division. He\'s particularly interested in my experience with WebXR and 3D graphics. Shared some insights about Meta\'s remote work culture and growth opportunities.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
-  // Recent contact
+  // Amazon contact - Alumni network connection
   {
-    id: 'nc4',
-    name: 'Jordan Williams',
-    company: 'GlobalTech',
-    role: 'Senior Developer',
-    date: '2025-09-24',
-    status: 'Initial Contact',
-    referral: 'N',
-    notes: 'Met at local tech meetup. Exchanged contact information and discussed career paths in frontend development.',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Follow-up contact
-  {
-    id: 'nc5',
-    name: 'Casey Johnson',
-    company: 'InnovateLab',
-    role: 'Product Manager',
-    date: '2025-09-18',
+    id: 'nc3',
+    name: 'Jennifer Park',
+    company: 'Amazon',
+    role: 'Principal Engineer',
+    date: dynamicDates.day2,
     status: 'Follow-up Sent',
-    referral: 'N',
-    notes: 'Following up on previous conversation about product development methodologies.',
+    referral: 'Y',
+    notes: 'Jennifer is a Stanford alumni from my computer science program. She currently leads the AWS Console frontend architecture team. We reconnected at the university alumni event last month. She provided valuable insights about Amazon\'s leadership principles and mentioned several open positions in AWS that align with my cloud infrastructure experience. Sent follow-up email with my portfolio showcasing AWS projects.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
 ];
 
-// Updated STAR Stories with realistic data
+// Updated STAR Stories with realistic data - Reduced to 2 detailed stories
 export const enhancedSampleStarStories: StarStory[] = [
-  // Fully detailed STAR story
+  // Detailed STAR story #1 - Technical Leadership
   {
     id: 'star1',
     title: 'Led Performance Optimization Initiative',
-    situation: 'Our web application was experiencing slow load times, leading to increased bounce rates and user complaints.',
-    task: 'I was tasked with identifying performance bottlenecks and implementing optimizations to reduce page load time by at least 40%.',
-    action: 'Conducted performance audits using Lighthouse and WebPageTest. Implemented code splitting, lazy loading, and image optimization. Migrated to a more efficient state management solution.',
-    result: 'Reduced page load time from 4.2s to 1.8s (57% improvement). Bounce rate decreased by 25% and user engagement increased by 40%.',
-    date: '2025-09-21',
+    situation: 'Our e-commerce web application was experiencing slow load times (4.2s average), leading to a 35% bounce rate and declining user engagement. Customer complaints were increasing, and we were losing potential sales during peak shopping periods.',
+    task: 'As the senior frontend engineer, I was tasked with identifying performance bottlenecks and implementing comprehensive optimizations to reduce page load time by at least 40% within 6 weeks, while maintaining all existing functionality.',
+    action: 'I conducted thorough performance audits using Lighthouse, WebPageTest, and Chrome DevTools to identify bottlenecks. Implemented code splitting for route-based lazy loading, optimized images with WebP format and responsive sizing, migrated from Redux to Zustand for more efficient state management, and introduced service workers for caching. I also collaborated with the backend team to optimize API responses and implemented skeleton loading screens for better perceived performance.',
+    result: 'Reduced page load time from 4.2s to 1.8s (57% improvement), exceeding the target. Bounce rate decreased by 25%, user engagement increased by 40%, and conversion rate improved by 18%. The optimizations resulted in an estimated $2.3M additional annual revenue. The performance improvements became a template for other teams in the organization.',
+    date: dynamicDates.day5,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
-  // Partially completed STAR story
+  // Detailed STAR story #2 - Crisis Management & Problem Solving
   {
     id: 'star2',
-    title: 'Resolved Critical Production Bug',
-    situation: 'A critical authentication bug was preventing users from logging in, affecting 100% of our user base.',
-    task: 'As the on-call engineer, I needed to quickly identify and resolve the issue to restore service.',
-    action: 'Used logs and monitoring tools to trace the error to a failed API dependency. Implemented a temporary workaround while coordinating with the third-party service provider.',
-    result: 'Resolved the issue within 2 hours, minimizing user impact. Implemented a more robust error handling solution to prevent future occurrences.',
-    date: '2025-09-19',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Minimal STAR story
-  {
-    id: 'star3',
-    title: 'Mentored Junior Developer',
-    situation: 'A new team member was struggling to meet project deadlines and understand complex codebase patterns.',
-    task: 'I was asked to mentor this junior developer and help them become more productive.',
-    action: 'Created a structured learning plan focusing on core technologies. Conducted weekly code reviews and pair programming sessions. Provided guidance on best practices and debugging techniques.',
-    result: 'Junior developer became fully productive within 6 weeks. Now contributes to complex features independently and has mentored other new hires.',
-    date: '2025-09-16',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Recent STAR story
-  {
-    id: 'star4',
-    title: 'Implemented New Feature Under Tight Deadline',
-    situation: 'Client requested a critical new feature with only one week before product launch, requiring integration with multiple existing systems.',
-    task: 'Lead the development of this feature while coordinating with backend and design teams to meet the aggressive timeline.',
-    action: 'Created a detailed project plan with daily standups. Implemented a modular approach to allow parallel development. Worked evenings and weekends to ensure quality and timely delivery.',
-    result: 'Successfully delivered the feature on time with zero bugs in production. Client was extremely satisfied, leading to a contract extension worth $200K.',
-    date: '2025-09-24',
-    createdAt: Timestamp.now(),
-    updatedAt: Timestamp.now(),
-  },
-  // Additional STAR story
-  {
-    id: 'star5',
-    title: 'Improved Team Collaboration Process',
-    situation: 'Our development team was experiencing communication breakdowns leading to missed deadlines and duplicated work.',
-    task: 'As team lead, I was responsible for implementing a more effective collaboration process.',
-    action: 'Introduced daily standups, sprint planning sessions, and a shared project management board. Established clear communication channels and escalation procedures.',
-    result: 'Team velocity increased by 35% and project delivery time improved by 20%. Team satisfaction scores increased in the next quarterly review.',
-    date: '2025-09-12',
+    title: 'Resolved Critical Production Outage Under Pressure',
+    situation: 'During Black Friday peak traffic, a critical authentication service failure prevented 100% of users from logging in to our platform. The outage occurred at 2 AM EST, affecting millions of users across multiple time zones, with potential revenue loss of $50K per hour.',
+    task: 'As the on-call senior engineer, I needed to quickly diagnose the root cause, implement a solution, and restore full service while coordinating with multiple teams (DevOps, Backend, Product) and providing regular updates to leadership during this high-stakes situation.',
+    action: 'I immediately initiated the incident response protocol and assembled a war room. Using distributed tracing and log analysis, I identified that a third-party OAuth provider had silently changed their API response format. I implemented an emergency backward-compatible adapter while coordinating with the vendor for a permanent fix. Simultaneously, I set up enhanced monitoring and created a fallback authentication mechanism to prevent future similar outages.',
+    result: 'Restored full service within 2 hours, minimizing customer impact during the critical shopping period. Prevented an estimated $100K in lost revenue. Implemented robust error handling and monitoring that caught 3 similar issues before they reached production. Received recognition from the CTO and the incident response became a case study for the engineering organization.',
+    date: dynamicDates.day3,
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
   },
