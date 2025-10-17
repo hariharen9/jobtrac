@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Star, Plus, Filter, SortAsc, SortDesc, X } from 'lucide-react';
+import { Star, Plus, Filter, SortAsc, SortDesc, X, HelpCircle } from 'lucide-react';
 import { StarStory } from '../../../types';
 import StarStoryCard from './StarStoryCard';
 import EmptyState from '../../../components/shared/EmptyState';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 
 type SortField = 'title' | 'createdAt';
 type SortDirection = 'asc' | 'desc';
@@ -165,6 +166,11 @@ const StarStories: React.FC<StarStoriesProps> = ({ stories, onAddStory, onEditSt
                 <Star className="w-6 h-6 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500" />
               </div>
               Behavioral Story Bank (STAR Method)
+              <SimpleTooltip content="Build compelling stories using Situation, Task, Action, Result format for behavioral interviews.">
+                <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+                  <HelpCircle className="w-4 h-4" />
+                </button>
+              </SimpleTooltip>
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
               Build compelling stories using the STAR framework

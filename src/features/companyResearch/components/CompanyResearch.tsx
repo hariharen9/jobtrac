@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Building, Plus, Filter, SortAsc, SortDesc, X, Search, Grid3X3, List, LayoutGrid } from 'lucide-react';
+import { Building, Plus, Filter, SortAsc, SortDesc, X, Search, Grid3X3, List, LayoutGrid, HelpCircle } from 'lucide-react';
 import { CompanyResearch } from '../../../types';
 import CompanyCard from './CompanyCard';
 import EmptyState from '../../../components/shared/EmptyState';
@@ -192,6 +192,11 @@ const CompanyResearchComponent: React.FC<CompanyResearchProps> = ({
               <Building className="w-6 h-6 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500" />
             </div>
             Company Intelligence
+            <SimpleTooltip content="Research company values, culture & news. Use filters to track progress.">
+              <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+                <HelpCircle className="w-4 h-4" />
+              </button>
+            </SimpleTooltip>
           </h2>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500">
             Research and insights on potential employers

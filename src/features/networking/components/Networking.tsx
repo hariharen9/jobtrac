@@ -1,11 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Users, Plus, Filter, SortAsc, SortDesc, X } from 'lucide-react';
+import { Users, Plus, Filter, SortAsc, SortDesc, X, HelpCircle } from 'lucide-react';
 import { NetworkingContact } from '../../../types';
 import NetworkingRow from './NetworkingRow';
 import NetworkingCard from './NetworkingCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import EmptyState from '../../../components/shared/EmptyState';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 
 type SortField = 'name' | 'company' | 'date' | 'status';
 type SortDirection = 'asc' | 'desc';
@@ -208,6 +209,11 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
                 <Users className="w-6 h-6 text-indigo-600 dark:text-indigo-400 amoled:text-indigo-500" />
               </div>
               Networking & Referrals
+              <SimpleTooltip content="Track professional connections, follow-ups, and referral opportunities.">
+                <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+                  <HelpCircle className="w-4 h-4" />
+                </button>
+              </SimpleTooltip>
             </h2>
             <p className="text-slate-600 dark:text-slate-400">
               Build and manage your professional network

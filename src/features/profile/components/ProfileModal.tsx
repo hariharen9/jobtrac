@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../../auth/hooks/useAuth';
 import { GoogleAuthProvider, linkWithPopup } from 'firebase/auth';
-import { CheckCircle, Link as LinkIcon, Trash2, RotateCcw, Target, Database, MessageCircle, Globe } from 'lucide-react';
+import { CheckCircle, Link as LinkIcon, Trash2, RotateCcw, Target, Database, MessageCircle, Globe, HelpCircle } from 'lucide-react';
 import { FaPaypal, FaCoffee, FaLinkedin, FaTwitter, FaGithub, FaMedium } from 'react-icons/fa';
 import { useState } from 'react';
 import Modal from '../../../components/shared/Modal';
@@ -31,7 +31,8 @@ const ProfileModal = ({
   stories = [],
   companies = [],
   onRestartTour, 
-  quickStartProgress 
+  quickStartProgress,
+  onOpenHelp
 }: { 
   applications?: Application[], 
   contacts?: NetworkingContact[], 
@@ -39,7 +40,8 @@ const ProfileModal = ({
   stories?: StarStory[],
   companies?: CompanyResearch[],
   onRestartTour?: () => void,
-  quickStartProgress?: number 
+  quickStartProgress?: number,
+  onOpenHelp?: () => void
 }) => {
   const { user, deleteAccount } = useAuth();
 
@@ -237,7 +239,34 @@ const ProfileModal = ({
             </div>
           </div>
 
-
+          {/* Help & Guide Section */}
+          <div className="p-4 mt-6 rounded-lg bg-gradient-to-r from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 amoled:from-amoled-card amoled:to-amoled-card border border-orange-200 dark:border-orange-700/50">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-orange-100 dark:bg-orange-900/30 amoled:bg-orange-900/30 rounded-lg flex-shrink-0">
+                  <HelpCircle className="w-5 h-5 text-orange-600 dark:text-orange-400 amoled:text-orange-400" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
+                    Help & Guide
+                  </h3>
+                  <p className="text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary mt-1 pr-2">
+                    📚 Learn how to use JobTrac effectively with our comprehensive guide
+                  </p>
+                  <div className="mt-2 text-xs text-orange-600 dark:text-orange-400 amoled:text-orange-400">
+                    ⌨️ Keyboard shortcut: Cmd/Ctrl + H
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={onOpenHelp}
+                className="flex items-center gap-2 px-4 py-2 bg-orange-600 text-white rounded-lg font-semibold text-sm hover:bg-orange-700 transition-colors shadow-md hover:shadow-lg flex-shrink-0 self-start sm:self-center"
+              >
+                <HelpCircle className="w-4 h-4" />
+                <span className="whitespace-nowrap">Open Guide</span>
+              </button>
+            </div>
+          </div>
 
           {/* Thanks Section */}
           <div className="mt-6 p-6 rounded-xl bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900/30 dark:via-purple-900/30 dark:to-pink-900/30 amoled:from-amoled-card amoled:via-amoled-card amoled:to-amoled-card border-2 border-gradient-to-r from-indigo-200 to-purple-200 dark:border-indigo-700/50">

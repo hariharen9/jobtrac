@@ -1,11 +1,12 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Subject } from '../../../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target } from 'lucide-react';
+import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target, HelpCircle } from 'lucide-react';
 import { PrepEntry } from '../../../types';
 import PrepLogSubjectCard from './PrepLogSubjectCard';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import EmptyState from '../../../components/shared/EmptyState';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import PrepAnalytics from './PrepAnalytics';
 import TodaysReviews from './TodaysReviews';
 import TopicBreakdown from './TopicBreakdown';
@@ -480,6 +481,11 @@ const PrepLog: React.FC<PrepLogProps> = ({
                 <BookOpen className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
               </div>
               Prep Dashboard
+              <SimpleTooltip content="Log study sessions, track confidence levels, and use spaced repetition for interview prep.">
+                <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+                  <HelpCircle className="w-4 h-4" />
+                </button>
+              </SimpleTooltip>
             </h1>
             <p className="mt-1 text-sm text-slate-600 dark:text-slate-400 amoled:text-slate-500">
               Track your learning progress and review schedules

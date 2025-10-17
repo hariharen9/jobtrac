@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings } from 'lucide-react';
+import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle } from 'lucide-react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
 import EmptyState from '../../../components/shared/EmptyState';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 import SettingsModal, { ApplicationTrackerSettings } from './SettingsModal';
@@ -204,6 +205,11 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
             <Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
           </div>
           My Applications
+          <SimpleTooltip content="Track job applications from submission to offer. Use status updates and priority levels to stay organized.">
+            <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+              <HelpCircle className="w-4 h-4" />
+            </button>
+          </SimpleTooltip>
         </h2>
         <div className="flex items-center gap-3">
           {!isMobile && settings.viewMode === 'comfy' && (

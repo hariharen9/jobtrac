@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
@@ -794,6 +794,7 @@ function App() {
             companies={companies}
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
+            onOpenHelp={() => setIsHelpOpen(true)}
           />
         </Modal>
         <Modal
@@ -907,18 +908,7 @@ function App() {
                   <kbd className="hidden sm:inline text-xs px-1 py-0.5 bg-gray-100 dark:bg-gray-700 amoled:bg-gray-700 rounded">⌘K</kbd>
                 </motion.button>
               </SimpleTooltip>
-              <SimpleTooltip content="Help & Guide">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsHelpOpen(true)}
-                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">Help</span>
-                </motion.button>
-              </SimpleTooltip>
-              
+
               {/* Quick Start Button */}
               {onboarding.hasCompletedWelcome && getProgressPercentage() < 100 && (
                 <SimpleTooltip content="Complete quick start guide">
@@ -944,7 +934,7 @@ function App() {
                   onClick={openProfileModal} 
                   className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card dark:border-dark-border amoled:border-amoled-border dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
                 >
-                  <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+                  <Settings className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
                 </motion.button>
               </SimpleTooltip>
               <SimpleTooltip content="Sign Out">
@@ -1114,6 +1104,7 @@ function App() {
             companies={companies}
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
+            onOpenHelp={() => setIsHelpOpen(true)}
           />
         </Modal>
 
