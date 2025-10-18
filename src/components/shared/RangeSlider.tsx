@@ -1,6 +1,4 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { animated, useSpring } from '@react-spring/web';
 
 interface RangeSliderProps {
   min: number;
@@ -12,35 +10,18 @@ interface RangeSliderProps {
   denomination?: 'K' | 'L';
 }
 
-const RangeSlider: React.FC<RangeSliderProps> = ({ 
-  min, 
-  max, 
-  step, 
-  value, 
-  onChange, 
-  currency = 'USD', 
-  denomination = 'K' 
+const RangeSlider: React.FC<RangeSliderProps> = ({
+  min,
+  max,
+  step,
+  value,
+  onChange,
+  currency = 'USD',
+  denomination = 'K'
 }) => {
   const [minVal, setMinVal] = useState(value[0]);
   const [maxVal, setMaxVal] = useState(value[1]);
-  const [isDragging, setIsDragging] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   const sliderRef = useRef<HTMLDivElement>(null);
-
-  // Spring animations for smooth interactions
-  const trackSpring = useSpring({
-    background: isDragging 
-      ? 'linear-gradient(90deg, rgb(99 102 241), rgb(168 85 247))' 
-      : 'linear-gradient(90deg, rgb(99 102 241), rgb(139 92 246))',
-    height: isHovered ? '8px' : '6px',
-    config: { tension: 300, friction: 30 }
-  });
-
-  const valueSpring = useSpring({
-    minVal,
-    maxVal,
-    config: { tension: 300, friction: 30 }
-  });
 
   // Get currency symbol
   const getCurrencySymbol = (curr: string) => {
@@ -116,7 +97,6 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
     };
 
     const onMouseUp = () => {
-      setIsDragging(false);
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('touchmove', onMouseMove);
@@ -130,112 +110,36 @@ const RangeSlider: React.FC<RangeSliderProps> = ({
   }, [min, max, step, minVal, maxVal, calculateValueFromMouseEvent]);
 
   return (
-    <motion.div 
-      className="relative pt-8 pb-4 w-full"
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="relative pt-8 pb-4 w-full">
       <div
         ref={sliderRef}
-        className="relative h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden"
+        className="relative h-1 rounded-md bg-slate-200 dark:bg-slate-700"
       >
-        {/* Animated background track */}
-        <animated.div 
-          style={trackSpring}
-          className="range-fill absolute rounded-full"
-        />
+        <div className="range-fill absolute h-1 rounded-md bg-indigo-500" />
 
-        {/* Min thumb */}
-        <motion.div
-          className="absolute w-6 h-6 -mt-2 -ml-3 bg-white rounded-full shadow-lg border-2 border-indigo-500 cursor-pointer touch-none z-10"
+        <div
+          className="absolute w-5 h-5 -mt-2 -ml-2 bg-white rounded-full shadow-md border-2 border-indigo-500 cursor-pointer touch-none"
           style={{ left: `${getPercent(minVal)}%` }}
-          onMouseDown={(e) => {
-            setIsDragging(true);
-            handleThumbMouseDown(e, true);
-          }}
-          onTouchStart={(e) => {
-            setIsDragging(true);
-            handleThumbMouseDown(e, true);
-          }}
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 1.1 }}
-          animate={{
-            boxShadow: isDragging 
-              ? '0 0 0 8px rgba(99, 102, 241, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15)'
-              : '0 0 0 0px rgba(99, 102, 241, 0), 0 2px 4px rgba(0, 0, 0, 0.1)'
-          }}
-          transition={{ duration: 0.2 }}
+          onMouseDown={(e) => handleThumbMouseDown(e, true)}
+          onTouchStart={(e) => handleThumbMouseDown(e, true)}
         >
-          <motion.div 
-            className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-800 text-xs font-medium whitespace-nowrap rounded-md"
-            initial={{ opacity: 0, scale: 0.8, y: 5 }}
-            animate={{ 
-              opacity: isHovered || isDragging ? 1 : 0, 
-              scale: isHovered || isDragging ? 1 : 0.8,
-              y: isHovered || isDragging ? 0 : 5
-            }}
-            transition={{ duration: 0.2 }}
-          >
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">
             {formatDisplayValue(minVal, false)}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-800 dark:border-t-slate-200" />
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
 
-        {/* Max thumb */}
-        <motion.div
-          className="absolute w-6 h-6 -mt-2 -ml-3 bg-white rounded-full shadow-lg border-2 border-indigo-500 cursor-pointer touch-none z-10"
+        <div
+          className="absolute w-5 h-5 -mt-2 -ml-2 bg-white rounded-full shadow-md border-2 border-indigo-500 cursor-pointer touch-none"
           style={{ left: `${getPercent(maxVal)}%` }}
-          onMouseDown={(e) => {
-            setIsDragging(true);
-            handleThumbMouseDown(e, false);
-          }}
-          onTouchStart={(e) => {
-            setIsDragging(true);
-            handleThumbMouseDown(e, false);
-          }}
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 1.1 }}
-          animate={{
-            boxShadow: isDragging 
-              ? '0 0 0 8px rgba(99, 102, 241, 0.2), 0 4px 12px rgba(0, 0, 0, 0.15)'
-              : '0 0 0 0px rgba(99, 102, 241, 0), 0 2px 4px rgba(0, 0, 0, 0.1)'
-          }}
-          transition={{ duration: 0.2 }}
+          onMouseDown={(e) => handleThumbMouseDown(e, false)}
+          onTouchStart={(e) => handleThumbMouseDown(e, false)}
         >
-          <motion.div 
-            className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-800 dark:bg-slate-200 text-white dark:text-slate-800 text-xs font-medium whitespace-nowrap rounded-md"
-            initial={{ opacity: 0, scale: 0.8, y: 5 }}
-            animate={{ 
-              opacity: isHovered || isDragging ? 1 : 0, 
-              scale: isHovered || isDragging ? 1 : 0.8,
-              y: isHovered || isDragging ? 0 : 5
-            }}
-            transition={{ duration: 0.2 }}
-          >
+          <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">
             {formatDisplayValue(maxVal, true)}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 w-0 h-0 border-l-2 border-r-2 border-t-2 border-transparent border-t-slate-800 dark:border-t-slate-200" />
-          </motion.div>
-        </motion.div>
-
-        {/* Range indicator with pulse effect */}
-        <motion.div
-          className="absolute top-1/2 -translate-y-1/2 h-1 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"
-          style={{
-            left: `${getPercent(minVal)}%`,
-            width: `${getPercent(maxVal) - getPercent(minVal)}%`
-          }}
-          animate={{
-            boxShadow: isDragging 
-              ? '0 0 10px rgba(99, 102, 241, 0.5)'
-              : '0 0 0px rgba(99, 102, 241, 0)'
-          }}
-          transition={{ duration: 0.2 }}
-        />
+          </div>
+        </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

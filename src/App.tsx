@@ -815,24 +815,18 @@ function App() {
         >
           {renderModalContent()}
         </Modal>
-        <Modal
+        <SettingsPage 
           isOpen={isProfileModalOpen}
+          applications={applications} 
+          contacts={contacts} 
+          prepEntries={prepEntries}
+          stories={stories}
+          companies={companies}
+          onRestartTour={handleRestartTour}
+          quickStartProgress={getProgressPercentage()}
+          onOpenHelp={() => setIsHelpOpen(true)}
           onClose={handleProfileModalClose}
-          title=""
-          size="xl"
-        >
-          <SettingsPage 
-            applications={applications} 
-            contacts={contacts} 
-            prepEntries={prepEntries}
-            stories={stories}
-            companies={companies}
-            onRestartTour={handleRestartTour}
-            quickStartProgress={getProgressPercentage()}
-            onOpenHelp={() => setIsHelpOpen(true)}
-            onClose={handleProfileModalClose}
-          />
-        </Modal>
+        />
         <Modal
           isOpen={isHelpOpen}
           onClose={() => setIsHelpOpen(false)}
@@ -1127,24 +1121,18 @@ function App() {
         </Modal>
 
         {/* Settings Modal */}
-        <Modal
+        <SettingsPage 
           isOpen={isProfileModalOpen}
+          applications={applications} 
+          contacts={contacts} 
+          prepEntries={prepEntries}
+          stories={stories}
+          companies={companies}
+          onRestartTour={handleRestartTour}
+          quickStartProgress={getProgressPercentage()}
+          onOpenHelp={() => setIsHelpOpen(true)}
           onClose={handleProfileModalClose}
-          title=""
-          size="xl"
-        >
-          <SettingsPage 
-            applications={applications} 
-            contacts={contacts} 
-            prepEntries={prepEntries}
-            stories={stories}
-            companies={companies}
-            onRestartTour={handleRestartTour}
-            quickStartProgress={getProgressPercentage()}
-            onOpenHelp={() => setIsHelpOpen(true)}
-            onClose={handleProfileModalClose}
-          />
-        </Modal>
+        />
 
         {/* Help Modal */}
         <Modal

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
@@ -7,7 +7,8 @@ import {
   Database, 
   MessageCircle, 
   Trash2,
-  ChevronRight
+  ChevronRight,
+  X
 } from 'lucide-react';
 import { Application, NetworkingContact, PrepEntry, StarStory, CompanyResearch } from '../../../types';
 import AccountSection from './settings/AccountSection';
@@ -16,8 +17,10 @@ import GoalsSection from './settings/GoalsSection';
 import DataSection from './settings/DataSection';
 import SupportSection from './settings/SupportSection';
 import DangerZoneSection from './settings/DangerZoneSection';
+import MobileSettingsPage from './MobileSettingsPage';
 
 interface SettingsPageProps {
+  isOpen: boolean;
   applications: Application[];
   contacts: NetworkingContact[];
   prepEntries: PrepEntry[];
@@ -32,6 +35,7 @@ interface SettingsPageProps {
 type SettingsSection = 'account' | 'analytics' | 'goals' | 'data' | 'support' | 'danger';
 
 const SettingsPage: React.FC<SettingsPageProps> = ({
+  isOpen,
   applications,
   contacts,
   prepEntries,
@@ -43,6 +47,46 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   onClose
 }) => {
   const [activeSection, setActiveSection] = useState<SettingsSection>('account');
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Reset to account section when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setActiveSection('account');
+    }
+  }, [isOpen]);
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
 
   const sections = [
     { id: 'account' as const, label: 'Account', icon: User },
@@ -92,8 +136,27 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   };
 
-  return (
-    <div className="flex flex-col h-full max-h-[85vh] bg-white dark:bg-dark-bg amoled:bg-amoled-bg">
+  // Render mobile version on small screens
+  if (isMobile) {
+    return (
+      <MobileSettingsPage
+        isOpen={isOpen}
+        applications={applications}
+        contacts={contacts}
+        prepEntries={prepEntries}
+        stories={stories}
+        companies={companies}
+        onRestartTour={onRestartTour}
+        quickStartProgress={quickStartProgress}
+        onOpenHelp={onOpenHelp}
+        onClose={onClose}
+      />
+    );
+  }
+
+  // Desktop modal content
+  const desktopContent = (
+    <div className="flex flex-col h-full bg-white dark:bg-dark-bg amoled:bg-amoled-bg">
       {/* Logo Header */}
       <div className="px-4 py-6 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border flex-shrink-0">
         <div className="flex flex-col items-center">
@@ -197,6 +260,43 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         </div>
       </div>
     </div>
+  );
+
+  // Desktop version with modal wrapper
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
+          />
+          
+          {/* Modal */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            transition={{ duration: 0.2, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="fixed inset-8 bg-white dark:bg-dark-bg amoled:bg-amoled-bg rounded-2xl shadow-2xl z-50 overflow-hidden max-h-[85vh]"
+          >
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full bg-slate-100 dark:bg-slate-700 amoled:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-600 amoled:hover:bg-slate-700 transition-colors"
+            >
+              <X className="w-5 h-5 text-slate-600 dark:text-slate-300 amoled:text-slate-400" />
+            </button>
+            
+            {desktopContent}
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 };
 
