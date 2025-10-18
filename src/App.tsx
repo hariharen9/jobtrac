@@ -893,7 +893,7 @@ function App() {
                 <span className="flex-shrink-0 text-sm sm:text-base lg:text-lg hidden sm:inline" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
               </h1>
               <p className="mt-2 ml-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base pt-1">
-                A comprehensive dashboard to manage preparation, applications, and interviews.
+                A comprehensive dashboard to manage applications, preparation, research and interviews.
               </p>
             </div>
             <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">

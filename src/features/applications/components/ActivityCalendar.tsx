@@ -340,10 +340,19 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                       }`}
                       onClick={() => setSelectedDate(dateStr)}
                     >
-                      <div className={`text-sm font-medium mb-1 ${
-                        isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
-                      }`}>
-                        {day}
+                      <div className="flex justify-between items-start mb-1">
+                        <div className={`text-sm font-medium ${
+                          isToday ? 'text-indigo-600 dark:text-indigo-400 font-bold' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
+                        }`}>
+                          {day}
+                        </div>
+                        {dayActivities.length > 2 && (
+                          <div className="text-xs text-slate-500 dark:text-slate-400">
+                            <span className="bg-slate-200 dark:bg-slate-700 rounded-md px-1.5 py-0.5 font-semibold">
+                              +{dayActivities.length - 2}
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="space-y-1">
                         {dayActivities.slice(0, 2).map(activity => {
@@ -358,11 +367,6 @@ const ActivityCalendar: React.FC<ActivityCalendarProps> = ({
                             </div>
                           );
                         })}
-                        {dayActivities.length > 2 && (
-                          <div className="text-xs text-slate-500 dark:text-slate-400 px-1">
-                            +{dayActivities.length - 2} more
-                          </div>
-                        )}
                       </div>
                     </div>
                   );

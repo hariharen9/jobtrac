@@ -6,12 +6,43 @@ interface RangeSliderProps {
   step: number;
   value: [number, number];
   onChange: (value: [number, number]) => void;
+  currency?: 'USD' | 'INR' | 'EUR' | 'GBP';
+  denomination?: 'K' | 'L';
 }
 
-const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, value, onChange }) => {
+const RangeSlider: React.FC<RangeSliderProps> = ({ 
+  min, 
+  max, 
+  step, 
+  value, 
+  onChange, 
+  currency = 'USD', 
+  denomination = 'K' 
+}) => {
   const [minVal, setMinVal] = useState(value[0]);
   const [maxVal, setMaxVal] = useState(value[1]);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Get currency symbol
+  const getCurrencySymbol = (curr: string) => {
+    switch (curr) {
+      case 'USD': return '$';
+      case 'INR': return '₹';
+      case 'EUR': return '€';
+      case 'GBP': return '£';
+      default: return '$';
+    }
+  };
+
+  const currencySymbol = getCurrencySymbol(currency);
+
+  // Format display value with "+" for max values
+  const formatDisplayValue = (val: number, isMax: boolean) => {
+    if (isMax && val === max && currency === 'INR' && denomination === 'L' && max === 50) {
+      return `${currencySymbol}${val}${denomination}+`;
+    }
+    return `${currencySymbol}${val}${denomination}`;
+  };
 
   // Convert value to percentage
   const getPercent = useCallback(
@@ -93,7 +124,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, value, onChan
           onTouchStart={(e) => handleThumbMouseDown(e, true)}
         >
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">
-            ${minVal}K
+            {formatDisplayValue(minVal, false)}
           </div>
         </div>
 
@@ -104,7 +135,7 @@ const RangeSlider: React.FC<RangeSliderProps> = ({ min, max, step, value, onChan
           onTouchStart={(e) => handleThumbMouseDown(e, false)}
         >
           <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-xs text-slate-700 dark:text-slate-300 font-medium whitespace-nowrap">
-            ${maxVal}K
+            {formatDisplayValue(maxVal, true)}
           </div>
         </div>
       </div>

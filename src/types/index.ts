@@ -1,5 +1,11 @@
 import { Timestamp } from 'firebase/firestore';
 
+export interface FirestoreDocument {
+  id: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export type ApplicationSource =
   | 'LinkedIn'
   | 'Indeed'
@@ -144,8 +150,7 @@ export interface SubjectFirestore {
 
 export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
 
-export interface Goal {
-  id: string;
+export interface Goal extends FirestoreDocument {
   type: 'weekly' | 'monthly';
   applications: number;
   networking: number;

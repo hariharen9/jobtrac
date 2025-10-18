@@ -62,7 +62,7 @@ const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEn
             <HelpCircle className="w-5 h-5 text-slate-400 dark:text-slate-500 amoled:text-slate-600 cursor-help" />
             <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-200 dark:border-dark-border amoled:border-amoled-border rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
               <p className="text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text">
-                Based on your confidence levels, these topics are due for review today using spaced repetition.
+                Based on your confidence levels, these topics are due for review today using spaced repetition algorithm.
               </p>
             </div>
           </div>
@@ -92,7 +92,7 @@ const TodaysReviews: React.FC<TodaysReviewsProps> = ({ prepEntries, onEditPrepEn
           <HelpCircle className="w-5 h-5 text-slate-400 dark:text-slate-500 amoled:text-slate-600 cursor-help" />
           <div className="absolute bottom-full right-0 mb-2 w-64 p-3 bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-200 dark:border-dark-border amoled:border-amoled-border rounded-lg shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity z-10">
             <p className="text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text">
-              Based on your confidence levels, these topics are due for review today using spaced repetition.
+              Based on your confidence levels, these topics are due for review today using spaced repetition algorithm.
             </p>
           </div>
         </div>
