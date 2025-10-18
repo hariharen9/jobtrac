@@ -94,11 +94,38 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
   return (
     <div className="flex flex-col h-full max-h-[85vh] bg-white dark:bg-dark-bg amoled:bg-amoled-bg">
-      {/* Header */}
-      <div className="px-4 py-4 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border flex-shrink-0">
-        <h2 className="text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
-          Settings
-        </h2>
+      {/* Logo Header */}
+      <div className="px-4 py-6 border-b border-slate-200 dark:border-dark-border amoled:border-amoled-border flex-shrink-0">
+        <div className="flex flex-col items-center">
+          {/* JobTrac Logo */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="mb-3"
+          >
+            <img 
+              src="/assets/jtrac-black-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-10 w-auto object-contain dark:hidden amoled:hidden"
+            />
+            <img 
+              src="/assets/jtrac-white-cropped.png" 
+              alt="JobTrac Logo" 
+              className="h-10 w-auto object-contain hidden dark:block amoled:block"
+            />
+          </motion.div>
+          
+          {/* Settings Title */}
+          <motion.h2 
+            className="text-xl font-bold text-slate-900 dark:text-dark-text amoled:text-amoled-text"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            Settings
+          </motion.h2>
+        </div>
       </div>
 
       {/* Mobile Tabs - Outside flex container */}

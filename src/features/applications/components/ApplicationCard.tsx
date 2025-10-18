@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar, Briefcase, MapPin, DollarSign, Info, Archive, ArchiveRestore } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useSpring, animated } from '@react-spring/web';
+import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar, Briefcase, MapPin, DollarSign, Info, Archive, ArchiveRestore, Sparkles, TrendingUp } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import CompanyIcon from './CompanyIcon';
+import { cardHover, cardTap, buttonHover, buttonTap } from '../../../utils/animations';
 
 interface ApplicationCardProps {
   app: Application;
@@ -31,6 +33,22 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   salaryDenomination = 'K'
 }) => {
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
+
+  // Spring animations for smooth interactions
+  const cardSpring = useSpring({
+    transform: isHovered ? 'translateY(-8px) scale(1.02)' : 'translateY(0px) scale(1)',
+    boxShadow: isHovered 
+      ? '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+      : '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+    config: { tension: 300, friction: 30 }
+  });
+
+  const prioritySpring = useSpring({
+    scale: app.priority === 'High' ? [1, 1.1, 1] : 1,
+    config: { tension: 400, friction: 30 }
+  });
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -75,17 +93,25 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
 
   return (
     <>
-      <motion.div
-        onClick={handleCardClick}
-        className={`relative rounded-xl shadow-sm transition-all duration-300 cursor-pointer overflow-hidden flex flex-col h-full ${
-          isSelected 
-            ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20' 
-            : 'bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-200 dark:border-dark-border amoled:border-amoled-border hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 amoled:hover:border-slate-500'
-        }`}
-        layout
-        whileHover={{ y: -5 }}
-        transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      <animated.div
+        style={cardSpring}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="relative"
       >
+        <motion.div
+          onClick={handleCardClick}
+          className={`relative rounded-xl cursor-pointer overflow-hidden flex flex-col h-full border-2 transition-all duration-300 ${
+            isSelected 
+              ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 dark:from-indigo-900/20 dark:to-purple-900/20 border-indigo-200 dark:border-indigo-700' 
+              : 'bg-white dark:bg-dark-card amoled:bg-amoled-card border-slate-200 dark:border-slate-700 hover:border-indigo-300 dark:hover:border-indigo-600'
+          }`}
+          layout
+          initial={{ opacity: 0, y: 20, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          whileTap={cardTap}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+        >
         <div className="p-5 flex-grow">
           <div className="flex justify-between items-start">
             <div className="flex items-start gap-3">
@@ -111,41 +137,60 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
             <div className="flex items-center gap-1">
               <SimpleTooltip content="Edit">
                 <motion.button
-                  whileHover={{ scale: 1.1, backgroundColor: 'rgba(99, 102, 241, 0.1)' }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
                   onClick={handleEditClick}
-                  className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-500 transition-colors p-1.5 rounded-full hover:bg-indigo-50 dark:hover:bg-indigo-900/30"
+                  className="text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-500 transition-all duration-200 p-2 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 group"
                   aria-label="Edit application"
                 >
-                  <Pencil className="w-4 h-4" />
+                  <motion.div
+                    animate={isHovered ? { rotate: [0, -10, 10, 0] } : { rotate: 0 }}
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Pencil className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  </motion.div>
                 </motion.button>
               </SimpleTooltip>
               {onArchiveApplication && (
                 <SimpleTooltip content={app.archived ? "Restore" : "Archive"}>
                   <motion.button
-                    whileHover={{ scale: 1.1, backgroundColor: app.archived ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)' }}
-                    whileTap={{ scale: 0.9 }}
+                    whileHover={buttonHover}
+                    whileTap={buttonTap}
                     onClick={handleArchiveClick}
-                    className={`transition-colors p-1.5 rounded-full ${
+                    className={`transition-all duration-200 p-2 rounded-lg group ${
                       app.archived 
                         ? 'text-slate-500 hover:text-green-600 dark:hover:text-green-400 amoled:hover:text-green-500 hover:bg-green-50 dark:hover:bg-green-900/30'
                         : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 amoled:hover:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/30'
                     }`}
                     aria-label={app.archived ? "Restore application" : "Archive application"}
                   >
-                    {app.archived ? <ArchiveRestore className="w-4 h-4" /> : <Archive className="w-4 h-4" />}
+                    <motion.div
+                      animate={isHovered ? { y: [0, -2, 0] } : { y: 0 }}
+                      transition={{ duration: 0.4, repeat: isHovered ? Infinity : 0, repeatDelay: 1 }}
+                    >
+                      {app.archived ? (
+                        <ArchiveRestore className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      ) : (
+                        <Archive className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                      )}
+                    </motion.div>
                   </motion.button>
                 </SimpleTooltip>
               )}
               <SimpleTooltip content="Delete">
                 <motion.button
-                  whileHover={{ scale: 1.1, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}
-                  whileTap={{ scale: 0.9 }}
+                  whileHover={buttonHover}
+                  whileTap={buttonTap}
                   onClick={handleDeleteClick}
-                  className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 amoled:hover:text-red-500 transition-colors p-1.5 rounded-full hover:bg-red-50 dark:hover:bg-red-900/30"
+                  className="text-slate-500 hover:text-red-600 dark:hover:text-red-400 amoled:hover:text-red-500 transition-all duration-200 p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/30 group"
                   aria-label="Delete application"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <motion.div
+                    animate={isHovered ? { rotate: [0, 5, -5, 0] } : { rotate: 0 }}
+                    transition={{ duration: 0.6 }}
+                  >
+                    <Trash2 className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  </motion.div>
                 </motion.button>
               </SimpleTooltip>
             </div>
@@ -244,6 +289,8 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
           </div>
         </div>
       </motion.div>
+      </animated.div>
+      
       <ConfirmationModal
         isOpen={isConfirmModalOpen}
         onClose={() => setConfirmModalOpen(false)}

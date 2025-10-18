@@ -1,5 +1,8 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
-import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move, Archive } from 'lucide-react';
+import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { useSpring, animated } from '@react-spring/web';
+import { useInView } from 'react-intersection-observer';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move, Archive, Sparkles } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import SettingsModal from '../../../components/shared/SettingsModal';
@@ -7,6 +10,8 @@ import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import Modal from '../../../components/shared/Modal';
 import { useApplicationSettings } from '../../../hooks/useApplicationSettings';
+import LoadingSpinner from '../../../components/shared/LoadingSpinner';
+import { staggerContainer, staggerItem, cardHover, cardTap } from '../../../utils/animations';
 
 interface KanbanBoardProps {
   applications: Application[];
@@ -54,6 +59,11 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   const [viewMode, setViewMode] = useLocalStorage<'scroll' | 'grid'>('kanban-view-mode', 'scroll');
   const [cardDensity, setCardDensity] = useLocalStorage<'compact' | 'normal'>('kanban-card-density', 'normal');
   const [movingApplication, setMovingApplication] = useState<Application | null>(null);
+  const [hoveredColumn, setHoveredColumn] = useState<string | null>(null);
+  const [celebrateOffer, setCelebrateOffer] = useState<string | null>(null);
+  
+  // Intersection observer for column animations
+  const [columnsInView, setColumnsInView] = useState<Record<string, boolean>>({});
 
   const columns: KanbanColumn[] = [
     { id: 'To Apply', title: 'To Apply', color: 'bg-gray-50 dark:bg-gray-800/50 amoled:bg-amoled-card' },
