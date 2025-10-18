@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
-import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus } from './types';
+import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle } from 'lucide-react';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
@@ -32,7 +32,7 @@ import { useNotes } from './features/notes/hooks/useNotes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
 import MobileDashboard from './components/shared/MobileDashboard';
-import { ProfileModal } from './features/profile';
+import { ProfileModal, SettingsPage } from './features/profile';
 import UserProfileModal from './features/auth/components/UserProfileModal';
 import { Helmet } from 'react-helmet-async';
 
@@ -163,6 +163,22 @@ function App() {
     deleteItem: deleteStory
   } = useFirestore<StarStory>('stories', user?.uid, true); // Polling
 
+  const {
+    data: subjects,
+    loading: subjectsLoading,
+    addItem: addSubject,
+    updateItem: updateSubject,
+    deleteItem: deleteSubject
+  } = useFirestore<SubjectFirestore>('subjects', user?.uid, true); // Polling
+
+  const {
+    data: sessions,
+    loading: sessionsLoading,
+    addItem: addSession,
+    updateItem: updateSession,
+    deleteItem: deleteSession
+  } = useFirestore<any>('sessions', user?.uid, true); // Polling
+
   // Notes data for global search
   const { notes } = useNotes(user?.uid);
 
@@ -178,15 +194,32 @@ function App() {
   const currentTab = useMemo(() => tabs.find(tab => tab.id === activeTab), [activeTab, tabs]);
   const pageTitle = currentTab ? `JobTrac - ${currentTab.label}` : 'JobTrac - Dashboard';
 
+  // State to hold the pre-filled topic for prep entries
+  const [preFilledPrepTopic, setPreFilledPrepTopic] = useState<string | null>(null);
+
   const openModal = useCallback((type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
     setEditingItem(itemToEdit);
+    setIsModalOpen(true);
+    
+    // Clear pre-filled topic when opening any modal
+    if (type !== 'prep') {
+      setPreFilledPrepTopic(null);
+    }
+  }, []);
+
+  // New function to open the prep form with a pre-filled topic
+  const openPrepModalWithTopic = useCallback((topic: string) => {
+    setModalType('prep');
+    setEditingItem(null); // No editing item since we're creating new
+    setPreFilledPrepTopic(topic); // Set the pre-filled topic
     setIsModalOpen(true);
   }, []);
 
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
     setEditingItem(null);
+    setPreFilledPrepTopic(null); // Clear pre-filled topic when closing modal
   }, []);
 
   // Auto-complete Quick Start tasks based on user actions
@@ -518,7 +551,25 @@ function App() {
             onAddPrepEntry={() => openModal('prep')} 
             onEditPrepEntry={(item) => openModal('prep', item)}
             onDeletePrepEntry={deletePrepEntry}
+            onAddPrepEntryWithTopic={openPrepModalWithTopic}
             loading={prepLoading}
+            subjects={subjects.map(subject => ({
+              ...subject,
+              createdAt: subject.createdAt.toDate(),
+              updatedAt: subject.updatedAt.toDate()
+            }))}
+            onAddSubject={addSubject}
+            onEditSubject={updateSubject}
+            onDeleteSubject={deleteSubject}
+            sessions={sessions.map(session => ({
+              ...session,
+              date: session.date.toDate(),
+              createdAt: session.createdAt.toDate(),
+              updatedAt: session.updatedAt.toDate()
+            }))}
+            onAddSession={addSession}
+            onEditSession={updateSession}
+            onDeleteSession={deleteSession}
           />
         );
       case 'research':
@@ -580,7 +631,20 @@ function App() {
             }
             onCancel={closeModal}
             initialData={editingItem}
+            preFilledTopic={preFilledPrepTopic || undefined} // Pass pre-filled topic
             loading={isSubmitting}
+            applications={applications}
+            subjects={subjects.map(subject => ({
+              ...subject,
+              createdAt: subject.createdAt.toDate(),
+              updatedAt: subject.updatedAt.toDate()
+            }))}
+            sessions={sessions.map(session => ({
+              ...session,
+              date: session.date.toDate(),
+              createdAt: session.createdAt.toDate(),
+              updatedAt: session.updatedAt.toDate()
+            }))}
           />
         );
       case 'research':
@@ -719,10 +783,10 @@ function App() {
         <Modal
           isOpen={isProfileModalOpen}
           onClose={handleProfileModalClose}
-          title="Profile"
-          size="lg"
+          title=""
+          size="xl"
         >
-          <ProfileModal 
+          <SettingsPage 
             applications={applications} 
             contacts={contacts} 
             prepEntries={prepEntries}
@@ -730,6 +794,8 @@ function App() {
             companies={companies}
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
+            onOpenHelp={() => setIsHelpOpen(true)}
+            onClose={handleProfileModalClose}
           />
         </Modal>
         <Modal
@@ -827,7 +893,7 @@ function App() {
                 <span className="flex-shrink-0 text-sm sm:text-base lg:text-lg hidden sm:inline" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
               </h1>
               <p className="mt-2 ml-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base pt-1">
-                A comprehensive dashboard to manage preparation, applications, and interviews.
+                A comprehensive dashboard to manage applications, preparation, research and interviews.
               </p>
             </div>
             <div className="flex items-center flex-shrink-0 gap-2 sm:gap-3">
@@ -843,18 +909,7 @@ function App() {
                   <kbd className="hidden sm:inline text-xs px-1 py-0.5 bg-gray-100 dark:bg-gray-700 amoled:bg-gray-700 rounded">⌘K</kbd>
                 </motion.button>
               </SimpleTooltip>
-              <SimpleTooltip content="Help & Guide">
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setIsHelpOpen(true)}
-                  className="flex items-center gap-1 px-2 py-2 text-xs font-medium transition-colors bg-white border rounded-md sm:gap-2 sm:px-3 sm:text-sm text-slate-700 dark:text-dark-text amoled:text-amoled-text dark:bg-dark-card amoled:bg-amoled-card border-slate-300 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
-                >
-                  <HelpCircle className="w-4 h-4" />
-                  <span className="hidden sm:inline">Help</span>
-                </motion.button>
-              </SimpleTooltip>
-              
+
               {/* Quick Start Button */}
               {onboarding.hasCompletedWelcome && getProgressPercentage() < 100 && (
                 <SimpleTooltip content="Complete quick start guide">
@@ -880,7 +935,7 @@ function App() {
                   onClick={openProfileModal} 
                   className="p-2 transition-colors bg-white border rounded-full hover:bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card dark:border-dark-border amoled:border-amoled-border dark:hover:bg-dark-card amoled:hover:bg-amoled-card"
                 >
-                  <UserIcon className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
+                  <Settings className="w-6 h-6 text-slate-700 dark:text-dark-text amoled:text-amoled-text" />
                 </motion.button>
               </SimpleTooltip>
               <SimpleTooltip content="Sign Out">
@@ -1035,14 +1090,14 @@ function App() {
           {renderModalContent()}
         </Modal>
 
-        {/* Profile Modal */}
+        {/* Settings Modal */}
         <Modal
           isOpen={isProfileModalOpen}
           onClose={handleProfileModalClose}
-          title="Profile"
-          size="lg"
+          title=""
+          size="xl"
         >
-          <ProfileModal 
+          <SettingsPage 
             applications={applications} 
             contacts={contacts} 
             prepEntries={prepEntries}
@@ -1050,6 +1105,8 @@ function App() {
             companies={companies}
             onRestartTour={handleRestartTour}
             quickStartProgress={getProgressPercentage()}
+            onOpenHelp={() => setIsHelpOpen(true)}
+            onClose={handleProfileModalClose}
           />
         </Modal>
 

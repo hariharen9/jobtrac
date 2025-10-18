@@ -1,10 +1,11 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings } from 'lucide-react';
+import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle } from 'lucide-react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
 import EmptyState from '../../../components/shared/EmptyState';
+import SimpleTooltip from '../../../components/shared/SimpleTooltip';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 import SettingsModal, { ApplicationTrackerSettings } from './SettingsModal';
@@ -58,10 +59,29 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isConfirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
-  const [settings, setSettings] = useState<ApplicationTrackerSettings>({
-    viewMode: 'compact',
-    showStats: false,
+  const [settings, setSettings] = useState<ApplicationTrackerSettings>(() => {
+    const saved = localStorage.getItem('applicationTrackerSettings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse settings:', e);
+      }
+    }
+    return {
+      viewMode: 'comfy',
+      showStats: false,
+      currency: 'INR',
+      salaryDenomination: 'L',
+    };
   });
+
+  // Save settings to localStorage whenever they change
+  React.useEffect(() => {
+    localStorage.setItem('applicationTrackerSettings', JSON.stringify(settings));
+    // Dispatch custom event for same-window updates
+    window.dispatchEvent(new Event('applicationSettingsChanged'));
+  }, [settings]);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
   const statusOptions: ApplicationStatus[] = [
@@ -204,6 +224,11 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
             <Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
           </div>
           My Applications
+          <SimpleTooltip content="Track job applications from submission to offer. Use status updates and priority levels to stay organized.">
+            <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
+              <HelpCircle className="w-4 h-4" />
+            </button>
+          </SimpleTooltip>
         </h2>
         <div className="flex items-center gap-3">
           {!isMobile && settings.viewMode === 'comfy' && (
@@ -275,20 +300,20 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
             initial={{ opacity: 0, height: 0 }} 
             animate={{ opacity: 1, height: 'auto' }} 
             exit={{ opacity: 0, height: 0 }} 
-            className="border-t border-b border-slate-200 dark:border-slate-700 py-5 mb-6 rounded-lg bg-slate-50/50 dark:bg-slate-800/30 backdrop-blur-sm"
+            className="border border-slate-200 dark:border-dark-border amoled:border-amoled-border rounded-xl p-4 sm:p-6 mb-6 bg-slate-50 dark:bg-dark-card amoled:bg-amoled-card"
           >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Status</label>
-                <div className="flex flex-wrap gap-2 mt-3">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">Status</label>
+                <div className="flex flex-wrap gap-2">
                   {statusOptions.map(s => (
                     <motion.button
                       key={s}
                       onClick={() => handleFilterChange('status', filters.status.includes(s) ? filters.status.filter(i => i !== s) : [...filters.status, s])}
                       className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
                         filters.status.includes(s) 
-                          ? 'bg-indigo-600 text-white shadow-sm' 
-                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                          ? 'bg-indigo-600 dark:bg-indigo-500 amoled:bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-900 border border-slate-200 dark:border-dark-border amoled:border-amoled-border'
                       }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -299,16 +324,16 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </div>
               </div>
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Source</label>
-                <div className="flex flex-wrap gap-2 mt-3">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">Source</label>
+                <div className="flex flex-wrap gap-2">
                   {sourceOptions.map(s => (
                     <motion.button
                       key={s}
                       onClick={() => handleFilterChange('source', filters.source.includes(s) ? filters.source.filter(i => i !== s) : [...filters.source, s])}
                       className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
                         filters.source.includes(s) 
-                          ? 'bg-indigo-600 text-white shadow-sm' 
-                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                          ? 'bg-indigo-600 dark:bg-indigo-500 amoled:bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-900 border border-slate-200 dark:border-dark-border amoled:border-amoled-border'
                       }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -319,26 +344,26 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </div>
               </div>
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Company</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">Company</label>
                 <input 
                   type="text" 
                   value={filters.company} 
                   onChange={e => handleFilterChange('company', e.target.value)} 
-                  className="w-full mt-3 p-2.5 border rounded-lg bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 dark:focus:ring-indigo-400 dark:focus:border-indigo-400 transition-all" 
+                  className="w-full p-2.5 border rounded-lg bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-900 dark:text-dark-text amoled:text-amoled-text border-slate-300 dark:border-dark-border amoled:border-amoled-border focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 amoled:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 amoled:focus:border-indigo-400 transition-all" 
                   placeholder="Filter by company..." 
                 />
               </div>
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Priority</label>
-                <div className="flex flex-wrap gap-2 mt-3">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">Priority</label>
+                <div className="flex flex-wrap gap-2">
                   {['High', 'Medium', 'Low'].map(p => (
                     <motion.button
                       key={p}
                       onClick={() => handleFilterChange('priority', filters.priority.includes(p as any) ? filters.priority.filter(i => i !== p) : [...filters.priority, p as any])}
                       className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
                         filters.priority.includes(p as any) 
-                          ? 'bg-indigo-600 text-white shadow-sm' 
-                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                          ? 'bg-indigo-600 dark:bg-indigo-500 amoled:bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-900 border border-slate-200 dark:border-dark-border amoled:border-amoled-border'
                       }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -349,16 +374,16 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </div>
               </div>
               <div>
-                <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Referral</label>
-                <div className="flex flex-wrap gap-2 mt-3">
+                <label className="block text-sm font-semibold text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">Referral</label>
+                <div className="flex flex-wrap gap-2">
                   {['Y', 'N'].map(r => (
                     <motion.button
                       key={r}
                       onClick={() => handleFilterChange('referral', filters.referral.includes(r as any) ? filters.referral.filter(i => i !== r) : [...filters.referral, r as any])}
                       className={`px-3 py-1.5 text-xs rounded-full transition-all duration-200 ${
                         filters.referral.includes(r as any) 
-                          ? 'bg-indigo-600 text-white shadow-sm' 
-                          : 'bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-600 border border-slate-200 dark:border-slate-600'
+                          ? 'bg-indigo-600 dark:bg-indigo-500 amoled:bg-indigo-600 text-white shadow-sm' 
+                          : 'bg-white dark:bg-dark-bg amoled:bg-amoled-bg text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:bg-slate-100 dark:hover:bg-slate-700 amoled:hover:bg-slate-900 border border-slate-200 dark:border-dark-border amoled:border-amoled-border'
                       }`}
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
@@ -369,10 +394,10 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
                 </div>
               </div>
             </div>
-            <div className="flex justify-end mt-4">
+            <div className="flex justify-end mt-4 pt-4 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
               <motion.button 
                 onClick={clearFilters} 
-                className="text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-medium transition-colors"
+                className="text-sm text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
@@ -412,6 +437,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               onViewJD={onViewJD} 
               isSelected={selectedItems.includes(app.id)}
               onSelectionChange={handleSelectionChange}
+              currency={settings.currency}
+              salaryDenomination={settings.salaryDenomination}
             />
           ))}
         </div>

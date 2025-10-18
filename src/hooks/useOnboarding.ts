@@ -12,7 +12,8 @@ import {
   enhancedSamplePrepEntries, 
   enhancedSampleStarStories,
   initialCompanyResearch,
-  initialNetworkingContacts
+  initialNetworkingContacts,
+  subjects
 } from '../data/initialData';
 import { AnalyticsService } from '../services/analyticsService';
 
@@ -123,7 +124,8 @@ export function useOnboarding(userId?: string | null) {
         { name: 'prepEntries', data: enhancedSamplePrepEntries },
         { name: 'stories', data: enhancedSampleStarStories },
         { name: 'companies', data: initialCompanyResearch },
-        { name: 'contacts', data: initialNetworkingContacts }
+        { name: 'contacts', data: initialNetworkingContacts },
+        { name: 'subjects', data: subjects }
       ];
 
       const batch = [];

@@ -399,7 +399,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
           action: () => { onOpenModal('prep', prep); onClose(); },
           icon: Edit3,
           category: 'items',
-          keywords: [prep.topic.toLowerCase(), 'edit', 'prep']
+          keywords: [(prep.topic || '').toLowerCase(), 'edit', 'prep']
         });
       });
     }
@@ -413,7 +413,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
           action: () => { onOpenModal('research', company); onClose(); },
           icon: Edit3,
           category: 'items',
-          keywords: [company.company.toLowerCase(), 'edit', 'company']
+          keywords: [(company.company || '').toLowerCase(), 'edit', 'company']
         });
       });
     }

@@ -39,7 +39,10 @@ export function useDataImportExport(userId?: string | null) {
                 referral: ['Y', 'N'].includes(item.referral?.toUpperCase()) ? item.referral.toUpperCase() : 'N',
                 nextStep: item.nextStep || '',
                 notes: item.notes || '',
-                jobDescription: item.jobDescription || ''
+                jobDescription: item.jobDescription || '',
+                salaryRange: item.salaryRange || '',
+                interviewDate: item.interviewDate || '',
+                priority: item.priority || 'Medium'
               };
               await addApplication(cleanedItem);
               break;

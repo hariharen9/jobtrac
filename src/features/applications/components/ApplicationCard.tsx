@@ -14,6 +14,8 @@ interface ApplicationCardProps {
   onViewJD: (application: Application) => void;
   isSelected: boolean;
   onSelectionChange: (id: string) => void;
+  currency?: 'USD' | 'INR' | 'EUR' | 'GBP';
+  salaryDenomination?: 'K' | 'L';
 }
 
 const ApplicationCard: React.FC<ApplicationCardProps> = ({ 
@@ -22,7 +24,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onDeleteApplication, 
   onViewJD,
   isSelected,
-  onSelectionChange
+  onSelectionChange,
+  currency = 'USD',
+  salaryDenomination = 'K'
 }) => {
   const [isConfirmModalOpen, setConfirmModalOpen] = useState(false);
 
@@ -155,7 +159,9 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               </div>
               <div>
                 <p className="text-xs text-slate-500 dark:text-slate-400">Salary</p>
-                <p className="font-medium">{app.salaryRange ? `${app.salaryRange}K` : 'N/A'}</p>
+                <p className="font-medium">
+                  {app.salaryRange ? `${currency === 'USD' ? '$' : currency === 'INR' ? '₹' : currency === 'EUR' ? '€' : '£'}${app.salaryRange}${salaryDenomination}` : 'N/A'}
+                </p>
               </div>
             </div>
           </div>

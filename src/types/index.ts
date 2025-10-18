@@ -1,5 +1,11 @@
 import { Timestamp } from 'firebase/firestore';
 
+export interface FirestoreDocument {
+  id: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export type ApplicationSource =
   | 'LinkedIn'
   | 'Indeed'
@@ -30,16 +36,25 @@ export interface Application {
   interviewDate?: string;
 }
 
+export interface Resource {
+  url: string;
+  title: string;
+  completed: boolean;
+}
+
 export interface PrepEntry {
-  id: string;
+  id:string;
   date: string;
-  topic: string;
-  problems: string;
+  resources: Resource[];
   time: number;
-  confidence: number;
+  confidence: number; // Stays as a number from 1-5
   notes: string;
   createdAt: Timestamp;
   updatedAt: Timestamp;
+  linkedApplicationId?: string; // Optional link to an application
+  srsStage?: number;
+  nextReviewDate?: string;
+  subjectId: string;
 }
 
 export interface CompanyResearch {
@@ -117,10 +132,25 @@ export interface UserNotes {
   };
 }
 
+export interface Subject {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface SubjectFirestore {
+  id: string;
+  name: string;
+  description?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
 export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
 
-export interface Goal {
-  id: string;
+export interface Goal extends FirestoreDocument {
   type: 'weekly' | 'monthly';
   applications: number;
   networking: number;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, HelpCircle, User as UserIcon, Target, Search } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search } from 'lucide-react';
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
@@ -72,18 +72,11 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={openHelpModal}
-            className="p-2 text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-700 dark:hover:text-dark-text amoled:hover:text-amoled-text"
-          >
-            <HelpCircle className="w-5 h-5" />
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
             onClick={openProfileModal}
             className="p-2 text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-slate-700 dark:hover:text-dark-text amoled:hover:text-amoled-text"
+            title="Settings"
           >
-            <UserIcon className="w-5 h-5" />
+            <Settings className="w-5 h-5" />
           </motion.button>
           <ThemeToggle />
           <AuthButton />
