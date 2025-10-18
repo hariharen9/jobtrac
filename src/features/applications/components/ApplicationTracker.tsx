@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle } from 'lucide-react';
+import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle, Archive } from 'lucide-react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
@@ -32,6 +32,8 @@ interface ApplicationTrackerProps {
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
   onViewJD: (application: Application) => void;
+  onArchiveApplication?: (id: string) => void;
+  onUnarchiveApplication?: (id: string) => void;
   loading?: boolean;
 }
 
@@ -41,6 +43,8 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   onEditApplication,
   onDeleteApplication,
   onViewJD,
+  onArchiveApplication,
+  onUnarchiveApplication,
   loading = false 
 }) => {
   const [sortField, setSortField] = useState<SortField>('date');
@@ -59,6 +63,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [isConfirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [showArchived, setShowArchived] = useState(false);
   const [settings, setSettings] = useState<ApplicationTrackerSettings>(() => {
     const saved = localStorage.getItem('applicationTrackerSettings');
     if (saved) {
@@ -96,6 +101,10 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const processedApplications = useMemo(() => {
     return [...applications]
       .filter(app => {
+        // Show archived or active applications based on toggle
+        if (showArchived && !app.archived) return false;
+        if (!showArchived && app.archived) return false;
+        
         if (filters.status.length > 0 && !filters.status.includes(app.status)) return false;
         if (filters.source.length > 0 && !filters.source.includes(app.source)) return false;
         if (filters.company && !app.company.toLowerCase().includes(filters.company.toLowerCase())) return false;
@@ -118,7 +127,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
         if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
         return 0;
       });
-  }, [applications, filters, sortField, sortDirection]);
+  }, [applications, filters, sortField, sortDirection, showArchived]);
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
@@ -171,9 +180,10 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
   const hasActiveFilters = filters.status.length > 0 || filters.source.length > 0 || filters.company || filters.dateRange.start || filters.dateRange.end || filters.priority.length > 0 || filters.referral.length > 0;
 
   const QuickStats = () => {
-    const total = applications.length;
-    const interviews = applications.filter(a => ['HR Screen', 'Tech Screen', 'Round 1', 'Round 2', 'Manager Round', 'Final Round'].includes(a.status)).length;
-    const offers = applications.filter(a => a.status === 'Offer').length;
+    const activeApplications = applications.filter(a => !a.archived);
+    const total = activeApplications.length;
+    const interviews = activeApplications.filter(a => ['HR Screen', 'Tech Screen', 'Round 1', 'Round 2', 'Manager Round', 'Final Round'].includes(a.status)).length;
+    const offers = activeApplications.filter(a => a.status === 'Offer').length;
     const successRate = total > 0 ? ((offers / total) * 100).toFixed(1) : 0;
 
     return (
@@ -223,7 +233,12 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
           <div className="p-2 rounded-lg bg-indigo-100 dark:bg-indigo-900/50">
             <Briefcase className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
           </div>
-          My Applications
+          {showArchived ? 'Archived Applications' : 'My Applications'}
+          {showArchived && (
+            <span className="ml-2 px-2 py-1 text-xs font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 rounded-full">
+              {applications.filter(app => app.archived).length}
+            </span>
+          )}
           <SimpleTooltip content="Track job applications from submission to offer. Use status updates and priority levels to stay organized.">
             <button className="p-1 text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors">
               <HelpCircle className="w-4 h-4" />
@@ -259,6 +274,20 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               </motion.button>
             </>
           )}
+          <SimpleTooltip content={showArchived ? "Show Active Applications" : "Show Archived Applications"}>
+            <motion.button 
+              onClick={() => setShowArchived(!showArchived)} 
+              className={`p-2.5 rounded-lg transition-all duration-200 ${
+                showArchived 
+                  ? 'bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400 shadow-sm' 
+                  : 'text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800'
+              }`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Archive className="w-5 h-5" />
+            </motion.button>
+          </SimpleTooltip>
           <motion.button 
             onClick={() => setShowFilters(!showFilters)} 
             className={`p-2.5 rounded-lg transition-all duration-200 ${
@@ -435,6 +464,7 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
               onEditApplication={onEditApplication} 
               onDeleteApplication={handleDeleteRequest} 
               onViewJD={onViewJD} 
+              onArchiveApplication={showArchived ? onUnarchiveApplication : onArchiveApplication}
               isSelected={selectedItems.includes(app.id)}
               onSelectionChange={handleSelectionChange}
               currency={settings.currency}

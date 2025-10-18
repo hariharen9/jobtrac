@@ -34,6 +34,7 @@ export interface Application {
   salaryRange?: string;
   priority?: 'High' | 'Medium' | 'Low';
   interviewDate?: string;
+  archived?: boolean;
 }
 
 export interface Resource {

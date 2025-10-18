@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react';
-import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move } from 'lucide-react';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move, Archive } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import SettingsModal from '../../../components/shared/SettingsModal';
@@ -14,6 +14,7 @@ interface KanbanBoardProps {
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
   onUpdateStatus: (id: string, newStatus: ApplicationStatus) => void;
+  onArchiveApplication?: (id: string) => void;
   loading?: boolean;
   currency?: 'USD' | 'INR' | 'EUR' | 'GBP';
   salaryDenomination?: 'K' | 'L';
@@ -31,6 +32,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
   onEditApplication,
   onDeleteApplication,
   onUpdateStatus,
+  onArchiveApplication,
   currency: currencyProp,
   salaryDenomination: salaryDenominationProp,
   loading = false
@@ -67,15 +69,17 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
     { id: 'Ghosted', title: 'Ghosted', color: 'bg-gray-100 dark:bg-gray-700/50 amoled:bg-amoled-card' }
   ];
 
-  // Group applications by status
+  // Group applications by status (exclude archived)
   const applicationsByStatus = useMemo(() => {
-    return applications.reduce((acc, app) => {
-      if (!acc[app.status]) {
-        acc[app.status] = [];
-      }
-      acc[app.status].push(app);
-      return acc;
-    }, {} as Record<ApplicationStatus, Application[]>);
+    return applications
+      .filter(app => !app.archived) // Filter out archived applications
+      .reduce((acc, app) => {
+        if (!acc[app.status]) {
+          acc[app.status] = [];
+        }
+        acc[app.status].push(app);
+        return acc;
+      }, {} as Record<ApplicationStatus, Application[]>);
   }, [applications]);
 
   // Auto-scroll functionality
@@ -322,6 +326,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                     application={app}
                     onEdit={onEditApplication}
                     onDelete={onDeleteApplication}
+                    onArchive={onArchiveApplication}
                     onMove={setMovingApplication}
                     isDragging={false}
                     cardDensity={cardDensity}
@@ -393,6 +398,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       application={app}
                       onEdit={onEditApplication}
                       onDelete={onDeleteApplication}
+                      onArchive={onArchiveApplication}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
@@ -471,6 +477,7 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
                       application={app}
                       onEdit={onEditApplication}
                       onDelete={onDeleteApplication}
+                      onArchive={onArchiveApplication}
                       onDragStart={handleDragStart}
                       onDragEnd={handleDragEnd}
                       isDragging={draggedItem?.id === app.id}
@@ -529,6 +536,7 @@ interface ApplicationCardProps {
   application: Application;
   onEdit: (application: Application) => void;
   onDelete: (id: string) => void;
+  onArchive?: (id: string) => void;
   onMove?: (application: Application) => void;
   onDragStart?: (e: React.DragEvent, application: Application) => void;
   onDragEnd?: () => void;
@@ -542,6 +550,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   application,
   onEdit,
   onDelete,
+  onArchive,
   onMove,
   onDragStart,
   onDragEnd,
@@ -659,6 +668,20 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
               <Pencil className="w-4 h-4" />
             </button>
           </SimpleTooltip>
+          {onArchive && (
+            <SimpleTooltip content="Archive" position="top">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onArchive(application.id);
+                }}
+                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                aria-label="Archive application"
+              >
+                <Archive className="w-4 h-4" />
+              </button>
+            </SimpleTooltip>
+          )}
           <SimpleTooltip content="Delete" position="top">
             <button
               onClick={(e) => {

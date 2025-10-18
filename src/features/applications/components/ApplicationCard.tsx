@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar, Briefcase, MapPin, DollarSign, Info } from 'lucide-react';
+import { ExternalLink, Trash2, Pencil, FileText, Flame, Calendar, Briefcase, MapPin, DollarSign, Info, Archive, ArchiveRestore } from 'lucide-react';
 import { Application } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import ConfirmationModal from '../../../components/shared/ConfirmationModal';
@@ -12,6 +12,7 @@ interface ApplicationCardProps {
   onEditApplication: (application: Application) => void;
   onDeleteApplication: (id: string) => void;
   onViewJD: (application: Application) => void;
+  onArchiveApplication?: (id: string) => void;
   isSelected: boolean;
   onSelectionChange: (id: string) => void;
   currency?: 'USD' | 'INR' | 'EUR' | 'GBP';
@@ -23,6 +24,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   onEditApplication, 
   onDeleteApplication, 
   onViewJD,
+  onArchiveApplication,
   isSelected,
   onSelectionChange,
   currency = 'USD',
@@ -48,6 +50,13 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
   const handleViewJDClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     onViewJD(app);
+  };
+
+  const handleArchiveClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onArchiveApplication) {
+      onArchiveApplication(app.id);
+    }
   };
 
   const handleCardClick = () => {
@@ -111,6 +120,23 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
                   <Pencil className="w-4 h-4" />
                 </motion.button>
               </SimpleTooltip>
+              {onArchiveApplication && (
+                <SimpleTooltip content={app.archived ? "Restore" : "Archive"}>
+                  <motion.button
+                    whileHover={{ scale: 1.1, backgroundColor: app.archived ? 'rgba(34, 197, 94, 0.1)' : 'rgba(107, 114, 128, 0.1)' }}
+                    whileTap={{ scale: 0.9 }}
+                    onClick={handleArchiveClick}
+                    className={`transition-colors p-1.5 rounded-full ${
+                      app.archived 
+                        ? 'text-slate-500 hover:text-green-600 dark:hover:text-green-400 amoled:hover:text-green-500 hover:bg-green-50 dark:hover:bg-green-900/30'
+                        : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 amoled:hover:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700/30'
+                    }`}
+                    aria-label={app.archived ? "Restore application" : "Archive application"}
+                  >
+                    {app.archived ? <ArchiveRestore className="w-4 h-4" /> : <Archive className="w-4 h-4" />}
+                  </motion.button>
+                </SimpleTooltip>
+              )}
               <SimpleTooltip content="Delete">
                 <motion.button
                   whileHover={{ scale: 1.1, backgroundColor: 'rgba(239, 68, 68, 0.1)' }}

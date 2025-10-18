@@ -4,6 +4,7 @@ import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search } 
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
+import MobileFooter from './MobileFooter';
 
 interface MobileDashboardProps {
   activeTab: TabType;
@@ -103,6 +104,9 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
           <div className="mt-8">
             {kanbanBoard}
           </div>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
+          <MobileFooter />
         </motion.div>
       </main>
       <motion.footer 

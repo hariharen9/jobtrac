@@ -327,6 +327,38 @@ function App() {
     }
   }, [updateApplication, user]);
 
+  const handleArchiveApplication = useCallback(async (id: string) => {
+    try {
+      await updateApplication(id, { archived: true });
+      
+      // Track application archive
+      if (user?.uid) {
+        AnalyticsService.trackEvent('application_archived', user.uid);
+      }
+      
+      toast.success('Application archived successfully!');
+    } catch (error) {
+      console.error('Failed to archive application:', error);
+      toast.error('Failed to archive application.');
+    }
+  }, [updateApplication, user]);
+
+  const handleUnarchiveApplication = useCallback(async (id: string) => {
+    try {
+      await updateApplication(id, { archived: false });
+      
+      // Track application unarchive
+      if (user?.uid) {
+        AnalyticsService.trackEvent('application_unarchived', user.uid);
+      }
+      
+      toast.success('Application restored successfully!');
+    } catch (error) {
+      console.error('Failed to restore application:', error);
+      toast.error('Failed to restore application.');
+    }
+  }, [updateApplication, user]);
+
   const handleViewJD = (application: Application) => {
     setSelectedApplication(application);
     setIsJdModalOpen(true);
@@ -541,6 +573,8 @@ function App() {
             onEditApplication={(item) => openModal('applications', item)}
             onDeleteApplication={deleteApplication}
             onViewJD={handleViewJD}
+            onArchiveApplication={handleArchiveApplication}
+            onUnarchiveApplication={handleUnarchiveApplication}
             loading={applicationsLoading}
           />
         );
@@ -769,6 +803,7 @@ function App() {
             onEditApplication={(item) => openModal('applications', item)}
             onDeleteApplication={deleteApplication}
             onUpdateStatus={handleApplicationStatusUpdate}
+            onArchiveApplication={handleArchiveApplication}
             loading={applicationsLoading}
           />}
         />
@@ -1019,6 +1054,7 @@ function App() {
             onEditApplication={(item) => openModal('applications', item)}
             onDeleteApplication={deleteApplication}
             onUpdateStatus={handleApplicationStatusUpdate}
+            onArchiveApplication={handleArchiveApplication}
             loading={applicationsLoading}
           />
         </div>
