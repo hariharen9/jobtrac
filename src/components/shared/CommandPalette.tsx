@@ -27,7 +27,7 @@ import {
   Mail,
   ExternalLink
 } from 'lucide-react';
-import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, EditableItem } from '../../types';
+import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, VaultResource, EditableItem } from '../../types';
 import { useMediaQuery } from '../../hooks/shared/useMediaQuery';
 import { AnalyticsService } from '../../services/analyticsService';
 import { useAuth } from '../../features/auth/hooks/useAuth';
@@ -42,6 +42,7 @@ interface CommandPaletteProps {
   companies: CompanyResearch[];
   contacts: NetworkingContact[];
   stories: StarStory[];
+  vaultResources: VaultResource[];
   notes?: any[]; // Notes data
   onOpenModal: (type: TabType, item?: EditableItem) => void;
   onOpenHelp: () => void;
@@ -73,6 +74,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
   companies,
   contacts,
   stories,
+  vaultResources,
   notes = [],
   onOpenModal,
   onOpenHelp,
@@ -168,6 +170,16 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       keywords: ['star', 'stories', 'behavioral', 'interviews']
     },
     {
+      id: 'nav-vault',
+      title: 'Go to My Vault',
+      description: 'Manage resources and documents',
+      action: () => { setActiveTab('vault'); onClose(); },
+      icon: FileText,
+      category: 'navigation',
+      shortcut: '⌘6',
+      keywords: ['vault', 'resources', 'documents', 'links']
+    },
+    {
       id: 'nav-help',
       title: 'Open Help',
       description: 'View help and documentation',
@@ -252,6 +264,15 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       icon: Plus,
       category: 'actions',
       keywords: ['add', 'star', 'story', 'behavioral']
+    },
+    {
+      id: 'add-vault-resource',
+      title: 'Add Vault Resource',
+      description: 'Add a new resource to your vault',
+      action: () => { onOpenModal('vault'); onClose(); },
+      icon: Plus,
+      category: 'actions',
+      keywords: ['add', 'vault', 'resource', 'document', 'link']
     }
   ], [setActiveTab, onClose, onOpenModal, onOpenHelp, onOpenProfile, onToggleTheme, onToggleNotes]);
 
@@ -352,6 +373,23 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
         });
       }
     });
+
+    // Search Vault Resources
+    vaultResources.forEach(resource => {
+      if (matchesSearch(resource.title) || matchesSearch(resource.description) || 
+          matchesSearch(resource.category) || resource.tags.some(tag => matchesSearch(tag))) {
+        results.push({
+          id: `search-vault-${resource.id}`,
+          title: resource.title,
+          description: `${resource.category} • ${resource.description.substring(0, 60)}${resource.description.length > 60 ? '...' : ''}`,
+          action: () => { setActiveTab('vault'); onOpenModal('vault', resource); onClose(); },
+          icon: FileText,
+          category: 'search-results',
+          dataType: 'vault',
+          metadata: resource.category
+        });
+      }
+    });
     
     // Search Notes
     notes.forEach((note: any) => {
@@ -370,7 +408,7 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
     });
     
     return results.slice(0, 20); // Limit to 20 results for performance
-  }, [searchTerm, applications, prepEntries, companies, contacts, stories, notes, setActiveTab, onOpenModal, onToggleNotes, onClose]);
+  }, [searchTerm, applications, prepEntries, companies, contacts, stories, vaultResources, notes, setActiveTab, onOpenModal, onToggleNotes, onClose]);
 
   // Add item-specific commands based on current tab
   const itemCommands: Command[] = useMemo(() => {

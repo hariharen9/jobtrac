@@ -109,7 +109,29 @@ export type ApplicationStatus =
   | 'Rejected'
   | 'Ghosted';
 
-export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory;
+export type ResourceCategory = 
+  | 'Documents'
+  | 'Portfolio' 
+  | 'Credentials'
+  | 'Profiles'
+  | 'Learning'
+  | 'Tools';
+
+export interface VaultResource {
+  id: string;
+  title: string;
+  url: string;
+  description: string;
+  category: ResourceCategory;
+  tags: string[];
+  isPublic: boolean;
+  isFavorite: boolean;
+  lastAccessed?: string;
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory | VaultResource;
 
 export interface NotePage {
   id: string;
@@ -149,7 +171,7 @@ export interface SubjectFirestore {
   updatedAt: Timestamp;
 }
 
-export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star';
+export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star' | 'vault';
 
 export interface Goal extends FirestoreDocument {
   type: 'weekly' | 'monthly';
@@ -283,11 +305,14 @@ export type EventType =
   // Core Features
   | 'application_created'
   | 'application_status_changed'
+  | 'application_archived'
+  | 'application_unarchived'
   | 'jd_saved'
   | 'prep_entry_created'
   | 'star_story_created'
   | 'company_research_created'
   | 'networking_contact_created'
+  | 'vault_resource_created'
   // Productivity
   | 'command_palette_opened'
   | 'command_palette_action'

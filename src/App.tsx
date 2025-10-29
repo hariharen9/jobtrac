@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle } from 'lucide-react';
-import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore } from './types';
+import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle, Archive } from 'lucide-react';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, VaultResource } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
@@ -22,6 +22,8 @@ import Networking from './features/networking/components/Networking';
 import NetworkingForm from './features/networking/components/NetworkingForm';
 import StarStories from './features/starStories/components/StarStories';
 import StarForm from './features/starStories/components/StarForm';
+import VaultManager from './features/vault/components/VaultManager';
+import VaultForm from './features/vault/components/VaultForm';
 import Modal from './components/shared/Modal';
 import ThemeToggle from './components/shared/ThemeToggle';
 import HelpPage from './components/shared/HelpPage';
@@ -44,6 +46,7 @@ const MemoizedPrepLog = React.memo(PrepLog);
 const MemoizedCompanyResearch = React.memo(CompanyResearch);
 const MemoizedNetworking = React.memo(Networking);
 const MemoizedStarStories = React.memo(StarStories);
+const MemoizedVaultManager = React.memo(VaultManager);
 const MemoizedActivityCalendar = React.memo(ActivityCalendar);
 const MemoizedKanbanBoard = React.memo(KanbanBoard);
 const MemoizedNotes = React.memo(Notes);
@@ -164,6 +167,14 @@ function App() {
   } = useFirestore<StarStory>('stories', user?.uid, true); // Polling
 
   const {
+    data: vaultResources,
+    loading: vaultLoading,
+    addItem: addVaultResource,
+    updateItem: updateVaultResource,
+    deleteItem: deleteVaultResource
+  } = useFirestore<VaultResource>('vault', user?.uid, true); // Polling
+
+  const {
     data: subjects,
     loading: subjectsLoading,
     addItem: addSubject,
@@ -189,6 +200,7 @@ function App() {
     { id: 'research', label: 'Company Research', icon: Building },
     { id: 'networking', label: 'Networking & Referrals', icon: Users },
     { id: 'star', label: 'Behavioral Story Bank', icon: Star },
+    { id: 'vault', label: 'My Vault', icon: Archive },
   ], []);
 
   const currentTab = useMemo(() => tabs.find(tab => tab.id === activeTab), [activeTab, tabs]);
@@ -231,7 +243,8 @@ function App() {
       'prep': 'add-prep-session', 
       'star': 'create-star-story',
       'research': 'add-company-research',
-      'networking': 'add-networking-contact'
+      'networking': 'add-networking-contact',
+      'vault': 'add-vault-resource'
     };
     
     const taskId = taskMap[modalType];
@@ -283,6 +296,9 @@ function App() {
             break;
           case 'networking':
             AnalyticsService.trackEvent('networking_contact_created', user.uid);
+            break;
+          case 'vault':
+            AnalyticsService.trackEvent('vault_resource_created', user.uid);
             break;
         }
       }
@@ -429,6 +445,9 @@ function App() {
         break;
       case 'add-networking-contact':
         openModal('networking');
+        break;
+      case 'add-vault-resource':
+        openModal('vault');
         break;
       case 'set-weekly-goal':
         openProfileModal();
@@ -636,6 +655,16 @@ function App() {
             loading={storiesLoading}
           />
         );
+      case 'vault':
+        return (
+          <MemoizedVaultManager
+            resources={vaultResources}
+            onAddResource={() => openModal('vault')}
+            onEditResource={(item) => openModal('vault', item)}
+            onDeleteResource={deleteVaultResource}
+            loading={vaultLoading}
+          />
+        );
       default:
         return null;
     }
@@ -711,6 +740,18 @@ function App() {
             onSubmit={editingItem
               ? (data: Partial<StarStory>) => handleUpdate(updateStory, { ...editingItem, ...data, date: new Date().toISOString().split('T')[0] })
               : (data: Omit<StarStory, 'id'>) => handleFormSubmit(addStory, { ...data, date: new Date().toISOString().split('T')[0] })
+            }
+            onCancel={closeModal}
+            initialData={editingItem}
+            loading={isSubmitting}
+          />
+        );
+      case 'vault':
+        return (
+          <VaultForm
+            onSubmit={editingItem
+              ? (data: Partial<VaultResource>) => handleUpdate(updateVaultResource, { ...editingItem, ...data })
+              : (data: Omit<VaultResource, 'id'>) => handleFormSubmit(addVaultResource, data)
             }
             onCancel={closeModal}
             initialData={editingItem}
@@ -880,6 +921,7 @@ function App() {
           companies={companies}
           contacts={contacts}
           stories={stories}
+          vaultResources={vaultResources}
           notes={notes}
           onOpenModal={openModal}
           onOpenHelp={() => setIsHelpOpen(true)}
@@ -1192,6 +1234,7 @@ function App() {
         companies={companies}
         contacts={contacts}
         stories={stories}
+        vaultResources={vaultResources}
         notes={notes}
         onOpenModal={openModal}
         onOpenHelp={() => setIsHelpOpen(true)}

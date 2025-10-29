@@ -445,6 +445,15 @@ export const defaultQuickStartTasks: QuickStartTask[] = [
     actionText: 'Add Contact',
     feature: 'networking',
   },
+  {
+    id: '6',
+    title: 'Add a resource to your vault',
+    description: 'Store important links like your resume, portfolio, or certifications',
+    icon: 'Archive',
+    completed: false,
+    actionText: 'Add Resource',
+    feature: 'vault',
+  },
 ];
 
 export const defaultOnboarding: UserOnboarding = {

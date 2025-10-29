@@ -81,6 +81,11 @@ export const useKeyboardShortcuts = ({
           trackShortcut('navigate_to_star');
           setActiveTab('star');
           break;
+        case '6':
+          e.preventDefault();
+          trackShortcut('navigate_to_vault');
+          setActiveTab('vault');
+          break;
         case 'h':
           e.preventDefault();
           trackShortcut('open_help');
