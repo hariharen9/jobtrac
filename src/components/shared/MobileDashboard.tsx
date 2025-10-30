@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search } from 'lucide-react';
+import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, Archive } from 'lucide-react';
 import { TabType } from '../../types';
 import ThemeToggle from './ThemeToggle';
 import AuthButton from '../../features/auth/components/AuthButton';
@@ -25,6 +25,7 @@ const tabs = [
   { id: 'research', label: 'Research', icon: Building },
   { id: 'networking', label: 'Network', icon: Users },
   { id: 'star', label: 'STARs', icon: Star },
+  { id: 'vault', label: 'Vault', icon: Archive },
 ];
 
 const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveTab, renderTabContent, openHelpModal, openProfileModal, openCommandPalette, activityCalendar, kanbanBoard, onShowQuickStart, showQuickStartButton = false }) => {
@@ -95,16 +96,20 @@ const MobileDashboard: React.FC<MobileDashboardProps> = ({ activeTab, setActiveT
             {renderTabContent()}
           </motion.div>
         </AnimatePresence>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-          <div className="mt-8">
-            {activityCalendar}
-          </div>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-          <div className="mt-8">
-            {kanbanBoard}
-          </div>
-        </motion.div>
+        {activeTab !== 'vault' && (
+          <>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <div className="mt-8">
+                {activityCalendar}
+              </div>
+            </motion.div>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
+              <div className="mt-8">
+                {kanbanBoard}
+              </div>
+            </motion.div>
+          </>
+        )}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
           <MobileFooter />
         </motion.div>

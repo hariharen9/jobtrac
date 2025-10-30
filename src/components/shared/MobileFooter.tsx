@@ -5,7 +5,7 @@ const MobileFooter: React.FC = () => {
     <div className="mt-8 pt-6 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
       <div className="text-center">
         <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary text-sm">
-          Built with 💖 by{' '}
+          Made with ❤️  by{' '}
           <a 
             href="https://hariharen9.site/" 
             target="_blank" 

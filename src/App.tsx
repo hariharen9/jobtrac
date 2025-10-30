@@ -662,6 +662,19 @@ function App() {
             onAddResource={() => openModal('vault')}
             onEditResource={(item) => openModal('vault', item)}
             onDeleteResource={deleteVaultResource}
+            onQuickAdd={async (data) => {
+              await addVaultResource(data);
+            }}
+            onBulkDelete={async (ids) => {
+              for (const id of ids) {
+                await deleteVaultResource(id);
+              }
+            }}
+            onBulkUpdate={async (ids, updates) => {
+              for (const id of ids) {
+                await updateVaultResource(id, updates);
+              }
+            }}
             loading={vaultLoading}
           />
         );
@@ -961,7 +974,7 @@ function App() {
                     className="h-6 sm:h-8 md:h-10 w-auto object-contain hidden dark:block amoled:block"
                   />
                 </div>
-                <span className="flex-shrink-0 text-sm sm:text-base lg:text-lg hidden sm:inline" style={{ fontFamily: 'Montserrat, sans-serif' }}>- Your Job Switch Command Center</span>
+                <span className="flex-shrink-0 text-sm sm:text-base lg:text-lg hidden sm:inline" style={{ fontFamily: 'Montserrat, sans-serif' }}>-  Your Job Switch Command Center</span>
               </h1>
               <p className="mt-2 ml-1 text-sm text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary sm:text-base pt-1">
                 A comprehensive dashboard to manage applications, preparation, research and interviews.
@@ -1024,7 +1037,8 @@ function App() {
           className="mb-4 border-b sm:mb-6 border-slate-200 dark:border-dark-border amoled:border-amoled-border"
         >
           <nav className="flex pb-px -mb-px space-x-2 overflow-x-auto sm:space-x-6 scrollbar-hide" aria-label="Tabs">
-            {tabs.map(tab => {
+            {/* Regular tabs */}
+            {tabs.filter(tab => tab.id !== 'vault').map(tab => {
               const Icon = tab.icon;
               const isActive = activeTab === tab.id;
               return (
@@ -1053,6 +1067,48 @@ function App() {
                 </motion.button>
               );
             })}
+            
+            {/* Spacer to push vault to the right */}
+            <div className="flex-1"></div>
+            
+            {/* Professional Vault Tab */}
+            {(() => {
+              const vaultTab = tabs.find(tab => tab.id === 'vault');
+              if (!vaultTab) return null;
+              
+              const Icon = vaultTab.icon;
+              const isActive = activeTab === 'vault';
+              return (
+                <motion.button
+                  key={`vault-${theme}`}
+                  onClick={() => setActiveTab('vault')}
+                  className={`relative whitespace-nowrap py-3 sm:py-4 px-3 sm:px-4 text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 flex-shrink-0 rounded-t-lg border-l border-r border-t ${
+                    isActive
+                      ? 'bg-slate-900 dark:bg-white amoled:bg-white text-white dark:text-slate-900 amoled:text-slate-900 border-slate-900 dark:border-white amoled:border-white shadow-lg'
+                      : 'bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card text-slate-700 dark:text-dark-text amoled:text-amoled-text border-slate-200 dark:border-dark-border amoled:border-amoled-border hover:bg-slate-200 dark:hover:bg-dark-border amoled:hover:bg-amoled-border'
+                  }`}
+                  whileHover={{ 
+                    scale: 1.02,
+                    y: isActive ? 0 : -2
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Icon className="flex-shrink-0 w-4 h-4" />
+                  <span className="hidden sm:inline font-bold">
+                    {vaultTab.label}
+                  </span>
+                  <span className="sm:hidden font-bold">Vault</span>
+                  {isActive && (
+                    <motion.div
+                      className="absolute bottom-0 left-0 right-0 h-0.5 bg-slate-900 dark:bg-white amoled:bg-white"
+                      layoutId="vault-underline"
+                      initial={false}
+                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                    />
+                  )}
+                </motion.button>
+              );
+            })()}
           </nav>
         </motion.div>
 
@@ -1071,36 +1127,41 @@ function App() {
           </AnimatePresence>
         </main>
 
-        {/* Activity Calendar */}
-        <div className="mt-8">
-          <MemoizedActivityCalendar 
-            applications={applications}
-            prepEntries={prepEntries}
-            companies={companies}
-            contacts={contacts}
-            stories={stories}
-          />
-        </div>
+        {/* Activity Calendar & Kanban - Only show for non-vault tabs */}
+        {activeTab !== 'vault' && (
+          <>
+            {/* Activity Calendar */}
+            <div className="mt-8">
+              <MemoizedActivityCalendar 
+                applications={applications}
+                prepEntries={prepEntries}
+                companies={companies}
+                contacts={contacts}
+                stories={stories}
+              />
+            </div>
 
-        {/* Kanban Board */}
-        <div className="mt-8" data-tooltip="kanban-board">
-          <MemoizedKanbanBoard
-            applications={applications}
-            onAddApplication={() => openModal('applications')}
-            onEditApplication={(item) => openModal('applications', item)}
-            onDeleteApplication={deleteApplication}
-            onUpdateStatus={handleApplicationStatusUpdate}
-            onArchiveApplication={handleArchiveApplication}
-            loading={applicationsLoading}
-          />
-        </div>
+            {/* Kanban Board */}
+            <div className="mt-8" data-tooltip="kanban-board">
+              <MemoizedKanbanBoard
+                applications={applications}
+                onAddApplication={() => openModal('applications')}
+                onEditApplication={(item) => openModal('applications', item)}
+                onDeleteApplication={deleteApplication}
+                onUpdateStatus={handleApplicationStatusUpdate}
+                onArchiveApplication={handleArchiveApplication}
+                loading={applicationsLoading}
+              />
+            </div>
+          </>
+        )}
 
         {/* Footer */}
         <footer className="mt-12 pt-8 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-sm">
             <div className="text-center md:text-left">
               <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-                Built with 💖 by{' '}
+                Made with ❤️  by{' '}
                 <a 
                   href="https://hariharen9.site/" 
                   target="_blank" 

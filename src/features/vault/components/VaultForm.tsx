@@ -153,14 +153,14 @@ const VaultForm: React.FC<VaultFormProps> = ({
       {/* Title */}
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Title *
+          Resource Title *
         </label>
         <input
           type="text"
           value={formData.title}
           onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
           placeholder="e.g., My Resume - Software Engineer"
-          className="w-full px-3 py-2 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+          className="w-full px-4 py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-xl bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-slate-500 dark:focus:ring-dark-text-secondary amoled:focus:ring-amoled-text-secondary focus:border-transparent transition-all duration-200"
           required
         />
       </div>
@@ -168,7 +168,7 @@ const VaultForm: React.FC<VaultFormProps> = ({
       {/* URL */}
       <div>
         <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          URL *
+          Resource URL *
         </label>
         <div className="relative">
           <input
@@ -176,15 +176,23 @@ const VaultForm: React.FC<VaultFormProps> = ({
             value={formData.url}
             onChange={(e) => handleUrlChange(e.target.value)}
             placeholder="https://drive.google.com/file/d/..."
-            className={`w-full px-3 py-2 pr-10 border rounded-lg bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${
-              urlError ? 'border-red-300 dark:border-red-600' : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border'
+            className={`w-full px-4 py-3 pr-12 border rounded-xl bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:border-transparent transition-all duration-200 ${
+              urlError 
+                ? 'border-red-300 dark:border-red-600 focus:ring-red-500' 
+                : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border focus:ring-slate-500 dark:focus:ring-dark-text-secondary amoled:focus:ring-amoled-text-secondary'
             }`}
             required
           />
-          <ExternalLink className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400" />
+          <ExternalLink className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-dark-text-secondary amoled:text-amoled-text-secondary" />
         </div>
         {urlError && (
-          <p className="mt-1 text-sm text-red-600 dark:text-red-400">{urlError}</p>
+          <motion.p 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-2 text-sm text-red-600 dark:text-red-400"
+          >
+            {urlError}
+          </motion.p>
         )}
       </div>
 
