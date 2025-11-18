@@ -32,6 +32,7 @@ import VaultAnalytics from './VaultAnalytics';
 import VaultActionsMenu from './VaultActionsMenu';
 import QuickAddForm from './QuickAddForm';
 import { exportToJSON, exportToCSV, exportToMarkdown, exportToPDF } from '../utils/exportUtils';
+import ConfirmationModal from '../../../components/shared/ConfirmationModal';
 
 interface VaultManagerProps {
     resources: VaultResource[];
@@ -87,6 +88,8 @@ const VaultManager: React.FC<VaultManagerProps> = ({
     const [showQuickAdd, setShowQuickAdd] = useState(false);
     const [showBulkActions, setShowBulkActions] = useState(false);
     const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
+    const [resourceToDelete, setResourceToDelete] = useState<string | null>(null);
+    const [isBulkDeleteConfirmOpen, setIsBulkDeleteConfirmOpen] = useState(false);
 
     const categories: ResourceCategory[] = ['Documents', 'Portfolio', 'Credentials', 'Profiles', 'Learning', 'Tools'];
 
@@ -149,6 +152,22 @@ const VaultManager: React.FC<VaultManagerProps> = ({
     const handleBulkDeleteResources = (ids: string[]) => {
         onBulkDelete(ids);
         setSelectedResources([]);
+    };
+
+    const handleDeleteRequest = (id: string) => {
+        setResourceToDelete(id);
+    };
+
+    const handleConfirmDeletion = () => {
+        if (resourceToDelete) {
+            onDeleteResource(resourceToDelete);
+            setResourceToDelete(null);
+            toast.success('Resource deleted');
+        }
+    };
+
+    const handleCancelDeletion = () => {
+        setResourceToDelete(null);
     };
 
     const handleExport = (format: 'json' | 'csv' | 'md' | 'pdf') => {
@@ -434,11 +453,7 @@ const VaultManager: React.FC<VaultManagerProps> = ({
                                     </button>
 
                                     <button
-                                        onClick={() => {
-                                            if (window.confirm(`Delete ${selectedResources.length} selected resources?`)) {
-                                                handleBulkDeleteResources(selectedResources);
-                                            }
-                                        }}
+                                        onClick={() => setIsBulkDeleteConfirmOpen(true)}
                                         className="flex items-center gap-1 px-2 py-1 text-xs bg-red-100 dark:bg-red-950/30 amoled:bg-red-950/20 text-red-700 dark:text-red-300 amoled:text-red-400 rounded hover:bg-red-200 dark:hover:bg-red-950/50 amoled:hover:bg-red-950/30 transition-colors"
                                     >
                                         <Trash2 className="w-3 h-3" />
@@ -585,7 +600,7 @@ const VaultManager: React.FC<VaultManagerProps> = ({
                                                             <Edit className="w-4 h-4" />
                                                         </button>
                                                         <button
-                                                            onClick={() => onDeleteResource(resource.id)}
+                                                            onClick={() => handleDeleteRequest(resource.id)}
                                                             className="p-2 text-slate-400 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 amoled:hover:bg-red-950/10 rounded-lg transition-all duration-200"
                                                             title="Delete resource"
                                                         >
@@ -711,7 +726,7 @@ const VaultManager: React.FC<VaultManagerProps> = ({
                                                 <Edit className="w-4 h-4" />
                                             </button>
                                             <button
-                                                onClick={() => onDeleteResource(resource.id)}
+                                                onClick={() => handleDeleteRequest(resource.id)}
                                                 className="p-2 text-slate-400 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 amoled:hover:bg-red-950/10 rounded-lg transition-all duration-200"
                                                 title="Delete resource"
                                             >
@@ -728,6 +743,25 @@ const VaultManager: React.FC<VaultManagerProps> = ({
 
             {/* Advanced Analytics */}
             <VaultAnalytics resources={resources} />
+
+            <ConfirmationModal
+                isOpen={!!resourceToDelete}
+                onClose={handleCancelDeletion}
+                onConfirm={handleConfirmDeletion}
+                title="Confirm Deletion"
+                message="Are you sure you want to delete this resource? This action cannot be undone."
+            />
+
+            <ConfirmationModal
+                isOpen={isBulkDeleteConfirmOpen}
+                onClose={() => setIsBulkDeleteConfirmOpen(false)}
+                onConfirm={() => {
+                    handleBulkDeleteResources(selectedResources);
+                    setIsBulkDeleteConfirmOpen(false);
+                }}
+                title={`Delete ${selectedResources.length} Resources`}
+                message="Are you sure you want to delete the selected resources? This action cannot be undone."
+            />
         </div>
     );
 };

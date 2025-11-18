@@ -15,7 +15,7 @@ export const exportToJSON = (resources: VaultResource[]) => {
   }));
 
   const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-  downloadFile(blob, `vault-resources-${getDateString()}.json`);
+  downloadFile(blob, `JobTrac-vault-resources-${getDateString()}.json`);
   toast.success('Resources exported as JSON!');
 };
 
@@ -34,12 +34,12 @@ export const exportToCSV = (resources: VaultResource[]) => {
 
   const csvContent = [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
   const blob = new Blob([csvContent], { type: 'text/csv' });
-  downloadFile(blob, `vault-resources-${getDateString()}.csv`);
+  downloadFile(blob, `JobTrac-vault-resources-${getDateString()}.csv`);
   toast.success('Resources exported as CSV!');
 };
 
 export const exportToMarkdown = (resources: VaultResource[]) => {
-  let markdown = '# My Resource Vault\n\n';
+  let markdown = '# My Resource Vault - JobTrac\n\n';
   markdown += `Generated on ${new Date().toLocaleDateString()}\n\n`;
 
   // Group by category
@@ -64,7 +64,7 @@ export const exportToMarkdown = (resources: VaultResource[]) => {
   });
 
   const blob = new Blob([markdown], { type: 'text/markdown' });
-  downloadFile(blob, `vault-resources-${getDateString()}.md`);
+  downloadFile(blob, `JobTrac-vault-resources-${getDateString()}.md`);
   toast.success('Resources exported as Markdown!');
 };
 
@@ -78,7 +78,7 @@ export const exportToPDF = async (resources: VaultResource[]) => {
     // Title
     pdf.setFontSize(20);
     pdf.setFont('helvetica', 'bold');
-    pdf.text('My Resource Vault', margin, yPosition);
+    pdf.text('My Resource Vault - JobTrac', margin, yPosition);
     yPosition += 15;
 
     // Date
@@ -152,7 +152,7 @@ export const exportToPDF = async (resources: VaultResource[]) => {
       yPosition += 5;
     });
 
-    pdf.save(`vault-resources-${getDateString()}.pdf`);
+    pdf.save(`JobTrac-vault-resources-${getDateString()}.pdf`);
     toast.success('Resources exported as PDF!');
   } catch (error) {
     console.error('Error generating PDF:', error);
