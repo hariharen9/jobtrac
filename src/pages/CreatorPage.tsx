@@ -44,7 +44,7 @@ const CreatorPage: React.FC = () => {
                 
                 <div className="space-y-4">
                   <motion.a 
-                    href="https://hariharen9.site/" 
+                    href="https://hariharen.site/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     whileHover={{ scale: 1.03 }}

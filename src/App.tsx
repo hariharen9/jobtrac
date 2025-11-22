@@ -1163,7 +1163,7 @@ function App() {
               <p className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
                 Made with ❤️  by{' '}
                 <a 
-                  href="https://hariharen9.site/" 
+                  href="https://hariharen.site/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="text-indigo-600 dark:text-indigo-400 amoled:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 amoled:hover:text-indigo-300 font-medium transition-colors"

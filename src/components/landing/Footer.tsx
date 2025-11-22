@@ -63,7 +63,7 @@ const Footer = () => {
                 </svg>
               </motion.a>
               <motion.a
-                href="https://hariharen9.site"
+                href="https://hariharen.site"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3 bg-slate-800 rounded-lg hover:bg-slate-700 transition-colors"
@@ -140,7 +140,7 @@ const Footer = () => {
           <p className="text-slate-400 mb-4 md:mb-0">
             © 2025 JobTrac. Built with 💜 by{' '}
             <a 
-              href="https://hariharen9.site" 
+              href="https://hariharen.site" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-indigo-400 hover:text-indigo-300 transition-colors"

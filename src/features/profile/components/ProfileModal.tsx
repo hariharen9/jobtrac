@@ -284,7 +284,7 @@ const ProfileModal = ({
               {/* Social Links */}
               <div className="flex flex-wrap justify-center gap-4">
                 <a 
-                  href="https://hariharen9.site" 
+                  href="https://hariharen.site" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 px-4 py-2 bg-white/70 dark:bg-dark-card/70 amoled:bg-amoled-card/70 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 text-slate-700 dark:text-dark-text amoled:text-amoled-text"

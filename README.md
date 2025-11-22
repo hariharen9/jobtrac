@@ -381,7 +381,7 @@ npm run dev
 
 <p>
   <strong>Built with 💜 by</strong><br>
-  <a href="https://hariharen9.site/">
+  <a href="https://hariharen.site/">
     <img src="https://img.shields.io/badge/Hariharen-Full%20Stack%20Engineer-4F46E5?style=flat-square&logo=github" alt="Hariharen">
   </a>
 </p>
