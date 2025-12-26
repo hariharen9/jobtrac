@@ -103,6 +103,28 @@
 
 </td>
 </tr>
+<tr>
+<td width="45%">
+
+### 🔐 **Resource Vault**
+**Professional Asset Manager**
+- Centralized Resume & Portfolio storage
+- Credentials & Certification tracking
+- One-click asset sharing & link previews
+- Multi-format data export (PDF, CSV, MD)
+
+</td>
+<td width="45%">
+
+### 📝 **Smart Notes**
+**Integrated Markdown Workspace**
+- Floating, minimizable note interface
+- Real-time Firebase synchronization
+- Category tagging & global search
+- Rich Markdown editing with live preview
+
+</td>
+</tr>
 </table>
 </div>
 
