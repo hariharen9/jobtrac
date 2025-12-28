@@ -126,70 +126,69 @@ function App() {
   });
 
 
-  const { 
-    data: applications, 
-    loading: applicationsLoading, 
-    addItem: addApplication,
-    updateItem: updateApplication,
-    deleteItem: deleteApplication
-  } = useFirestore<Application>('applications', user?.uid); // Real-time
+    const { 
+      data: applications, 
+      loading: applicationsLoading, 
+      addItem: addApplication,
+      updateItem: updateApplication,
+      deleteItem: deleteApplication
+    } = useFirestore<Application>('applications', user?.uid); // Real-time
+    
+    const { 
+      data: prepEntries, 
+      loading: prepLoading,
+      addItem: addPrepEntry,
+      updateItem: updatePrepEntry,
+      deleteItem: deletePrepEntry
+    } = useFirestore<PrepEntry>('prepEntries', user?.uid); // Real-time
+    
+    const { 
+      data: companies, 
+      loading: companiesLoading, 
+      addItem: addCompany,
+      updateItem: updateCompany,
+      deleteItem: deleteCompany
+    } = useFirestore<CompanyResearchType>('companies', user?.uid); // Real-time
+    
+    const { 
+      data: contacts, 
+      loading: contactsLoading, 
+      addItem: addContact,
+      updateItem: updateContact,
+      deleteItem: deleteContact
+    } = useFirestore<NetworkingContact>('contacts', user?.uid); // Real-time
+    
+    const { 
+      data: stories, 
+      loading: storiesLoading, 
+      addItem: addStory,
+      updateItem: updateStory,
+      deleteItem: deleteStory
+    } = useFirestore<StarStory>('stories', user?.uid); // Real-time
   
-  const { 
-    data: prepEntries, 
-    loading: prepLoading,
-    addItem: addPrepEntry,
-    updateItem: updatePrepEntry,
-    deleteItem: deletePrepEntry
-  } = useFirestore<PrepEntry>('prepEntries', user?.uid, true); // Polling
+    const {
+      data: vaultResources,
+      loading: vaultLoading,
+      addItem: addVaultResource,
+      updateItem: updateVaultResource,
+      deleteItem: deleteVaultResource
+    } = useFirestore<VaultResource>('vault', user?.uid); // Real-time
   
-  const { 
-    data: companies, 
-    loading: companiesLoading,
-    addItem: addCompany,
-    updateItem: updateCompany,
-    deleteItem: deleteCompany
-  } = useFirestore<CompanyResearchType>('companies', user?.uid, true); // Polling
+    const {
+      data: subjects,
+      loading: subjectsLoading,
+      addItem: addSubject,
+      updateItem: updateSubject,
+      deleteItem: deleteSubject
+    } = useFirestore<SubjectFirestore>('subjects', user?.uid); // Real-time
   
-  const { 
-    data: contacts, 
-    loading: contactsLoading,
-    addItem: addContact,
-    updateItem: updateContact,
-    deleteItem: deleteContact
-  } = useFirestore<NetworkingContact>('contacts', user?.uid, true); // Polling
-  
-  const { 
-    data: stories, 
-    loading: storiesLoading,
-    addItem: addStory,
-    updateItem: updateStory,
-    deleteItem: deleteStory
-  } = useFirestore<StarStory>('stories', user?.uid, true); // Polling
-
-  const {
-    data: vaultResources,
-    loading: vaultLoading,
-    addItem: addVaultResource,
-    updateItem: updateVaultResource,
-    deleteItem: deleteVaultResource
-  } = useFirestore<VaultResource>('vault', user?.uid, true); // Polling
-
-  const {
-    data: subjects,
-    loading: subjectsLoading,
-    addItem: addSubject,
-    updateItem: updateSubject,
-    deleteItem: deleteSubject
-  } = useFirestore<SubjectFirestore>('subjects', user?.uid, true); // Polling
-
-  const {
-    data: sessions,
-    loading: sessionsLoading,
-    addItem: addSession,
-    updateItem: updateSession,
-    deleteItem: deleteSession
-  } = useFirestore<any>('sessions', user?.uid, true); // Polling
-
+    const {
+      data: sessions,
+      loading: sessionsLoading,
+      addItem: addSession,
+      updateItem: updateSession,
+      deleteItem: deleteSession
+    } = useFirestore<any>('sessions', user?.uid); // Real-time
   // Notes data for global search
   const { notes } = useNotes(user?.uid);
 
