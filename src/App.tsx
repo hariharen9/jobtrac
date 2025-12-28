@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle, Archive } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, VaultResource } from './types';
@@ -13,23 +13,17 @@ import ApplicationTracker from './features/applications/components/ApplicationTr
 import ApplicationForm from './features/applications/components/ApplicationForm';
 import ActivityCalendar from './features/applications/components/ActivityCalendar';
 import KanbanBoard from './features/applications/components/KanbanBoard';
-import PrepLog from './features/prepLog/components/PrepLog';
 import PrepForm from './features/prepLog/components/PrepForm';
-import CompanyResearch from './features/companyResearch/components/CompanyResearch';
 import CompanyForm from './features/companyResearch/components/CompanyForm';
 import { CompanyResearch as CompanyResearchType } from './types';
-import Networking from './features/networking/components/Networking';
 import NetworkingForm from './features/networking/components/NetworkingForm';
-import StarStories from './features/starStories/components/StarStories';
 import StarForm from './features/starStories/components/StarForm';
-import VaultManager from './features/vault/components/VaultManager';
 import VaultForm from './features/vault/components/VaultForm';
 import Modal from './components/shared/Modal';
 import ThemeToggle from './components/shared/ThemeToggle';
 import HelpPage from './components/shared/HelpPage';
 import CommandPalette from './components/shared/CommandPalette';
 import { WelcomeWizard, QuickStartChecklist, TooltipManager } from './components/shared';
-import Notes from './features/notes/components/Notes';
 import { useNotes } from './features/notes/hooks/useNotes';
 import './animations.css';
 import { useMediaQuery } from './hooks/shared/useMediaQuery';
@@ -40,6 +34,15 @@ import { Helmet } from 'react-helmet-async';
 
 import SimpleTooltip from './components/shared/SimpleTooltip';
 import StarTooltip from './components/shared/StarTooltip';
+import LoadingSpinner from './components/shared/LoadingSpinner';
+
+// Lazy load feature components
+const PrepLog = React.lazy(() => import('./features/prepLog/components/PrepLog'));
+const CompanyResearch = React.lazy(() => import('./features/companyResearch/components/CompanyResearch'));
+const Networking = React.lazy(() => import('./features/networking/components/Networking'));
+const StarStories = React.lazy(() => import('./features/starStories/components/StarStories'));
+const VaultManager = React.lazy(() => import('./features/vault/components/VaultManager'));
+const Notes = React.lazy(() => import('./features/notes/components/Notes'));
 
 const MemoizedApplicationTracker = React.memo(ApplicationTracker);
 const MemoizedPrepLog = React.memo(PrepLog);
@@ -598,84 +601,114 @@ function App() {
         );
       case 'prep':
         return (
-          <MemoizedPrepLog 
-            prepEntries={prepEntries} 
-            onAddPrepEntry={() => openModal('prep')} 
-            onEditPrepEntry={(item) => openModal('prep', item)}
-            onDeletePrepEntry={deletePrepEntry}
-            onAddPrepEntryWithTopic={openPrepModalWithTopic}
-            loading={prepLoading}
-            subjects={subjects.map(subject => ({
-              ...subject,
-              createdAt: subject.createdAt.toDate(),
-              updatedAt: subject.updatedAt.toDate()
-            }))}
-            onAddSubject={addSubject}
-            onEditSubject={updateSubject}
-            onDeleteSubject={deleteSubject}
-            sessions={sessions.map(session => ({
-              ...session,
-              date: session.date.toDate(),
-              createdAt: session.createdAt.toDate(),
-              updatedAt: session.updatedAt.toDate()
-            }))}
-            onAddSession={addSession}
-            onEditSession={updateSession}
-            onDeleteSession={deleteSession}
-          />
+          <Suspense fallback={
+            <div className="flex justify-center items-center py-12">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <MemoizedPrepLog 
+              prepEntries={prepEntries} 
+              onAddPrepEntry={() => openModal('prep')} 
+              onEditPrepEntry={(item) => openModal('prep', item)}
+              onDeletePrepEntry={deletePrepEntry}
+              onAddPrepEntryWithTopic={openPrepModalWithTopic}
+              loading={prepLoading}
+              subjects={subjects.map(subject => ({
+                ...subject,
+                createdAt: subject.createdAt.toDate(),
+                updatedAt: subject.updatedAt.toDate()
+              }))}
+              onAddSubject={addSubject}
+              onEditSubject={updateSubject}
+              onDeleteSubject={deleteSubject}
+              sessions={sessions.map(session => ({
+                ...session,
+                date: session.date.toDate(),
+                createdAt: session.createdAt.toDate(),
+                updatedAt: session.updatedAt.toDate()
+              }))}
+              onAddSession={addSession}
+              onEditSession={updateSession}
+              onDeleteSession={deleteSession}
+            />
+          </Suspense>
         );
       case 'research':
         return (
-          <MemoizedCompanyResearch 
-            companies={companies} 
-            onAddCompany={() => openModal('research')} 
-            onEditCompany={(item) => openModal('research', item)}
-            onDeleteCompany={deleteCompany}
-            loading={companiesLoading}
-          />
+          <Suspense fallback={
+            <div className="flex justify-center items-center py-12">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <MemoizedCompanyResearch 
+              companies={companies} 
+              onAddCompany={() => openModal('research')} 
+              onEditCompany={(item) => openModal('research', item)}
+              onDeleteCompany={deleteCompany}
+              loading={companiesLoading}
+            />
+          </Suspense>
         );
       case 'networking':
         return (
-          <MemoizedNetworking 
-            contacts={contacts} 
-            onAddContact={() => openModal('networking')} 
-            onEditContact={(item) => openModal('networking', item)}
-            onDeleteContact={deleteContact}
-            loading={contactsLoading}
-          />
+          <Suspense fallback={
+            <div className="flex justify-center items-center py-12">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <MemoizedNetworking 
+              contacts={contacts} 
+              onAddContact={() => openModal('networking')} 
+              onEditContact={(item) => openModal('networking', item)}
+              onDeleteContact={deleteContact}
+              loading={contactsLoading}
+            />
+          </Suspense>
         );
       case 'star':
         return (
-          <MemoizedStarStories 
-            stories={stories} 
-            onAddStory={() => openModal('star')} 
-            onEditStory={(item) => openModal('star', item)}
-            onDeleteStory={deleteStory}
-            loading={storiesLoading}
-          />
+          <Suspense fallback={
+            <div className="flex justify-center items-center py-12">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <MemoizedStarStories 
+              stories={stories} 
+              onAddStory={() => openModal('star')} 
+              onEditStory={(item) => openModal('star', item)}
+              onDeleteStory={deleteStory}
+              loading={storiesLoading}
+            />
+          </Suspense>
         );
       case 'vault':
         return (
-          <MemoizedVaultManager
-            resources={vaultResources}
-            onAddResource={() => openModal('vault')}
-            onEditResource={(item) => openModal('vault', item)}
-            onDeleteResource={deleteVaultResource}
-            onQuickAdd={async (data) => {
-              await addVaultResource(data);
-            }}
-            onBulkDelete={async (ids) => {
-              for (const id of ids) {
-                await deleteVaultResource(id);
-              }
-            }}
-            onBulkUpdate={async (ids, updates) => {
-              for (const id of ids) {
-                await updateVaultResource(id, updates);
-              }
-            }}
-            loading={vaultLoading}
-          />
+          <Suspense fallback={
+            <div className="flex justify-center items-center py-12">
+              <LoadingSpinner size="lg" />
+            </div>
+          }>
+            <MemoizedVaultManager
+              resources={vaultResources}
+              onAddResource={() => openModal('vault')}
+              onEditResource={(item) => openModal('vault', item)}
+              onDeleteResource={deleteVaultResource}
+              onQuickAdd={async (data) => {
+                await addVaultResource(data);
+              }}
+              onBulkDelete={async (ids) => {
+                for (const id of ids) {
+                  await deleteVaultResource(id);
+                }
+              }}
+              onBulkUpdate={async (ids, updates) => {
+                for (const id of ids) {
+                  await updateVaultResource(id, updates);
+                }
+              }}
+              loading={vaultLoading}
+            />
+          </Suspense>
         );
       default:
         return null;
@@ -843,22 +876,26 @@ function App() {
           openCommandPalette={() => setIsCommandPaletteOpen(true)}
           onShowQuickStart={() => setShowQuickStart(true)}
           showQuickStartButton={onboarding.hasCompletedWelcome && getProgressPercentage() < 100}
-          activityCalendar={<MemoizedActivityCalendar 
-            applications={applications}
-            prepEntries={prepEntries}
-            companies={companies}
-            contacts={contacts}
-            stories={stories}
-          />}
-          kanbanBoard={<MemoizedKanbanBoard
-            applications={applications}
-            onAddApplication={() => openModal('applications')}
-            onEditApplication={(item) => openModal('applications', item)}
-            onDeleteApplication={deleteApplication}
-            onUpdateStatus={handleApplicationStatusUpdate}
-            onArchiveApplication={handleArchiveApplication}
-            loading={applicationsLoading}
-          />}
+          activityCalendar={
+            <MemoizedActivityCalendar 
+              applications={applications}
+              prepEntries={prepEntries}
+              companies={companies}
+              contacts={contacts}
+              stories={stories}
+            />
+          }
+          kanbanBoard={
+            <MemoizedKanbanBoard
+              applications={applications}
+              onAddApplication={() => openModal('applications')}
+              onEditApplication={(item) => openModal('applications', item)}
+              onDeleteApplication={deleteApplication}
+              onUpdateStatus={handleApplicationStatusUpdate}
+              onArchiveApplication={handleArchiveApplication}
+              loading={applicationsLoading}
+            />
+          }
         />
         <Modal
           isOpen={isModalOpen}
@@ -1255,7 +1292,9 @@ function App() {
       </div>
       
       {/* Notes Component */}
-      <MemoizedNotes userId={user?.uid} isExpanded={isNotesExpanded} onToggle={toggleNotes} />
+      <Suspense fallback={null}>
+        <MemoizedNotes userId={user?.uid} isExpanded={isNotesExpanded} onToggle={toggleNotes} />
+      </Suspense>
       
       {/* Onboarding Components */}
       {showWelcomeWizard && (
