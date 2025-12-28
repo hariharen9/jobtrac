@@ -36,6 +36,9 @@ import SimpleTooltip from './components/shared/SimpleTooltip';
 import StarTooltip from './components/shared/StarTooltip';
 import LoadingSpinner from './components/shared/LoadingSpinner';
 
+import PrivacyPolicyModal from './components/shared/PrivacyPolicyModal';
+import TermsModal from './components/shared/TermsModal';
+
 // Lazy load feature components
 const PrepLog = React.lazy(() => import('./features/prepLog/components/PrepLog'));
 const CompanyResearch = React.lazy(() => import('./features/companyResearch/components/CompanyResearch'));
@@ -74,6 +77,10 @@ function App() {
   // User profile setup modal state
   const [isUserProfileModalOpen, setIsUserProfileModalOpen] = useState(false);
   const [isSubmittingProfile, setIsSubmittingProfile] = useState(false);
+
+  // Legal Modals state
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
   
   // Onboarding state
   const {
@@ -1217,7 +1224,6 @@ function App() {
                 {[
                   { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
                   { name: 'Report an Issue', url: 'https://github.com/hariharen9/jobtrac/issues' },
-                  { name: 'License', url: 'https://github.com/hariharen9/jobtrac/blob/main/LICENSE' },
                   { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },
                 ].map((link) => (
                   <li key={link.name}>
@@ -1244,6 +1250,22 @@ function App() {
                     )}
                   </li>
                 ))}
+                <li>
+                  <button
+                    onClick={() => setIsPrivacyOpen(true)}
+                    className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors"
+                  >
+                    Privacy Policy
+                  </button>
+                </li>
+                <li>
+                  <button
+                    onClick={() => setIsTermsOpen(true)}
+                    className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors"
+                  >
+                    Terms & Conditions
+                  </button>
+                </li>
               </ul>
             </div>
           </div>
@@ -1348,6 +1370,16 @@ function App() {
         onComplete={handleProfileComplete}
         onSkip={handleProfileSkip}
         isSubmitting={isSubmittingProfile}
+      />
+
+      <PrivacyPolicyModal 
+        isOpen={isPrivacyOpen} 
+        onClose={() => setIsPrivacyOpen(false)} 
+      />
+      
+      <TermsModal 
+        isOpen={isTermsOpen} 
+        onClose={() => setIsTermsOpen(false)} 
       />
     </div>
   );

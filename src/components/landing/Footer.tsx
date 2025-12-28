@@ -1,8 +1,14 @@
 import { motion } from 'framer-motion';
 import { Github, Globe } from 'lucide-react';
 import CurvedLoop from './CurvedLoop';
+import { useState } from 'react';
+import PrivacyPolicyModal from '../shared/PrivacyPolicyModal';
+import TermsModal from '../shared/TermsModal';
 
 const Footer = () => {
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [isTermsOpen, setIsTermsOpen] = useState(false);
+
   return (
     <footer className="bg-slate-900 dark:bg-dark-card amoled:bg-amoled-card text-white py-8 sm:py-16 px-6">
       <CurvedLoop 
@@ -82,9 +88,6 @@ const Footer = () => {
               {[
                 { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
                 { name: 'Issues', url: 'https://github.com/hariharen9/jobtrac/issues' },
-                { name: ' LICENSE', url: 'https://github.com/hariharen9/jobtrac/blob/main/LICENSE' },
-                { name: 'Pull Requests', url: 'https://github.com/hariharen9/jobtrac/pulls' },
-                { name: 'Discussions', url: 'https://github.com/hariharen9/jobtrac/discussions' },
                 { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },
                 { name: 'Releases', url: 'https://github.com/hariharen9/jobtrac/releases' }
               ].map((link, index) => (
@@ -105,6 +108,30 @@ const Footer = () => {
                   </motion.a>
                 </motion.li>
               ))}
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5 }}
+              >
+                <button
+                  onClick={() => setIsPrivacyOpen(true)}
+                  className="text-slate-300 hover:text-indigo-400 transition-colors block text-left w-full"
+                >
+                  Privacy Policy
+                </button>
+              </motion.li>
+              <motion.li
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6 }}
+              >
+                <button
+                  onClick={() => setIsTermsOpen(true)}
+                  className="text-slate-300 hover:text-indigo-400 transition-colors block text-left w-full"
+                >
+                  Terms & Conditions
+                </button>
+              </motion.li>
             </ul>
           </div>
 
@@ -153,6 +180,9 @@ const Footer = () => {
           </p>
         </motion.div>
       </div>
+
+      <PrivacyPolicyModal isOpen={isPrivacyOpen} onClose={() => setIsPrivacyOpen(false)} />
+      <TermsModal isOpen={isTermsOpen} onClose={() => setIsTermsOpen(false)} />
     </footer>
   );
 };
