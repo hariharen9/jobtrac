@@ -4,7 +4,7 @@ import { FaPaypal, FaCoffee, FaLinkedin, FaTwitter, FaGithub, FaMedium } from 'r
 
 const SupportSection: React.FC = () => {
   const socialLinks = [
-    { name: 'Portfolio', url: 'https://hariharen9.site', icon: Globe, color: 'slate' },
+    { name: 'Portfolio', url: 'https://hariharen.site', icon: Globe, color: 'slate' },
     { name: 'LinkedIn', url: 'https://linkedin.com/in/hariharen9', icon: FaLinkedin, color: 'blue' },
     { name: 'Twitter', url: 'https://twitter.com/thisishariharen', icon: FaTwitter, color: 'sky' },
     { name: 'GitHub', url: 'https://github.com/hariharen9', icon: FaGithub, color: 'gray' },
