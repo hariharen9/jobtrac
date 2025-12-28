@@ -1,15 +1,29 @@
+import React, { Suspense } from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import App from "../App";
-import AuthPage from "../features/auth/components/AuthPage";
 import LandingPage from "../pages/LandingPage";
 import ProtectedRoute from "./ProtectedRoute";
 import ErrorBoundary from "../components/shared/ErrorBoundary";
-import LicensePage from "../pages/LicensePage";
-import OverviewPage from "../pages/OverviewPage";
-import FAQPage from "../pages/FAQPage";
-import CreatorPage from "../pages/CreatorPage";
 import { OfflineWarningProvider } from "../components/shared/OfflineWarning";
+import LoadingSpinner from "../components/shared/LoadingSpinner";
 
+// Lazy load pages
+const App = React.lazy(() => import("../App"));
+const AuthPage = React.lazy(() => import("../features/auth/components/AuthPage"));
+const LicensePage = React.lazy(() => import("../pages/LicensePage"));
+const OverviewPage = React.lazy(() => import("../pages/OverviewPage"));
+const FAQPage = React.lazy(() => import("../pages/FAQPage"));
+const CreatorPage = React.lazy(() => import("../pages/CreatorPage"));
+
+// Helper to wrap lazy components with Suspense
+const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
+  <Suspense fallback={
+    <div className="flex items-center justify-center min-h-screen">
+      <LoadingSpinner size="lg" />
+    </div>
+  }>
+    {children}
+  </Suspense>
+);
 
 export const router = createBrowserRouter([
     {
@@ -19,23 +33,23 @@ export const router = createBrowserRouter([
     },
     {
         path: "/auth",
-        element: <AuthPage />,
+        element: <SuspenseWrapper><AuthPage /></SuspenseWrapper>,
     },
     {
         path: "/license",
-        element: <LicensePage />,
+        element: <SuspenseWrapper><LicensePage /></SuspenseWrapper>,
     },
     {
         path: "/overview",
-        element: <OverviewPage />,
+        element: <SuspenseWrapper><OverviewPage /></SuspenseWrapper>,
     },
     {
         path: "/faq",
-        element: <FAQPage />,
+        element: <SuspenseWrapper><FAQPage /></SuspenseWrapper>,
     },
     {
         path: "/creator",
-        element: <CreatorPage />,
+        element: <SuspenseWrapper><CreatorPage /></SuspenseWrapper>,
     },
     {
         path: "/app",
@@ -43,7 +57,15 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: "",
-                element: <ErrorBoundary><OfflineWarningProvider><App /></OfflineWarningProvider></ErrorBoundary>
+                element: (
+                    <ErrorBoundary>
+                        <OfflineWarningProvider>
+                            <SuspenseWrapper>
+                                <App />
+                            </SuspenseWrapper>
+                        </OfflineWarningProvider>
+                    </ErrorBoundary>
+                )
             },
 
         ]
