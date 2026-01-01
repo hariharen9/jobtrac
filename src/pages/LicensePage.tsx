@@ -72,9 +72,9 @@ const LicensePage: React.FC = () => {
     <div style={styles.container}>
       <h1 style={styles.h1}>JobTrac Open Core License</h1>
       <p style={styles.p}>
-        <strong style={styles.strong}>Version 1.0, August 2025</strong>
+        <strong style={styles.strong}>Version 1.0, January 2026</strong>
       </p>
-      <p style={styles.p}>Copyright (c) 2025 Hariharen</p>
+      <p style={styles.p}>Copyright (c) 2026 Hariharen</p>
 
       <h2 style={styles.h2}>Open Source Core Components</h2>
       <p style={styles.p}>

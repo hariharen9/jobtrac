@@ -39,8 +39,8 @@ describe('Basic Tests - Always Pass', () => {
   });
 
   it('should handle date operations', () => {
-    const date = new Date('2025-01-01');
-    expect(date.getFullYear()).toBe(2025);
+    const date = new Date('2026-01-01');
+    expect(date.getFullYear()).toBe(2026);
     expect(date.getMonth()).toBe(0); // January is 0
   });
 

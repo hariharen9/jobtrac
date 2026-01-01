@@ -165,7 +165,7 @@ const Footer = () => {
           transition={{ delay: 0.5 }}
         >
           <p className="text-slate-400 mb-4 md:mb-0">
-            © 2025 JobTrac. Built with 💜 by{' '}
+            © 2026 JobTrac. Built with 💜 by{' '}
             <a 
               href="https://hariharen.site" 
               target="_blank" 

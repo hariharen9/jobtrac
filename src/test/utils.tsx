@@ -9,8 +9,8 @@ export const mockUser = {
   displayName: 'Test User',
   isAnonymous: false,
   metadata: {
-    creationTime: 'Wed, 01 Jan 2025 00:00:00 GMT',
-    lastSignInTime: 'Wed, 01 Jan 2025 00:00:00 GMT',
+    creationTime: 'Wed, 01 Jan 2026 00:00:00 GMT',
+    lastSignInTime: 'Wed, 01 Jan 2026 00:00:00 GMT',
   },
 };
 
@@ -20,7 +20,7 @@ export const mockApplications = [
     company: 'Google',
     role: 'Software Engineer',
     status: 'Applied' as const,
-    date: '2025-01-01',
+    date: '2026-01-01',
     link: 'https://google.com/jobs',
     nextStep: 'Wait for response',
     recruiter: 'Jane Smith',
@@ -35,7 +35,7 @@ export const mockApplications = [
     company: 'Microsoft',
     role: 'Senior Developer',
     status: 'HR Screen' as const,
-    date: '2025-01-02',
+    date: '2026-01-02',
     link: 'https://microsoft.com/jobs',
     nextStep: 'Technical interview',
     recruiter: 'John Doe',
@@ -50,7 +50,7 @@ export const mockApplications = [
 export const mockPrepEntries = [
   {
     id: '1',
-    date: '2025-01-01',
+    date: '2026-01-01',
     topic: 'System Design',
     problems: 'Design a URL shortener',
     time: 120,
@@ -81,7 +81,7 @@ export const mockContacts = [
     name: 'Alice Johnson',
     company: 'Google',
     role: 'Engineering Manager',
-    date: '2025-01-01',
+    date: '2026-01-01',
     status: 'Connected',
     referral: 'Y' as const,
     notes: 'Met at tech conference',

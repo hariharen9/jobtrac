@@ -176,7 +176,7 @@ export const enhancedSampleApplications: Application[] = [
     recruiter: 'Sarah Johnson',
     referral: 'N',
     location: 'Mountain View, CA',
-    notes: 'Received offer with competitive salary and stock options. Accepted position starting November 2025.',
+    notes: 'Received offer with competitive salary and stock options. Accepted position starting January 2026.',
     jobDescription: 'Build scalable frontend applications using React and TypeScript. Collaborate with design and backend teams to deliver exceptional user experiences.',
     createdAt: Timestamp.now(),
     updatedAt: Timestamp.now(),
