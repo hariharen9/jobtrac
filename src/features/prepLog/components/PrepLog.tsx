@@ -1,9 +1,10 @@
 import React, { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { Subject } from '../../../types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target, HelpCircle, BarChart3, ChevronDown } from 'lucide-react';
-import { PrepEntry } from '../../../types';
+import { BookOpen, Plus, Filter, SortAsc, SortDesc, X, AlertTriangle, Calendar, Clock, Star, TrendingUp, FolderOpen, Target, HelpCircle, BarChart3, ChevronDown, Code2 } from 'lucide-react';
+import { PrepEntry, CodingProblem } from '../../../types';
 import PrepLogSubjectCard from './PrepLogSubjectCard';
+import ProblemTracker from './ProblemTracker';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import EmptyState from '../../../components/shared/EmptyState';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
@@ -34,12 +35,16 @@ interface FilterOptions {
 interface PrepLogProps {
   prepEntries: PrepEntry[];
   subjects: Subject[];
+  problems?: CodingProblem[];
   onAddPrepEntry: () => void;
   onEditPrepEntry: (entry: PrepEntry) => void;
   onDeletePrepEntry: (id: string) => void;
   onAddSubject: (subject: Omit<Subject, 'id' | 'createdAt' | 'updatedAt'>) => void;
   onEditSubject: (subject: Subject) => void;
   onDeleteSubject: (id: string) => void;
+  onAddProblem?: () => void;
+  onEditProblem?: (problem: CodingProblem) => void;
+  onDeleteProblem?: (id: string) => void;
   loading?: boolean;
 }
 
@@ -111,15 +116,20 @@ const MobileSidebarCollapsible: React.FC<{
 const PrepLog: React.FC<PrepLogProps> = ({ 
   prepEntries, 
   subjects, 
+  problems = [],
   onAddPrepEntry, 
   onEditPrepEntry, 
   onDeletePrepEntry, 
   onAddSubject,
   onEditSubject,
   onDeleteSubject,
+  onAddProblem = () => {},
+  onEditProblem = () => {},
+  onDeleteProblem = () => {},
   loading = false 
 }) => {
   const isMobile = useMediaQuery('(max-width: 1023px)');
+  const [activeTab, setActiveTab] = useState<'study' | 'problems'>('study');
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showFilters, setShowFilters] = useState(false);
@@ -540,7 +550,36 @@ const PrepLog: React.FC<PrepLogProps> = ({
               Track your learning progress and review schedules
             </p>
           </div>
+          
+          {/* Main Tab Navigation */}
+          <div className="flex bg-slate-100 dark:bg-dark-card amoled:bg-amoled-card p-1 rounded-lg self-start sm:self-center">
+            <button
+              onClick={() => setActiveTab('study')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === 'study'
+                  ? 'bg-white dark:bg-slate-700 amoled:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+              }`}
+            >
+              <BookOpen className="w-4 h-4" />
+              Study Log
+            </button>
+            <button
+              onClick={() => setActiveTab('problems')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                activeTab === 'problems'
+                  ? 'bg-white dark:bg-slate-700 amoled:bg-slate-800 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
+              }`}
+            >
+              <Code2 className="w-4 h-4" />
+              Problem Tracker
+            </button>
+          </div>
+
           <div className="flex items-center gap-3">
+            {activeTab === 'study' && (
+              <>
             <motion.button
               whileHover={{ scale: 1.03 }} 
               whileTap={{ scale: 0.98 }}
@@ -593,10 +632,12 @@ const PrepLog: React.FC<PrepLogProps> = ({
               <span className="hidden sm:inline">Log Prep</span>
               <span className="sm:hidden">Log</span>
             </motion.button>
+              </>
+            )}
           </div>
         </div>
 
-        {isMobile && (
+        {isMobile && activeTab === 'study' && (
           <MobileSidebarCollapsible 
             prepEntries={prepEntries}
             onEditPrepEntry={onEditPrepEntry}
@@ -604,6 +645,14 @@ const PrepLog: React.FC<PrepLogProps> = ({
           />
         )}
 
+        {activeTab === 'problems' ? (
+          <ProblemTracker 
+            problems={problems}
+            onAddProblem={onAddProblem}
+            onEditProblem={onEditProblem}
+            onDeleteProblem={onDeleteProblem}
+          />
+        ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 lg:gap-6">
           <main className="lg:col-span-2 space-y-6">
             {/* Filter Panel */}
@@ -831,6 +880,7 @@ const PrepLog: React.FC<PrepLogProps> = ({
           {/* Sidebar */}
           {!isMobile && dashboardSidebar}
         </div>
+        )}
       </div>
 
       {/* Subject Manager Modal */}

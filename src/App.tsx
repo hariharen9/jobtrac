@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useMemo, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle, Archive } from 'lucide-react';
-import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, VaultResource } from './types';
+import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, VaultResource, CodingProblem } from './types';
 import { useAuth } from './features/auth/hooks/useAuth';
 import AuthButton from './features/auth/components/AuthButton';
 import { useTheme } from './hooks/shared/useTheme';
@@ -14,6 +14,7 @@ import ApplicationForm from './features/applications/components/ApplicationForm'
 import ActivityCalendar from './features/applications/components/ActivityCalendar';
 import KanbanBoard from './features/applications/components/KanbanBoard';
 import PrepForm from './features/prepLog/components/PrepForm';
+import ProblemForm from './features/prepLog/components/ProblemForm';
 import CompanyForm from './features/companyResearch/components/CompanyForm';
 import { CompanyResearch as CompanyResearchType } from './types';
 import NetworkingForm from './features/networking/components/NetworkingForm';
@@ -199,6 +200,14 @@ function App() {
       updateItem: updateSession,
       deleteItem: deleteSession
     } = useFirestore<any>('sessions', user?.uid); // Real-time
+
+    const {
+      data: problems,
+      loading: problemsLoading,
+      addItem: addProblem,
+      updateItem: updateProblem,
+      deleteItem: deleteProblem
+    } = useFirestore<CodingProblem>('problems', user?.uid); // Real-time
   // Notes data for global search
   const { notes } = useNotes(user?.uid);
 
@@ -615,19 +624,23 @@ function App() {
           }>
             <MemoizedPrepLog 
               prepEntries={prepEntries} 
-              onAddPrepEntry={() => openModal('prep')} 
-              onEditPrepEntry={(item) => openModal('prep', item)}
-              onDeletePrepEntry={deletePrepEntry}
-              onAddPrepEntryWithTopic={openPrepModalWithTopic}
-              loading={prepLoading}
               subjects={subjects.map(subject => ({
                 ...subject,
                 createdAt: subject.createdAt.toDate(),
                 updatedAt: subject.updatedAt.toDate()
               }))}
+              problems={problems}
+              onAddPrepEntry={() => openModal('prep')} 
+              onEditPrepEntry={(item) => openModal('prep', item)}
+              onDeletePrepEntry={deletePrepEntry}
+              onAddPrepEntryWithTopic={openPrepModalWithTopic}
               onAddSubject={addSubject}
               onEditSubject={updateSubject}
               onDeleteSubject={deleteSubject}
+              onAddProblem={() => openModal('problem')}
+              onEditProblem={(item) => openModal('problem', item)}
+              onDeleteProblem={deleteProblem}
+              loading={prepLoading || problemsLoading}
               sessions={sessions.map(session => ({
                 ...session,
                 date: session.date.toDate(),
@@ -665,9 +678,11 @@ function App() {
           }>
             <MemoizedNetworking 
               contacts={contacts} 
+              companies={companies}
               onAddContact={() => openModal('networking')} 
               onEditContact={(item) => openModal('networking', item)}
               onDeleteContact={deleteContact}
+              onAddCompanyData={addCompany}
               loading={contactsLoading}
             />
           </Suspense>
@@ -807,6 +822,18 @@ function App() {
             }
             onCancel={closeModal}
             initialData={editingItem}
+            loading={isSubmitting}
+          />
+        );
+      case 'problem':
+        return (
+          <ProblemForm
+            onSubmit={editingItem
+              ? (data: Partial<CodingProblem>) => handleUpdate(updateProblem, { ...editingItem, ...data })
+              : (data: Omit<CodingProblem, 'id'>) => handleFormSubmit(addProblem, data)
+            }
+            onCancel={closeModal}
+            initialData={editingItem as CodingProblem}
             loading={isSubmitting}
           />
         );

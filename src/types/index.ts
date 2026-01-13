@@ -131,7 +131,26 @@ export interface VaultResource {
   updatedAt: Timestamp;
 }
 
-export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory | VaultResource;
+export type ProblemPlatform = 'LeetCode' | 'NeetCode' | 'HackerRank' | 'Other';
+export type ProblemDifficulty = 'Easy' | 'Medium' | 'Hard';
+export type ProblemStatus = 'Todo' | 'Solved' | 'Attempted' | 'Revision Needed';
+
+export interface CodingProblem {
+  id: string;
+  title: string;
+  platform: ProblemPlatform;
+  difficulty: ProblemDifficulty;
+  link: string;
+  status: ProblemStatus;
+  notes: string;
+  tags: string[]; // e.g., "Arrays", "DP"
+  solvedDate?: string;
+  timeSpent?: number; // in minutes
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+}
+
+export type EditableItem = Application | PrepEntry | CompanyResearch | NetworkingContact | StarStory | VaultResource | CodingProblem;
 
 export interface NotePage {
   id: string;
@@ -171,7 +190,7 @@ export interface SubjectFirestore {
   updatedAt: Timestamp;
 }
 
-export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star' | 'vault';
+export type TabType = 'applications' | 'prep' | 'research' | 'networking' | 'star' | 'vault' | 'problem';
 
 export interface Goal extends FirestoreDocument {
   type: 'weekly' | 'monthly';

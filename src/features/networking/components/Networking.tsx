@@ -1,9 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Users, Plus, Filter, SortAsc, SortDesc, X, HelpCircle } from 'lucide-react';
-import { NetworkingContact } from '../../../types';
+import { NetworkingContact, CompanyResearch } from '../../../types';
 import NetworkingRow from './NetworkingRow';
 import NetworkingCard from './NetworkingCard';
+import TargetCompaniesCard from './TargetCompaniesCard';
+import QuickAddCompanyModal from './QuickAddCompanyModal';
 import { useMediaQuery } from '../../../hooks/shared/useMediaQuery';
 import EmptyState from '../../../components/shared/EmptyState';
 import SimpleTooltip from '../../../components/shared/SimpleTooltip';
@@ -24,9 +26,11 @@ interface FilterOptions {
 
 interface NetworkingProps {
   contacts: NetworkingContact[];
+  companies?: CompanyResearch[];
   onAddContact: () => void;
   onEditContact: (contact: NetworkingContact) => void;
   onDeleteContact: (id: string) => void;
+  onAddCompanyData?: (data: Omit<CompanyResearch, 'id'>) => Promise<void>;
   loading?: boolean;
 }
 
@@ -46,11 +50,20 @@ const itemVariants = {
   exit: { opacity: 0, y: -20, transition: { duration: 0.2 } },
 };
 
-const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditContact, onDeleteContact, loading = false }) => {
+const Networking: React.FC<NetworkingProps> = ({ 
+  contacts, 
+  companies = [], 
+  onAddContact, 
+  onEditContact, 
+  onDeleteContact, 
+  onAddCompanyData,
+  loading = false 
+}) => {
   const isMobile = useMediaQuery('(max-width: 768px)');
   const [sortField, setSortField] = useState<SortField>('date');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [showFilters, setShowFilters] = useState(false);
+  const [isQuickAddCompanyOpen, setIsQuickAddCompanyOpen] = useState(false);
   const [filters, setFilters] = useState<FilterOptions>({
     name: '',
     company: '',
@@ -251,10 +264,30 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
 
       </div>
 
-      {/* Main Content */}
-      <div className="bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+      {/* Main Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* Left Column: Target Companies & Stats (Desktop) */}
+        <div className="lg:col-span-1 space-y-6">
+           <TargetCompaniesCard 
+             companies={companies}
+             contacts={contacts}
+             onAddCompany={() => setIsQuickAddCompanyOpen(true)}
+             onFilterByCompany={(company) => {
+               setFilters(prev => ({ 
+                 ...prev, 
+                 company: prev.company === company ? '' : company 
+               }));
+               setShowFilters(true);
+             }}
+             activeFilterCompany={filters.company}
+           />
+        </div>
 
-      {/* Filter Panel */}
+        {/* Right Column: Contact List */}
+        <div className="lg:col-span-3 bg-white dark:bg-dark-card amoled:bg-amoled-card p-6 rounded-xl shadow-sm border border-slate-200/50 dark:border-slate-700/50">
+
+        {/* Filter Panel */}
       <AnimatePresence>
         {showFilters && (
           <motion.div
@@ -541,7 +574,28 @@ const Networking: React.FC<NetworkingProps> = ({ contacts, onAddContact, onEditC
           </table>
         </div>
       )}
-    </div>
+        </div>
+      </div>
+      <QuickAddCompanyModal 
+        isOpen={isQuickAddCompanyOpen}
+        onClose={() => setIsQuickAddCompanyOpen(false)}
+        onSubmit={async (name) => {
+          if (onAddCompanyData) {
+            // Create a minimal company object
+            await onAddCompanyData({
+              company: name,
+              whatTheyDo: '',
+              values: '',
+              why: '',
+              questions: '',
+              news: '',
+              date: new Date().toISOString().split('T')[0],
+              createdAt: undefined as any, // handled by hook
+              updatedAt: undefined as any // handled by hook
+            });
+          }
+        }}
+      />
     </div>
   );
 };
