@@ -192,7 +192,7 @@ const QuickAddForm: React.FC<QuickAddFormProps> = ({
           exit={{ opacity: 0, height: 0 }}
           className="overflow-hidden"
         >
-          <div className="p-6 bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-2xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm">
+          <div className="p-6 mb-6 bg-white dark:bg-dark-card amoled:bg-amoled-card rounded-2xl border border-slate-200 dark:border-dark-border amoled:border-amoled-border shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text">
                 Quick Add Resource

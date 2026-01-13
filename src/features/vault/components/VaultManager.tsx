@@ -149,6 +149,19 @@ const VaultManager: React.FC<VaultManagerProps> = ({
         setSelectedResources([]);
     };
 
+    const handleBulkCopyLinks = (ids: string[]) => {
+        const links = ids
+            .map(id => resources.find(r => r.id === id)?.url)
+            .filter(Boolean)
+            .join('\n');
+        
+        if (links) {
+            navigator.clipboard.writeText(links);
+            toast.success(`Copied ${ids.length} links to clipboard`);
+            setSelectedResources([]);
+        }
+    };
+
     const handleBulkDeleteResources = (ids: string[]) => {
         onBulkDelete(ids);
         setSelectedResources([]);
@@ -450,6 +463,14 @@ const VaultManager: React.FC<VaultManagerProps> = ({
                                     >
                                         <Globe className="w-3 h-3" />
                                         Toggle Public
+                                    </button>
+
+                                    <button
+                                        onClick={() => handleBulkCopyLinks(selectedResources)}
+                                        className="flex items-center gap-1 px-2 py-1 text-xs bg-blue-100 dark:bg-blue-950/30 amoled:bg-blue-950/20 text-blue-700 dark:text-blue-300 amoled:text-blue-400 rounded hover:bg-blue-200 dark:hover:bg-blue-950/50 amoled:hover:bg-blue-950/30 transition-colors"
+                                    >
+                                        <Copy className="w-3 h-3" />
+                                        Copy Links
                                     </button>
 
                                     <button
