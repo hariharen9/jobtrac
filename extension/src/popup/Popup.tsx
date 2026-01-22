@@ -148,6 +148,10 @@ function App() {
         link: formData.link,
         location: formData.location,
         source: formData.source,
+        status: formData.status,
+        priority: formData.priority,
+        referral: formData.referral,
+        date: formData.date,
         salary: formData.salaryRange || '',
         notes: formData.notes || '',
         jd: formData.jobDescription?.substring(0, 2000) || '', // Limit JD size for URL

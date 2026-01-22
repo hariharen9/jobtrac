@@ -249,11 +249,15 @@ function App() {
       const link = searchParams.get('link') || '';
       const location = searchParams.get('location') || '';
       const source = searchParams.get('source') as Application['source'] || 'LinkedIn';
+      const status = searchParams.get('status') as Application['status'] || 'To Apply';
+      const priority = searchParams.get('priority') as Application['priority'] || 'Medium';
+      const referral = searchParams.get('referral') as 'Y' | 'N' || 'N';
+      const date = searchParams.get('date') || new Date().toISOString().split('T')[0];
       const salary = searchParams.get('salary') || '';
       const notes = searchParams.get('notes') || '';
       const jd = searchParams.get('jd') || '';
 
-      console.log('[JobTrac] Extension data:', { company, role, link, location, notes });
+      console.log('[JobTrac] Extension data:', { company, role, link, location, status, priority, referral, notes });
 
       if (company || role) {
         // Set pre-filled application data
@@ -265,9 +269,10 @@ function App() {
           source,
           salaryRange: salary,
           jobDescription: jd,
-          status: 'To Apply',
-          date: new Date().toISOString().split('T')[0],
-          referral: 'N',
+          status,
+          priority,
+          date,
+          referral,
           recruiter: '',
           notes,
         });
