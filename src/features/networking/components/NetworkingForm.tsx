@@ -1,5 +1,30 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import {
+  User,
+  Building2,
+  Briefcase,
+  Calendar,
+  MessageSquare,
+  UserCheck,
+  Clock,
+  Linkedin,
+  Mail,
+  Phone,
+  Coffee,
+  CheckCircle,
+  XCircle,
+  AlertCircle,
+  FileText,
+} from 'lucide-react';
 import { NetworkingContact } from '../../../types';
+import {
+  FormInput,
+  FormTextarea,
+  FormButtonGroup,
+  FormActions,
+  FormSectionHeader,
+} from '../../../components/shared/form';
 
 interface NetworkingFormProps {
   onSubmit: (contact: Omit<NetworkingContact, 'id'>) => void;
@@ -8,7 +33,25 @@ interface NetworkingFormProps {
   loading?: boolean;
 }
 
-const NetworkingForm: React.FC<NetworkingFormProps> = ({ onSubmit, onCancel, initialData, loading = false }) => {
+// Status options with icons and hover colors for better UX
+const statusOptions = [
+  { value: 'Planning to reach out', label: 'Planning', icon: Clock, hoverColor: 'purple' as const },
+  { value: 'Messaged on LinkedIn', label: 'LinkedIn', icon: Linkedin, hoverColor: 'blue' as const },
+  { value: 'Email sent', label: 'Email', icon: Mail, hoverColor: 'teal' as const },
+  { value: 'Connected on LinkedIn', label: 'Connected', icon: UserCheck, hoverColor: 'green' as const },
+  { value: 'Had initial conversation', label: 'Talked', icon: Phone, hoverColor: 'blue' as const },
+  { value: 'Follow-up scheduled', label: 'Follow-up', icon: Coffee, hoverColor: 'orange' as const },
+  { value: 'Referral provided', label: 'Referral', icon: CheckCircle, hoverColor: 'green' as const },
+  { value: 'No response', label: 'No response', icon: AlertCircle, hoverColor: 'maroon' as const },
+  { value: 'Not interested', label: 'Declined', icon: XCircle, hoverColor: 'red' as const },
+];
+
+const NetworkingForm: React.FC<NetworkingFormProps> = ({
+  onSubmit,
+  onCancel,
+  initialData,
+  loading = false,
+}) => {
   const [formData, setFormData] = useState({
     name: '',
     company: '',
@@ -16,7 +59,7 @@ const NetworkingForm: React.FC<NetworkingFormProps> = ({ onSubmit, onCancel, ini
     date: new Date().toISOString().split('T')[0],
     status: '',
     referral: 'N' as 'Y' | 'N',
-    notes: ''
+    notes: '',
   });
 
   useEffect(() => {
@@ -28,7 +71,7 @@ const NetworkingForm: React.FC<NetworkingFormProps> = ({ onSubmit, onCancel, ini
         date: initialData.date,
         status: initialData.status,
         referral: initialData.referral || 'N',
-        notes: initialData.notes || ''
+        notes: initialData.notes || '',
       });
     }
   }, [initialData]);
@@ -38,124 +81,104 @@ const NetworkingForm: React.FC<NetworkingFormProps> = ({ onSubmit, onCancel, ini
     onSubmit(formData);
   };
 
-  const statusOptions = [
-    'Planning to reach out',
-    'Messaged on LinkedIn',
-    'Email sent',
-    'Connected on LinkedIn',
-    'Had initial conversation',
-    'Follow-up scheduled',
-    'Referral provided',
-    'No response',
-    'Not interested'
-  ];
-
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Contact Name *</label>
-          <input
-            type="text"
-            required
+    <motion.form
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      onSubmit={handleSubmit}
+      className="space-y-6"
+    >
+      {/* Contact Information */}
+      <div className="space-y-4">
+        <FormSectionHeader title="Contact" icon={User} />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormInput
+            label="Name"
+            icon={User}
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, name: value })}
             placeholder="e.g., John Smith"
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Company *</label>
-          <input
-            type="text"
             required
+          />
+          <FormInput
+            label="Company"
+            icon={Building2}
             value={formData.company}
-            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, company: value })}
             placeholder="e.g., Google"
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Role/Title *</label>
-          <input
-            type="text"
             required
-            value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-            placeholder="e.g., Senior Software Engineer"
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
           />
         </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Date Contacted</label>
-          <input
-            type="date"
-            value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Status *</label>
-          <select
-            required
-            value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="">Select status...</option>
-            {statusOptions.map(status => (
-              <option key={status} value={status}>{status}</option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Provided Referral?</label>
-          <select
-            value={formData.referral}
-            onChange={(e) => setFormData({ ...formData, referral: e.target.value as 'Y' | 'N' })}
-            className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-          >
-            <option value="N">No</option>
-            <option value="Y">Yes</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-1">Notes</label>
-        <textarea
-          value={formData.notes}
-          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
-          rows={3}
-          placeholder="Conversation details, follow-up actions, personal notes..."
-          className="w-full border border-slate-300 dark:border-slate-600 rounded-md px-3 py-2 bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+
+        <FormInput
+          label="Role / Title"
+          icon={Briefcase}
+          value={formData.role}
+          onChange={(value) => setFormData({ ...formData, role: value })}
+          placeholder="e.g., Senior Software Engineer"
+          required
         />
       </div>
-      <div className="flex justify-end gap-3 pt-4">
-        <button
-          type="button"
-          onClick={onCancel}
-          disabled={loading}
-          className="px-4 py-2 text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text bg-white dark:bg-dark-card amoled:bg-amoled-card border border-slate-300 dark:border-slate-600 rounded-md hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition-colors"
-        >
-          {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white inline-block mr-2"></div>
-              Saving...
-            </>
-          ) : (
-            'Save Contact'
-          )}
-        </button>
+
+      {/* Status & Interaction */}
+      <div className="space-y-4">
+        <FormSectionHeader title="Status" icon={MessageSquare} />
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormInput
+            label="Date Contacted"
+            icon={Calendar}
+            type="date"
+            value={formData.date}
+            onChange={(value) => setFormData({ ...formData, date: value })}
+          />
+
+          <FormButtonGroup
+            label="Referral Received?"
+            value={formData.referral}
+            onChange={(value) => setFormData({ ...formData, referral: value as 'Y' | 'N' })}
+            options={[
+              { value: 'N', label: 'No' },
+              { value: 'Y', label: 'Yes' },
+            ]}
+          />
+        </div>
+
+        <FormButtonGroup
+          label="Current Status"
+          value={formData.status}
+          onChange={(value) => setFormData({ ...formData, status: value })}
+          options={statusOptions}
+          columns={3}
+          required
+        />
       </div>
-    </form>
+
+      {/* Notes */}
+      <div className="space-y-4">
+        <FormSectionHeader title="Notes" icon={FileText} />
+
+        <FormTextarea
+          value={formData.notes}
+          onChange={(value) => setFormData({ ...formData, notes: value })}
+          placeholder="Conversation details, follow-up actions, key topics discussed..."
+          rows={3}
+          showCharCount
+          maxLength={1000}
+        />
+      </div>
+
+      {/* Actions */}
+      <FormActions
+        onCancel={onCancel}
+        isLoading={loading}
+        submitText={initialData ? 'Update Contact' : 'Save Contact'}
+        loadingText="Saving..."
+        submitIcon={UserCheck}
+      />
+    </motion.form>
   );
 };
 

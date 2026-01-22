@@ -39,10 +39,23 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
+          // Core React
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // Firebase suite
           'vendor-firebase': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/analytics'],
-          'vendor-framer': ['framer-motion'],
-          'vendor-icons': ['lucide-react'],
+          // Animation libraries
+          'vendor-animation': ['framer-motion', 'lottie-react', 'react-spring', '@react-spring/web'],
+          // Markdown editor and rendering (large)
+          'vendor-markdown': ['@uiw/react-md-editor', 'react-markdown', 'react-syntax-highlighter'],
+          // Charts library
+          'vendor-charts': ['recharts'],
+          // PDF generation
+          'vendor-pdf': ['jspdf', 'html2canvas'],
+          // Date utilities
+          'vendor-date': ['date-fns'],
+          // UI utilities
+          'vendor-ui': ['react-hot-toast', 'react-confetti', 'react-draggable', 'react-helmet-async'],
+          // Note: lucide-react removed - let Rollup tree-shake individual icons into their component chunks
         },
       },
     },
