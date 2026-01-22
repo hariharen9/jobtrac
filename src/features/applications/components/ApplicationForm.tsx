@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import RangeSlider from '../../../components/shared/RangeSlider';
 import { useApplicationSettings } from '../../../hooks/useApplicationSettings';
-import { Briefcase, MapPin, Calendar, DollarSign, Star, Link as LinkIcon, Mail, Users, FileText, Flag } from 'lucide-react';
+import { Briefcase, MapPin, Calendar, DollarSign, Star, Link as LinkIcon, Mail, Users, FileText, Flag, ChevronDown, ChevronUp } from 'lucide-react';
 
 interface ApplicationFormProps {
   onSubmit: (application: Omit<Application, 'id' | 'createdAt' | 'updatedAt' | 'nextStep'>) => void;

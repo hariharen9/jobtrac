@@ -1,4 +1,5 @@
-import React, { useState, useCallback, useMemo, Suspense } from 'react';
+import React, { useState, useCallback, useMemo, Suspense, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Briefcase, BookOpen, Building, Users, Star, Settings, Target, Search, HelpCircle, Archive } from 'lucide-react';
 import { TabType, Application, PrepEntry, NetworkingContact, StarStory, EditableItem, ApplicationStatus, Subject, SubjectFirestore, VaultResource, CodingProblem } from './types';
@@ -224,8 +225,63 @@ function App() {
   const currentTab = useMemo(() => tabs.find(tab => tab.id === activeTab), [activeTab, tabs]);
   const pageTitle = currentTab ? `JobTrac - ${currentTab.label}` : 'JobTrac - Dashboard';
 
+  // URL search params for extension integration
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // State to hold pre-filled application data from extension
+  const [preFilledApplication, setPreFilledApplication] = useState<Partial<Application> | null>(null);
+
   // State to hold the pre-filled topic for prep entries
   const [preFilledPrepTopic, setPreFilledPrepTopic] = useState<string | null>(null);
+
+  // Check for extension data in URL params on mount
+  useEffect(() => {
+    const action = searchParams.get('action');
+    console.log('[JobTrac] Checking URL params, action:', action, 'user:', !!user);
+
+    // Only process if user is authenticated
+    if (!user) return;
+
+    if (action === 'add-application') {
+      // Extract job data from URL params (sent by extension)
+      const company = searchParams.get('company') || '';
+      const role = searchParams.get('role') || '';
+      const link = searchParams.get('link') || '';
+      const location = searchParams.get('location') || '';
+      const source = searchParams.get('source') as Application['source'] || 'LinkedIn';
+      const salary = searchParams.get('salary') || '';
+      const notes = searchParams.get('notes') || '';
+      const jd = searchParams.get('jd') || '';
+
+      console.log('[JobTrac] Extension data:', { company, role, link, location, notes });
+
+      if (company || role) {
+        // Set pre-filled application data
+        setPreFilledApplication({
+          company,
+          role,
+          link,
+          location,
+          source,
+          salaryRange: salary,
+          jobDescription: jd,
+          status: 'To Apply',
+          date: new Date().toISOString().split('T')[0],
+          referral: 'N',
+          recruiter: '',
+          notes,
+        });
+
+        // Switch to applications tab and open modal
+        setActiveTab('applications');
+        setModalType('applications');
+        setIsModalOpen(true);
+
+        // Clear URL params after reading
+        setSearchParams({}, { replace: true });
+      }
+    }
+  }, [searchParams, setSearchParams, user]);
 
   const openModal = useCallback((type: TabType, itemToEdit: EditableItem | null = null) => {
     setModalType(type);
@@ -250,6 +306,7 @@ function App() {
     setIsModalOpen(false);
     setEditingItem(null);
     setPreFilledPrepTopic(null); // Clear pre-filled topic when closing modal
+    setPreFilledApplication(null); // Clear pre-filled application data (from extension)
   }, []);
 
   // Auto-complete Quick Start tasks based on user actions
@@ -747,8 +804,11 @@ function App() {
         return (
           <ApplicationForm
             onSubmit={handleSubmit}
-            onCancel={closeModal}
-            initialData={editingItem}
+            onCancel={() => {
+              closeModal();
+              setPreFilledApplication(null); // Clear pre-filled data on cancel
+            }}
+            initialData={editingItem || preFilledApplication as Application | null}
             loading={isSubmitting}
           />
         );

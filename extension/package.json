@@ -1,0 +1,27 @@
+{
+  "name": "jobtrac-extension",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "JobTrac browser extension - Import job postings with one click",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "build:watch": "vite build --watch",
+    "preview": "vite preview",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "@types/node": "^22.10.0",
+    "@types/react": "^18.3.5",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "typescript": "^5.5.3",
+    "vite": "^6.0.0"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "manifest_version": 3,
+  "name": "JobTrac - Job Application Importer",
+  "version": "1.0.0",
+  "description": "One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more directly into JobTrac.",
+  "icons": {
+    "128": "icons/icon.svg"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/icon.svg"
+    },
+    "default_title": "Import Job to JobTrac"
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/jobs/*",
+        "https://linkedin.com/jobs/*",
+        "https://www.indeed.com/*",
+        "https://indeed.com/*",
+        "https://www.glassdoor.com/*",
+        "https://glassdoor.com/*",
+        "https://www.glassdoor.co.in/*",
+        "https://www.naukri.com/*",
+        "https://naukri.com/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+J",
+        "mac": "Command+Shift+J"
+      },
+      "description": "Open JobTrac Importer"
+    }
+  },
+  "host_permissions": [
+    "https://www.linkedin.com/*",
+    "https://linkedin.com/*",
+    "https://www.indeed.com/*",
+    "https://indeed.com/*",
+    "https://www.glassdoor.com/*",
+    "https://glassdoor.com/*",
+    "https://www.glassdoor.co.in/*",
+    "https://www.naukri.com/*",
+    "https://naukri.com/*",
+    "https://*.firebaseio.com/*",
+    "https://*.googleapis.com/*"
+  ]
+}
