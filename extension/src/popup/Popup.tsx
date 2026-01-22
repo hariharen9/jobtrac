@@ -10,6 +10,8 @@ import {
   DEFAULT_SETTINGS,
 } from '../types';
 import { getSettings, addPendingApplication } from '../storage';
+import { useTheme, Theme } from './hooks/useTheme';
+import CompanyIcon from './components/CompanyIcon';
 import './popup.css';
 
 type ViewState = 'loading' | 'extracted' | 'form' | 'success' | 'error' | 'not-job-page';
@@ -34,6 +36,7 @@ function App() {
   const [viewState, setViewState] = useState<ViewState>('loading');
   const [jobData, setJobData] = useState<ExtractedJobData | null>(null);
   const [error, setError] = useState<string>('');
+  const { theme, toggleTheme } = useTheme();
 
   // Form state
   const [formData, setFormData] = useState<ApplicationPayload>({
@@ -173,7 +176,7 @@ function App() {
   if (viewState === 'loading') {
     return (
       <div className="popup-container">
-        <Header />
+        <Header theme={theme} onToggleTheme={toggleTheme} />
         <div className="loading-container">
           <div className="loading-spinner" />
           <p className="loading-text">Extracting job details...</p>
@@ -185,7 +188,7 @@ function App() {
   if (viewState === 'not-job-page') {
     return (
       <div className="popup-container">
-        <Header />
+        <Header theme={theme} onToggleTheme={toggleTheme} />
         <div className="empty-state">
           <div className="empty-state-icon">🔍</div>
           <h2 className="empty-state-title">No Job Posting Detected</h2>
@@ -205,7 +208,7 @@ function App() {
   if (viewState === 'success') {
     return (
       <div className="popup-container">
-        <Header />
+        <Header theme={theme} onToggleTheme={toggleTheme} />
         <div className="success-state">
           <div className="success-icon">✓</div>
           <h2 className="empty-state-title">Application Saved!</h2>
@@ -222,7 +225,7 @@ function App() {
 
   return (
     <div className="popup-container">
-      <Header />
+      <Header theme={theme} onToggleTheme={toggleTheme} />
 
       {/* Job Preview */}
       <div className="card">
@@ -232,9 +235,7 @@ function App() {
               {jobData?.companyLogo ? (
                 <img src={jobData.companyLogo} alt={formData.company} />
               ) : (
-                <span className="job-preview-logo-placeholder">
-                  {formData.company.charAt(0).toUpperCase()}
-                </span>
+                <CompanyIcon companyName={formData.company} size={32} />
               )}
             </div>
             <div className="job-preview-info">
@@ -388,7 +389,29 @@ function App() {
 }
 
 // Header Component
-function Header() {
+function Header({ theme, onToggleTheme }: { theme: Theme; onToggleTheme: () => void }) {
+  const getThemeIcon = () => {
+    switch (theme) {
+      case 'light':
+        return '☀️';
+      case 'dark':
+        return '🌙';
+      case 'amoled':
+        return '🖤';
+    }
+  };
+
+  const getThemeLabel = () => {
+    switch (theme) {
+      case 'light':
+        return 'Light';
+      case 'dark':
+        return 'Dark';
+      case 'amoled':
+        return 'AMOLED';
+    }
+  };
+
   return (
     <header className="header">
       <div className="header-title">
@@ -396,6 +419,13 @@ function Header() {
         <h1>JobTrac</h1>
       </div>
       <div className="header-actions">
+        <button
+          className="btn btn-ghost theme-toggle"
+          onClick={onToggleTheme}
+          title={`Theme: ${getThemeLabel()} (click to change)`}
+        >
+          <span className="theme-icon">{getThemeIcon()}</span>
+        </button>
         <button
           className="btn btn-ghost"
           onClick={() => chrome.tabs.create({ url: DEFAULT_SETTINGS.jobtracUrl })}

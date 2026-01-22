@@ -506,3 +506,431 @@ body {
   gap: 12px;
   padding-top: 4px;
 }
+
+/* Theme Toggle Button */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* ========================================
+   DARK MODE
+   ======================================== */
+.dark body,
+:root.dark body {
+  background: #161B22;
+  color: #B4BCC5;
+}
+
+.dark .header {
+  border-bottom-color: #3A3F48;
+}
+
+.dark .header-title h1 {
+  color: #B4BCC5;
+}
+
+.dark .card {
+  background: #1F242B;
+  border-color: #3A3F48;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.2);
+}
+
+.dark .card:hover {
+  box-shadow: 0 4px 12px -2px rgb(0 0 0 / 0.3);
+  border-color: #4A5058;
+}
+
+.dark .card-header {
+  border-bottom-color: #3A3F48;
+}
+
+.dark .card-title {
+  color: #7E8995;
+}
+
+.dark .form-label {
+  color: #B4BCC5;
+}
+
+.dark .form-input,
+.dark .form-select,
+.dark .form-textarea {
+  background-color: #161B22;
+  border-color: #3A3F48;
+  color: #B4BCC5;
+}
+
+.dark .form-input:focus,
+.dark .form-select:focus,
+.dark .form-textarea:focus {
+  border-color: #7E8995;
+  background-color: #1F242B;
+  box-shadow: 0 0 0 3px rgba(126, 137, 149, 0.15);
+}
+
+.dark .form-input::placeholder,
+.dark .form-textarea::placeholder {
+  color: #7E8995;
+}
+
+.dark .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237E8995'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.dark .btn-primary {
+  background: #ffffff;
+  color: #161B22;
+}
+
+.dark .btn-primary:hover {
+  background: #e2e8f0;
+}
+
+.dark .btn-secondary {
+  background: #1F242B;
+  color: #B4BCC5;
+  border-color: #3A3F48;
+}
+
+.dark .btn-secondary:hover {
+  background: #2A3038;
+  color: #ffffff;
+}
+
+.dark .btn-ghost {
+  color: #7E8995;
+}
+
+.dark .btn-ghost:hover {
+  color: #B4BCC5;
+  background: #1F242B;
+}
+
+.dark .job-preview-logo {
+  background: linear-gradient(135deg, #1F242B 0%, #2A3038 100%);
+  border-color: #3A3F48;
+}
+
+.dark .job-preview-logo-placeholder {
+  color: #B4BCC5;
+}
+
+.dark .job-preview-role {
+  color: #ffffff;
+}
+
+.dark .job-preview-company {
+  color: #B4BCC5;
+}
+
+.dark .job-preview-meta {
+  color: #7E8995;
+}
+
+.dark .job-preview-meta-item {
+  background: #1F242B;
+  color: #B4BCC5;
+}
+
+.dark .status-badge.info {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.dark .status-badge.success {
+  background: rgba(34, 197, 94, 0.15);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.dark .status-badge.warning {
+  background: rgba(251, 191, 36, 0.15);
+  color: #fcd34d;
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+.dark .status-badge.error {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.dark .loading-spinner {
+  border-color: #3A3F48;
+  border-top-color: #ffffff;
+}
+
+.dark .loading-text {
+  color: #7E8995;
+}
+
+.dark .empty-state-icon {
+  background: #1F242B;
+}
+
+.dark .empty-state-title {
+  color: #ffffff;
+}
+
+.dark .empty-state-text {
+  color: #7E8995;
+}
+
+.dark .success-icon {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.3);
+  color: #86efac;
+}
+
+.dark .expandable {
+  border-top-color: #3A3F48;
+}
+
+.dark .expandable-header:hover {
+  background: #1F242B;
+}
+
+.dark .expandable-header span:last-child {
+  color: #7E8995;
+}
+
+.dark .footer {
+  border-top-color: #3A3F48;
+  color: #7E8995;
+}
+
+.dark .footer a {
+  color: #B4BCC5;
+}
+
+.dark .footer a:hover {
+  color: #ffffff;
+}
+
+.dark .footer span:not(:first-child):not(:last-child) {
+  color: #3A3F48;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #3A3F48;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #4A5058;
+}
+
+/* ========================================
+   AMOLED MODE (Pure Black)
+   ======================================== */
+.amoled body,
+:root.amoled body {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.amoled .header {
+  border-bottom-color: #333333;
+}
+
+.amoled .header-title h1 {
+  color: #FFFFFF;
+}
+
+.amoled .card {
+  background: #000000;
+  border-color: #333333;
+  box-shadow: none;
+}
+
+.amoled .card:hover {
+  box-shadow: 0 0 0 1px #444444;
+  border-color: #444444;
+}
+
+.amoled .card-header {
+  border-bottom-color: #333333;
+}
+
+.amoled .card-title {
+  color: #AAAAAA;
+}
+
+.amoled .form-label {
+  color: #FFFFFF;
+}
+
+.amoled .form-input,
+.amoled .form-select,
+.amoled .form-textarea {
+  background-color: #000000;
+  border-color: #333333;
+  color: #FFFFFF;
+}
+
+.amoled .form-input:focus,
+.amoled .form-select:focus,
+.amoled .form-textarea:focus {
+  border-color: #AAAAAA;
+  background-color: #111111;
+  box-shadow: 0 0 0 3px rgba(170, 170, 170, 0.1);
+}
+
+.amoled .form-input::placeholder,
+.amoled .form-textarea::placeholder {
+  color: #AAAAAA;
+}
+
+.amoled .form-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23AAAAAA'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.amoled .btn-primary {
+  background: #ffffff;
+  color: #000000;
+}
+
+.amoled .btn-primary:hover {
+  background: #e2e8f0;
+}
+
+.amoled .btn-secondary {
+  background: #111111;
+  color: #FFFFFF;
+  border-color: #333333;
+}
+
+.amoled .btn-secondary:hover {
+  background: #222222;
+  color: #ffffff;
+}
+
+.amoled .btn-ghost {
+  color: #AAAAAA;
+}
+
+.amoled .btn-ghost:hover {
+  color: #FFFFFF;
+  background: #111111;
+}
+
+.amoled .job-preview-logo {
+  background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%);
+  border-color: #333333;
+}
+
+.amoled .job-preview-logo-placeholder {
+  color: #FFFFFF;
+}
+
+.amoled .job-preview-role {
+  color: #ffffff;
+}
+
+.amoled .job-preview-company {
+  color: #FFFFFF;
+}
+
+.amoled .job-preview-meta {
+  color: #AAAAAA;
+}
+
+.amoled .job-preview-meta-item {
+  background: #111111;
+  color: #FFFFFF;
+}
+
+.amoled .status-badge.info {
+  background: rgba(99, 102, 241, 0.1);
+  color: #a5b4fc;
+  border-color: rgba(99, 102, 241, 0.2);
+}
+
+.amoled .status-badge.success {
+  background: rgba(34, 197, 94, 0.1);
+  color: #86efac;
+  border-color: rgba(34, 197, 94, 0.2);
+}
+
+.amoled .status-badge.warning {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fcd34d;
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+.amoled .status-badge.error {
+  background: rgba(239, 68, 68, 0.1);
+  color: #fca5a5;
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.amoled .loading-spinner {
+  border-color: #333333;
+  border-top-color: #ffffff;
+}
+
+.amoled .loading-text {
+  color: #AAAAAA;
+}
+
+.amoled .empty-state-icon {
+  background: #111111;
+}
+
+.amoled .empty-state-title {
+  color: #ffffff;
+}
+
+.amoled .empty-state-text {
+  color: #AAAAAA;
+}
+
+.amoled .success-icon {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.2);
+  color: #86efac;
+}
+
+.amoled .expandable {
+  border-top-color: #333333;
+}
+
+.amoled .expandable-header:hover {
+  background: #111111;
+}
+
+.amoled .expandable-header span:last-child {
+  color: #AAAAAA;
+}
+
+.amoled .footer {
+  border-top-color: #333333;
+  color: #AAAAAA;
+}
+
+.amoled .footer a {
+  color: #FFFFFF;
+}
+
+.amoled .footer a:hover {
+  color: #ffffff;
+}
+
+.amoled .footer span:not(:first-child):not(:last-child) {
+  color: #333333;
+}
+
+.amoled ::-webkit-scrollbar-thumb {
+  background: #333333;
+}
+
+.amoled ::-webkit-scrollbar-thumb:hover {
+  background: #444444;
+}
