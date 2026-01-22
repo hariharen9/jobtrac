@@ -36,8 +36,11 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
     notes: '',
     salaryRange: getDefaultSalaryRange(),
     priority: 'Medium' as 'High' | 'Medium' | 'Low',
-    interviewDate: ''
+    interviewDate: '',
+    jobDescription: ''
   });
+
+  const [showJobDescription, setShowJobDescription] = useState(false);
 
   useEffect(() => {
     if (initialData) {
@@ -55,8 +58,13 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
         notes: initialData.notes || '',
         salaryRange: initialData.salaryRange || getDefaultSalaryRange(),
         priority: initialData.priority || 'Medium',
-        interviewDate: initialData.interviewDate || ''
+        interviewDate: initialData.interviewDate || '',
+        jobDescription: initialData.jobDescription || ''
       });
+      // Auto-expand job description section if there's content
+      if (initialData.jobDescription) {
+        setShowJobDescription(true);
+      }
     }
   }, [initialData]);
 
@@ -373,7 +381,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
           Additional Notes
         </h3>
-        
+
         <div className="group">
           <textarea
             value={formData.notes}
@@ -383,6 +391,43 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             className="w-full px-4 py-3 rounded-lg border-2 border-slate-200 dark:border-slate-700 amoled:border-slate-800 bg-white dark:bg-dark-card amoled:bg-black text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-600 resize-none"
           />
         </div>
+      </div>
+
+      {/* Job Description Section - Collapsible */}
+      <div className="space-y-4">
+        <button
+          type="button"
+          onClick={() => setShowJobDescription(!showJobDescription)}
+          className="w-full flex items-center justify-between text-sm font-semibold text-slate-900 dark:text-dark-text amoled:text-amoled-text uppercase tracking-wider hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+            Job Description
+            {formData.jobDescription && (
+              <span className="text-xs font-normal normal-case text-green-600 dark:text-green-400">(saved)</span>
+            )}
+          </span>
+          {showJobDescription ? (
+            <ChevronUp className="w-4 h-4" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
+        </button>
+
+        {showJobDescription && (
+          <div className="group animate-in fade-in slide-in-from-top-2 duration-200">
+            <textarea
+              value={formData.jobDescription}
+              onChange={(e) => setFormData({ ...formData, jobDescription: e.target.value })}
+              rows={8}
+              placeholder="Paste the full job description here for reference..."
+              className="w-full px-4 py-3 rounded-lg border-2 border-slate-200 dark:border-slate-700 amoled:border-slate-800 bg-white dark:bg-dark-card amoled:bg-black text-slate-900 dark:text-dark-text amoled:text-amoled-text placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200 hover:border-slate-300 dark:hover:border-slate-600 resize-y text-sm font-mono"
+            />
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Storing the job description helps you prepare for interviews and reference requirements later.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Action Buttons */}

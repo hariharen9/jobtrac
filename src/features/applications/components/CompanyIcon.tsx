@@ -143,6 +143,8 @@ const CustomIcons = {
   ),
 };
 
+import LogoDevImage from './LogoDevImage';
+
 // Mapping of company names to their icons and brand colors
 const companyIconMap: Record<string, { 
   icon: React.ComponentType<{ size?: number, className?: string } | React.SVGProps<SVGSVGElement>>, 
@@ -351,8 +353,8 @@ const CompanyIcon: React.FC<CompanyIconProps> = ({
     );
   }
   
-  // Default to a generic building icon
-  return <FaBuilding size={size} className={className} />;
+  // Default to LogoDevImage which will fallback to FaBuilding if image load fails
+  return <LogoDevImage companyName={companyName} size={size} className={className} />;
 };
 
 export default CompanyIcon;
