@@ -447,18 +447,19 @@ function Footer() {
   return (
     <footer className="footer">
       <span>
+        Built by{' '}
         <a
-          href={DEFAULT_SETTINGS.jobtracUrl}
+          href="https://hariharen.site"
           onClick={(e) => {
             e.preventDefault();
-            chrome.tabs.create({ url: DEFAULT_SETTINGS.jobtracUrl });
+            chrome.tabs.create({ url: 'https://hariharen.site' });
           }}
         >
-          jobtrac.site
+          Hariharen
         </a>
       </span>
       <span>•</span>
-      <span>v1.0.0</span>
+      <span>v0.1.0</span>
     </footer>
   );
 }

@@ -13,6 +13,7 @@ const LicensePage = React.lazy(() => import("../pages/LicensePage"));
 const OverviewPage = React.lazy(() => import("../pages/OverviewPage"));
 const FAQPage = React.lazy(() => import("../pages/FAQPage"));
 const CreatorPage = React.lazy(() => import("../pages/CreatorPage"));
+const PrivacyPage = React.lazy(() => import("../pages/PrivacyPage"));
 
 // Helper to wrap lazy components with Suspense
 const SuspenseWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -50,6 +51,10 @@ export const router = createBrowserRouter([
     {
         path: "/creator",
         element: <SuspenseWrapper><CreatorPage /></SuspenseWrapper>,
+    },
+    {
+        path: "/privacy",
+        element: <SuspenseWrapper><PrivacyPage /></SuspenseWrapper>,
     },
     {
         path: "/app",

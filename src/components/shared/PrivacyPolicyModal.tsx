@@ -11,6 +11,7 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
     <Modal isOpen={isOpen} onClose={onClose} title="Privacy Policy" size="lg">
       <div className="space-y-6 text-slate-600 dark:text-slate-300 p-2">
         <div>
+          <p className="text-sm text-slate-500 mb-4">Last updated: January 22, 2026</p>
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">1. Introduction</h3>
           <p>
             Welcome to JobTrac. I am Hariharen, the developer behind this open-source project. 
@@ -72,18 +73,38 @@ const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ isOpen, onClose
           <ul className="list-disc list-inside space-y-1 ml-2 mt-2">
             <li><strong>Google Firebase:</strong> For authentication, database, and hosting.</li>
             <li><strong>Google Analytics:</strong> For usage tracking.</li>
+            <li><strong>Logo.dev:</strong> For fetching company logos (in the browser extension).</li>
           </ul>
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">7. Changes to This Policy</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">7. Browser Extension</h3>
+          <p>
+            The JobTrac Browser Extension helps you import job postings from job boards directly into JobTrac. Here's how it handles your data:
+          </p>
+          <ul className="list-disc list-inside space-y-1 ml-2 mt-2">
+            <li><strong>Data Collected:</strong> The extension only reads job posting data (company name, role, location, salary, job description) from the current page when you click the extension icon.</li>
+            <li><strong>Data Storage:</strong> Your theme preference is stored locally in your browser using Chrome Storage API. No data is sent to external servers except when you choose to save to JobTrac.</li>
+            <li><strong>Permissions Used:</strong>
+              <ul className="list-disc list-inside ml-4 mt-1">
+                <li><code className="text-xs bg-slate-100 dark:bg-slate-700 px-1 rounded">activeTab</code> - To read job posting data from the current page</li>
+                <li><code className="text-xs bg-slate-100 dark:bg-slate-700 px-1 rounded">storage</code> - To save your preferences (theme, default status)</li>
+                <li><code className="text-xs bg-slate-100 dark:bg-slate-700 px-1 rounded">tabs</code> - To open JobTrac with pre-filled job data</li>
+              </ul>
+            </li>
+            <li><strong>No Background Tracking:</strong> The extension does not run in the background, track your browsing, or collect any data without your explicit action.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">8. Changes to This Policy</h3>
           <p>
             I may update this Privacy Policy from time to time. I will notify users of any changes by posting the new Privacy Policy on this page.
           </p>
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">8. Contact Me</h3>
+          <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">9. Contact Me</h3>
           <p>
             If you have any questions about this Privacy Policy, please contact me at:
           </p>

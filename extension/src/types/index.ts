@@ -115,6 +115,5 @@ export const DEFAULT_SETTINGS: StoredSettings = {
   defaultStatus: 'To Apply',
   defaultPriority: 'Medium',
   autoFillDate: true,
-  // Use localhost for development, production URL for release
-  jobtracUrl: 'http://localhost:5173',  // Change to 'https://jobtrac.site' for production
+  jobtracUrl: 'https://jobtrac.site',
 };

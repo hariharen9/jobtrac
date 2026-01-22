@@ -11,7 +11,7 @@ const TermsModal: React.FC<TermsModalProps> = ({ isOpen, onClose }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="Terms and Conditions" size="lg">
       <div className="space-y-6 text-slate-600 dark:text-slate-300 p-2">
         <div>
-          <p className="text-sm text-slate-500 mb-4">Last updated: January 01, 2026</p>
+          <p className="text-sm text-slate-500 mb-4">Last updated: January 22, 2026</p>
           <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">1. Agreement to Terms</h3>
           <p>
             By accessing or using JobTrac, you agree to be bound by these Terms and Conditions. 
