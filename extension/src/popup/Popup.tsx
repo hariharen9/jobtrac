@@ -392,7 +392,7 @@ function Header() {
   return (
     <header className="header">
       <div className="header-title">
-        <span className="header-logo">🎯</span>
+        <img src="/icons/jtrac-logo.png" alt="JobTrac" className="header-logo" />
         <h1>JobTrac</h1>
       </div>
       <div className="header-actions">

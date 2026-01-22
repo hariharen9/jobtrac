@@ -4,12 +4,14 @@
   "version": "1.0.0",
   "description": "One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more directly into JobTrac.",
   "icons": {
-    "128": "icons/icon.svg"
+    "48": "icons/jtrac-logo.png",
+    "128": "icons/jtrac-logo.png"
   },
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "128": "icons/icon.svg"
+      "48": "icons/jtrac-logo.png",
+      "128": "icons/jtrac-logo.png"
     },
     "default_title": "Import Job to JobTrac"
   },
