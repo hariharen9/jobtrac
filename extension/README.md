@@ -1,6 +1,6 @@
 # JobTrac Browser Extension
 
-One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more directly into JobTrac.
+Save jobs in one click. Auto-extracts company, role, location, salary & job description from LinkedIn, Indeed, Glassdoor & Naukri into your JobTrac dashboard.
 
 ## Features
 
@@ -13,7 +13,8 @@ One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more 
   - Generic company career pages (uses JSON-LD structured data)
 - **Auto-Detection**: Automatically detects company, role, location, salary, and job description
 - **Quick Edit**: Review and edit extracted data before saving
-- **Keyboard Shortcuts**: `Cmd+Shift+J` (Mac) / `Ctrl+Shift+J` (Windows) to open
+- **Theme Support**: Light, Dark & AMOLED modes
+- **Keyboard Shortcuts**: `Ctrl+Shift+J` (Mac) / `Alt+Shift+J` (Windows/Linux) to open
 
 ## Installation
 
@@ -40,15 +41,9 @@ One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more 
    - Click "Load unpacked"
    - Select the `extension/dist` folder
 
-### Creating Icons
+### Icons
 
-Before loading the extension, you need to create PNG icons from the SVG:
-
-1. Open `public/icons/icon.svg` in a browser or image editor
-2. Export as PNG in these sizes: 16x16, 32x32, 48x48, 128x128
-3. Save as `icon16.png`, `icon32.png`, `icon48.png`, `icon128.png` in `dist/icons/`
-
-Or use an online tool like [CloudConvert](https://cloudconvert.com/svg-to-png) to batch convert.
+The extension uses `jtrac-logo.png` from `public/icons/`. The build process automatically copies icons to the dist folder.
 
 ## Usage
 

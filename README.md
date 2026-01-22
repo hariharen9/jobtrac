@@ -132,6 +132,7 @@
 
 | Feature                 | Description                                                              |
 | :---------------------- | :----------------------------------------------------------------------- |
+| 🧩 **Browser Extension**| Save jobs in one click from LinkedIn, Indeed, Glassdoor & Naukri.        |
 | 🚀 **Onboarding**       | Get started in seconds with an interactive welcome wizard and demo mode.            |
 | 📱 **Responsive Design**| A seamless experience on desktop, tablet, and mobile.                    |
 | 🎨 **Theming**          | Switch between Light, Dark, and AMOLED themes for your comfort.          |
@@ -288,6 +289,30 @@
 - **Quick Navigation**: Click any result to jump directly to that item for editing.
 
 </details>
+
+---
+
+## 🧩 Browser Extension
+
+<div align="center">
+  <p>
+    <strong>Save jobs in one click. No more copy-pasting.</strong>
+  </p>
+</div>
+
+The JobTrac Browser Extension lets you import job postings directly from job boards into your dashboard.
+
+| Feature | Description |
+| :------ | :---------- |
+| **One-Click Import** | Auto-extracts company, role, location, salary & job description |
+| **Supported Sites** | LinkedIn, Indeed, Glassdoor, Naukri + generic career pages |
+| **Quick Edit** | Review and customize before saving |
+| **Theme Support** | Light, Dark & AMOLED modes |
+| **Keyboard Shortcut** | `Ctrl+Shift+J` (Mac) / `Alt+Shift+J` (Windows) |
+
+📥 **Install from Chrome Web Store** *(Coming Soon)*
+
+> See [`extension/README.md`](extension/README.md) for development setup.
 
 ---
 

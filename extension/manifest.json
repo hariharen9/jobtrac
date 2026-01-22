@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "JobTrac - Job Application Importer",
   "version": "0.1.0",
-  "description": "One-click import job postings from LinkedIn, Indeed, Glassdoor, Naukri and more directly into JobTrac.",
+  "description": "Save jobs in one click. Auto-extracts details from LinkedIn, Indeed, Glassdoor & Naukri into your JobTrac dashboard.",
   "author": "Hariharen",
   "homepage_url": "https://jobtrac.site",
   "icons": {
@@ -50,8 +50,8 @@
   "commands": {
     "_execute_action": {
       "suggested_key": {
-        "default": "Ctrl+Shift+J",
-        "mac": "Command+Shift+J"
+        "default": "Alt+Shift+J",
+        "mac": "MacCtrl+Shift+J"
       },
       "description": "Open JobTrac Importer"
     }

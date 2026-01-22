@@ -84,6 +84,7 @@ const PrivacyPage: React.FC = () => {
               The JobTrac Browser Extension helps you import job postings from job boards directly into JobTrac. Here's how it handles your data:
             </p>
             <ul className="list-disc list-inside space-y-2 ml-2">
+              <li><strong>NOTE:"JobTrac does not transmit user data to third-party servers without user consent. Data is processed locally within the browser."</strong></li>
               <li><strong>Data Collected:</strong> The extension only reads job posting data (company name, role, location, salary, job description) from the current page when you click the extension icon.</li>
               <li><strong>Data Storage:</strong> Your theme preference is stored locally in your browser using Chrome Storage API. No data is sent to external servers except when you choose to save to JobTrac.</li>
               <li><strong>Permissions Used:</strong>

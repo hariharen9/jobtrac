@@ -27,35 +27,56 @@ export const linkedinParser: JobParser = {
 
   extract: (): ExtractedJobData | null => {
     try {
-      // Job title - multiple possible selectors
+      // Job title - multiple possible selectors for different LinkedIn layouts
       const role = getTextFromSelectors([
+        // Search results page selectors
+        '.job-details-jobs-unified-top-card__job-title h1 a',
         '.job-details-jobs-unified-top-card__job-title h1',
+        '.job-details-jobs-unified-top-card__job-title',
+        '.jobs-search__job-details--container h1',
+        '.jobs-search-results-list h1',
+        // Collections/recommended page selectors
         '.jobs-unified-top-card__job-title',
         '.t-24.job-details-jobs-unified-top-card__job-title',
         'h1.topcard__title',
         '.jobs-details-top-card__job-title',
         'h1[class*="job-title"]',
         '.job-view-layout h1',
+        // Fallback - any h1 in job details area
+        '.jobs-details h1',
+        '.scaffold-layout__detail h1',
       ]);
 
       // Company name
       const company = getTextFromSelectors([
+        // Search results page selectors
         '.job-details-jobs-unified-top-card__company-name a',
         '.job-details-jobs-unified-top-card__company-name',
+        '.job-details-jobs-unified-top-card__primary-description-container a',
+        // Collections/recommended page selectors
         '.jobs-unified-top-card__company-name a',
         '.jobs-unified-top-card__company-name',
         '.topcard__org-name-link',
         '.jobs-details-top-card__company-url',
         'a[class*="company-name"]',
+        // Fallback selectors
+        '.jobs-details a[data-control-name="company_link"]',
+        '.scaffold-layout__detail a[href*="/company/"]',
       ]);
 
       // Location
       const location = getTextFromSelectors([
+        // Search results page selectors
         '.job-details-jobs-unified-top-card__primary-description-container .tvm__text',
+        '.job-details-jobs-unified-top-card__primary-description-container span:nth-child(1)',
+        '.job-details-jobs-unified-top-card__bullet',
+        // Collections/recommended page selectors
         '.jobs-unified-top-card__bullet',
         '.topcard__flavor--bullet',
         '.jobs-details-top-card__bullet',
         'span[class*="location"]',
+        // Fallback
+        '.jobs-details span[class*="bullet"]',
       ]);
 
       // Job description
@@ -65,6 +86,9 @@ export const linkedinParser: JobParser = {
         '.jobs-box__html-content',
         '#job-details',
         '.description__text',
+        // Search results specific
+        '.jobs-description',
+        'article[class*="jobs-description"]',
       ]);
 
       // Salary (if available)
@@ -72,17 +96,31 @@ export const linkedinParser: JobParser = {
         '.job-details-jobs-unified-top-card__job-insight span',
         '.compensation__salary',
         '[class*="salary"]',
+        '.job-details-jobs-unified-top-card__job-insight--highlight',
       ]);
 
       // Employment type
       const employmentType = getTextFromSelectors([
         '.job-details-jobs-unified-top-card__job-insight--highlight span',
         '.jobs-unified-top-card__workplace-type',
+        '.job-details-jobs-unified-top-card__job-insight li span',
       ]);
 
-      // Company logo
-      const logoEl = document.querySelector('.job-details-jobs-unified-top-card__company-logo img') as HTMLImageElement;
-      const companyLogo = logoEl?.src || '';
+      // Company logo - try multiple selectors
+      let companyLogo = '';
+      const logoSelectors = [
+        '.job-details-jobs-unified-top-card__company-logo img',
+        '.jobs-unified-top-card__company-logo img',
+        '.scaffold-layout__detail img[class*="company-logo"]',
+        '.jobs-details img[class*="logo"]',
+      ];
+      for (const selector of logoSelectors) {
+        const logoEl = document.querySelector(selector) as HTMLImageElement;
+        if (logoEl?.src) {
+          companyLogo = logoEl.src;
+          break;
+        }
+      }
 
       if (!role && !company) {
         return null;
