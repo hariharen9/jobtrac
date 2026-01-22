@@ -7,21 +7,30 @@ import { copyFileSync, mkdirSync, existsSync } from 'fs';
 const copyExtensionFiles = () => ({
   name: 'copy-extension-files',
   closeBundle() {
+    const distDir = resolve(__dirname, 'dist');
+
+    // Ensure dist directory exists
+    if (!existsSync(distDir)) {
+      mkdirSync(distDir, { recursive: true });
+    }
+
     // Copy manifest.json
     copyFileSync(
       resolve(__dirname, 'manifest.json'),
-      resolve(__dirname, 'dist/manifest.json')
+      resolve(distDir, 'manifest.json')
     );
 
     // Copy icons
-    const iconsDir = resolve(__dirname, 'dist/icons');
+    const iconsDir = resolve(distDir, 'icons');
     if (!existsSync(iconsDir)) {
       mkdirSync(iconsDir, { recursive: true });
     }
-    copyFileSync(
-      resolve(__dirname, 'public/icons/icon.svg'),
-      resolve(__dirname, 'dist/icons/icon.svg')
-    );
+
+    // Copy the logo file used in manifest
+    const logoSrc = resolve(__dirname, 'public/icons/jtrac-logo.png');
+    if (existsSync(logoSrc)) {
+      copyFileSync(logoSrc, resolve(iconsDir, 'jtrac-logo.png'));
+    }
 
     console.log('✓ Copied manifest.json and icons to dist/');
   },
@@ -29,6 +38,7 @@ const copyExtensionFiles = () => ({
 
 // Chrome Extension Vite Config
 export default defineConfig({
+  root: __dirname, // Set root to extension directory
   plugins: [react(), copyExtensionFiles()],
   build: {
     outDir: 'dist',
