@@ -1,12 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  X, 
-  ExternalLink, 
-  Star, 
-  Globe, 
-  Lock, 
-  Plus,
+import {
   FileText,
   Briefcase,
   Award,
@@ -15,6 +9,15 @@ import {
   Wrench
 } from 'lucide-react';
 import { VaultResource, ResourceCategory } from '../../../types';
+import {
+  FormInput,
+  FormTextarea,
+  FormButtonGroup,
+  FormTagInput,
+  FormToggle,
+  FormActions,
+  ButtonGroupOption
+} from '../../../components/shared/form';
 
 interface VaultFormProps {
   onSubmit: (data: Omit<VaultResource, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
@@ -41,6 +44,8 @@ const categoryDescriptions: Record<ResourceCategory, string> = {
   Tools: 'Job search tools, templates, and utilities',
 };
 
+const categories: ResourceCategory[] = ['Documents', 'Portfolio', 'Credentials', 'Profiles', 'Learning', 'Tools'];
+
 const VaultForm: React.FC<VaultFormProps> = ({
   onSubmit,
   onCancel,
@@ -57,7 +62,6 @@ const VaultForm: React.FC<VaultFormProps> = ({
     isFavorite: false,
   });
 
-  const [tagInput, setTagInput] = useState('');
   const [urlError, setUrlError] = useState('');
 
   useEffect(() => {
@@ -92,34 +96,7 @@ const VaultForm: React.FC<VaultFormProps> = ({
     }
   };
 
-  const handleAddTag = () => {
-    const tag = tagInput.trim();
-    if (tag && !formData.tags.includes(tag)) {
-      setFormData(prev => ({
-        ...prev,
-        tags: [...prev.tags, tag]
-      }));
-      setTagInput('');
-    }
-  };
-
-  const handleRemoveTag = (tagToRemove: string) => {
-    setFormData(prev => ({
-      ...prev,
-      tags: prev.tags.filter(tag => tag !== tagToRemove)
-    }));
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-      handleAddTag();
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSubmit = async () => { // Changed to match FormActions onSubmit signature (void)
     if (!formData.title.trim() || !formData.url.trim()) {
       return;
     }
@@ -134,237 +111,95 @@ const VaultForm: React.FC<VaultFormProps> = ({
       const cleanData = Object.fromEntries(
         Object.entries(formData).filter(([_, value]) => value !== undefined)
       ) as typeof formData;
-      
+
       await onSubmit(cleanData);
     } catch (error) {
       console.error('Error submitting vault resource:', error);
     }
   };
 
-  const categories: ResourceCategory[] = ['Documents', 'Portfolio', 'Credentials', 'Profiles', 'Learning', 'Tools'];
+  const categoryOptions: ButtonGroupOption[] = categories.map(cat => ({
+    value: cat,
+    label: cat,
+    icon: categoryIcons[cat],
+    description: categoryDescriptions[cat],
+    hoverColor: 'blue' // Closest to indigo in the design system
+  }));
 
   return (
-    <motion.form
+    <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      onSubmit={handleSubmit}
       className="space-y-6"
     >
-      {/* Title */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Resource Title *
-        </label>
-        <input
-          type="text"
-          value={formData.title}
-          onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-          placeholder="e.g., My Resume - Software Engineer"
-          className="w-full px-4 py-3 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-xl bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-slate-500 dark:focus:ring-dark-text-secondary amoled:focus:ring-amoled-text-secondary focus:border-transparent transition-all duration-200"
-          required
+      <FormInput
+        label="Resource Title"
+        value={formData.title}
+        onChange={(val) => setFormData(prev => ({ ...prev, title: val }))}
+        placeholder="e.g., My Resume - Software Engineer"
+        required
+        autoFocus
+      />
+
+      <FormInput
+        label="Resource URL"
+        type="url"
+        value={formData.url}
+        onChange={handleUrlChange}
+        placeholder="https://drive.google.com/file/d/..."
+        required
+        error={urlError}
+        helperText={!urlError ? "Enter the full URL to the resource" : undefined}
+      />
+
+      <FormButtonGroup
+        label="Category"
+        value={formData.category}
+        onChange={(val) => setFormData(prev => ({ ...prev, category: val as ResourceCategory }))}
+        options={categoryOptions}
+        columns={3}
+        required
+      />
+
+      <FormTextarea
+        label="Description"
+        value={formData.description}
+        onChange={(val) => setFormData(prev => ({ ...prev, description: val }))}
+        placeholder="Brief description of this resource..."
+        rows={3}
+      />
+
+      <FormTagInput
+        label="Tags"
+        value={formData.tags}
+        onChange={(tags) => setFormData(prev => ({ ...prev, tags }))}
+        placeholder="Add a tag..."
+        helperText="Press Enter to add tags"
+      />
+
+      <div className="space-y-4 pt-2">
+        <FormToggle
+          label="Mark as favorite"
+          checked={formData.isFavorite}
+          onChange={(checked) => setFormData(prev => ({ ...prev, isFavorite: checked }))}
+        />
+
+        <FormToggle
+          label="Public resource"
+          description="(Safe to share with recruiters)"
+          checked={formData.isPublic}
+          onChange={(checked) => setFormData(prev => ({ ...prev, isPublic: checked }))}
         />
       </div>
 
-      {/* URL */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Resource URL *
-        </label>
-        <div className="relative">
-          <input
-            type="url"
-            value={formData.url}
-            onChange={(e) => handleUrlChange(e.target.value)}
-            placeholder="https://drive.google.com/file/d/..."
-            className={`w-full px-4 py-3 pr-12 border rounded-xl bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:border-transparent transition-all duration-200 ${
-              urlError 
-                ? 'border-red-300 dark:border-red-600 focus:ring-red-500' 
-                : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border focus:ring-slate-500 dark:focus:ring-dark-text-secondary amoled:focus:ring-amoled-text-secondary'
-            }`}
-            required
-          />
-          <ExternalLink className="absolute right-4 top-1/2 transform -translate-y-1/2 w-4 h-4 text-slate-400 dark:text-dark-text-secondary amoled:text-amoled-text-secondary" />
-        </div>
-        {urlError && (
-          <motion.p 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mt-2 text-sm text-red-600 dark:text-red-400"
-          >
-            {urlError}
-          </motion.p>
-        )}
-      </div>
-
-      {/* Category */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Category *
-        </label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          {categories.map(category => {
-            const CategoryIcon = categoryIcons[category];
-            const isSelected = formData.category === category;
-            return (
-              <button
-                key={category}
-                type="button"
-                onClick={() => setFormData(prev => ({ ...prev, category }))}
-                className={`p-3 border rounded-lg text-left transition-colors ${
-                  isSelected
-                    ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 amoled:bg-indigo-900/20'
-                    : 'border-slate-300 dark:border-dark-border amoled:border-amoled-border bg-white dark:bg-dark-card amoled:bg-amoled-card hover:border-slate-400'
-                }`}
-              >
-                <div className="flex items-center gap-2 mb-1">
-                  <CategoryIcon className={`w-4 h-4 ${
-                    isSelected ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary'
-                  }`} />
-                  <span className={`text-sm font-medium ${
-                    isSelected ? 'text-indigo-900 dark:text-indigo-300' : 'text-slate-900 dark:text-dark-text amoled:text-amoled-text'
-                  }`}>
-                    {category}
-                  </span>
-                </div>
-                <p className={`text-xs ${
-                  isSelected ? 'text-indigo-700 dark:text-indigo-400' : 'text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary'
-                }`}>
-                  {categoryDescriptions[category]}
-                </p>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Description */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Description
-        </label>
-        <textarea
-          value={formData.description}
-          onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-          placeholder="Brief description of this resource..."
-          rows={3}
-          className="w-full px-3 py-2 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 focus:border-transparent resize-none"
-        />
-      </div>
-
-      {/* Tags */}
-      <div>
-        <label className="block text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text mb-2">
-          Tags
-        </label>
-        <div className="flex flex-wrap gap-2 mb-2">
-          {formData.tags.map((tag, index) => (
-            <span
-              key={index}
-              className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-100 dark:bg-indigo-900/20 amoled:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 amoled:text-indigo-300 text-sm rounded"
-            >
-              {tag}
-              <button
-                type="button"
-                onClick={() => handleRemoveTag(tag)}
-                className="text-indigo-500 hover:text-indigo-700 dark:hover:text-indigo-200"
-              >
-                <X className="w-3 h-3" />
-              </button>
-            </span>
-          ))}
-        </div>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={tagInput}
-            onChange={(e) => setTagInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder="Add a tag..."
-            className="flex-1 px-3 py-2 border border-slate-300 dark:border-dark-border amoled:border-amoled-border rounded-lg bg-white dark:bg-dark-card amoled:bg-amoled-card text-slate-900 dark:text-dark-text amoled:text-amoled-text focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-          />
-          <button
-            type="button"
-            onClick={handleAddTag}
-            disabled={!tagInput.trim()}
-            className="px-3 py-2 bg-slate-100 dark:bg-dark-bg amoled:bg-amoled-bg text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary rounded-lg hover:bg-slate-200 dark:hover:bg-dark-card amoled:hover:bg-amoled-card disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Options */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Star className={`w-4 h-4 ${formData.isFavorite ? 'text-yellow-500 fill-current' : 'text-slate-400'}`} />
-            <span className="text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text">
-              Mark as favorite
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setFormData(prev => ({ ...prev, isFavorite: !prev.isFavorite }))}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              formData.isFavorite ? 'bg-indigo-600' : 'bg-slate-200 dark:bg-dark-border amoled:bg-amoled-border'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                formData.isFavorite ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {formData.isPublic ? (
-              <Globe className="w-4 h-4 text-green-500" />
-            ) : (
-              <Lock className="w-4 h-4 text-slate-400" />
-            )}
-            <span className="text-sm font-medium text-slate-700 dark:text-dark-text amoled:text-amoled-text">
-              Public resource
-            </span>
-            <span className="text-xs text-slate-500 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">
-              (Safe to share with recruiters)
-            </span>
-          </div>
-          <button
-            type="button"
-            onClick={() => setFormData(prev => ({ ...prev, isPublic: !prev.isPublic }))}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-              formData.isPublic ? 'bg-green-600' : 'bg-slate-200 dark:bg-dark-border amoled:bg-amoled-border'
-            }`}
-          >
-            <span
-              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                formData.isPublic ? 'translate-x-6' : 'translate-x-1'
-              }`}
-            />
-          </button>
-        </div>
-      </div>
-
-      {/* Actions */}
-      <div className="flex gap-3 pt-4 border-t border-slate-200 dark:border-dark-border amoled:border-amoled-border">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="flex-1 px-4 py-2 border border-slate-300 dark:border-dark-border amoled:border-amoled-border text-slate-700 dark:text-dark-text amoled:text-amoled-text rounded-lg hover:bg-slate-50 dark:hover:bg-dark-card amoled:hover:bg-amoled-card transition-colors"
-        >
-          Cancel
-        </button>
-        <button
-          type="submit"
-          disabled={loading || !formData.title.trim() || !formData.url.trim() || !!urlError}
-          className="flex-1 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {loading ? 'Saving...' : initialData ? 'Update Resource' : 'Add Resource'}
-        </button>
-      </div>
-    </motion.form>
+      <FormActions
+        onCancel={onCancel}
+        onSubmit={handleSubmit}
+        isLoading={loading}
+        submitText={initialData ? 'Update Resource' : 'Add Resource'}
+        isDisabled={!formData.title.trim() || !formData.url.trim() || !!urlError}
+      />
+    </motion.div>
   );
 };
 

@@ -88,7 +88,7 @@ const FormToggle: React.FC<FormToggleProps> = ({
         </div>
       </div>
 
-      <motion.button
+      <button
         id={id}
         type="button"
         role="switch"
@@ -96,7 +96,6 @@ const FormToggle: React.FC<FormToggleProps> = ({
         aria-label={label}
         disabled={disabled}
         onClick={() => !disabled && onChange(!checked)}
-        whileTap={{ scale: disabled ? 1 : 0.95 }}
         className={cx(
           toggleBase,
           currentSize.toggle,
@@ -104,16 +103,14 @@ const FormToggle: React.FC<FormToggleProps> = ({
           disabled && 'opacity-50 cursor-not-allowed'
         )}
       >
-        <motion.span
-          layout
-          transition={{ type: 'spring', stiffness: 700, damping: 30 }}
+        <span
           className={cx(
             toggleKnob,
             currentSize.knob,
             checked ? currentSize.translateOn : currentSize.translateOff
           )}
         />
-      </motion.button>
+      </button>
     </div>
   );
 };
