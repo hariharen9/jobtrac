@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "JobTrac - Job Application Importer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Save jobs in one click. Auto-extracts details from LinkedIn, Indeed, Glassdoor & Naukri into your JobTrac dashboard.",
   "author": "Hariharen",
   "homepage_url": "https://jobtrac.site",

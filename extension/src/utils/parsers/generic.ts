@@ -3,54 +3,7 @@
 // Uses common patterns and structured data (JSON-LD)
 
 import { ExtractedJobData, JobParser, ApplicationSource } from '../../types';
-
-const getText = (selector: string): string => {
-  const el = document.querySelector(selector);
-  return el?.textContent?.trim() || '';
-};
-
-const getTextFromSelectors = (selectors: string[]): string => {
-  for (const selector of selectors) {
-    const text = getText(selector);
-    if (text) return text;
-  }
-  return '';
-};
-
-// Try to extract data from JSON-LD structured data
-const extractFromJsonLd = (): Partial<ExtractedJobData> | null => {
-  const scripts = document.querySelectorAll('script[type="application/ld+json"]');
-
-  for (const script of scripts) {
-    try {
-      const data = JSON.parse(script.textContent || '');
-
-      // Handle both single object and array of objects
-      const items = Array.isArray(data) ? data : [data];
-
-      for (const item of items) {
-        if (item['@type'] === 'JobPosting') {
-          return {
-            role: item.title || '',
-            company: item.hiringOrganization?.name || '',
-            location: item.jobLocation?.address?.addressLocality ||
-                     item.jobLocation?.name || '',
-            jobDescription: item.description || '',
-            salaryRange: item.baseSalary?.value?.value
-              ? `${item.baseSalary.currency || ''} ${item.baseSalary.value.value}`
-              : undefined,
-            employmentType: item.employmentType || undefined,
-            // companyLogo removed to let CompanyIcon component handle it
-          };
-        }
-      }
-    } catch {
-      // Ignore JSON parse errors
-    }
-  }
-
-  return null;
-};
+import { getTextFromSelectors, extractFromJsonLd } from './helpers';
 
 // Heuristic to detect source based on domain
 const detectSourceFromUrl = (url: string): ApplicationSource => {

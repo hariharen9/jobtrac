@@ -104,6 +104,40 @@ function App() {
     }
   };
 
+  const handleRefreshAndRetry = async () => {
+    setViewState('loading');
+    try {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab?.id) {
+        setViewState('not-job-page');
+        return;
+      }
+
+      await chrome.tabs.reload(tab.id);
+
+      // Poll for completion
+      const checkStatus = async () => {
+        try {
+          const currentTab = await chrome.tabs.get(tab.id!);
+          if (currentTab.status === 'complete') {
+            // Give content scripts a moment to initialize after load
+            setTimeout(extractJobData, 2000);
+          } else {
+            setTimeout(checkStatus, 1000);
+          }
+        } catch (e) {
+          setViewState('not-job-page');
+        }
+      };
+
+      // Start polling after a short delay
+      setTimeout(checkStatus, 1000);
+    } catch (e) {
+      console.error('Error refreshing:', e);
+      setViewState('not-job-page');
+    }
+  };
+
   const populateForm = async (data: ExtractedJobData) => {
     const settings = await getSettings();
 
@@ -200,9 +234,14 @@ function App() {
             Navigate to a job posting on LinkedIn, Indeed, Glassdoor, Naukri, or any company
             career page to import job details.
           </p>
-          <button className="btn btn-secondary" onClick={extractJobData}>
-            Try Again
-          </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%' }}>
+            <button className="btn btn-primary btn-full" onClick={extractJobData}>
+              Try Again
+            </button>
+            <button className="btn btn-secondary btn-full" onClick={handleRefreshAndRetry}>
+              🔄 Refresh & Try Again
+            </button>
+          </div>
         </div>
         <Footer />
       </div>
@@ -459,7 +498,7 @@ function Footer() {
         </a>
       </span>
       <span>•</span>
-      <span>v0.1.0</span>
+      <span>v0.1.2</span>
     </footer>
   );
 }

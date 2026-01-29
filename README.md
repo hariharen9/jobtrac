@@ -14,6 +14,12 @@
     <a href="https://github.com/hariharen9/jobtrac/stargazers">
       <img src="https://img.shields.io/github/stars/hariharen9/jobtrac?style=for-the-badge&logo=github" alt="GitHub Stars">
     </a>
+    <a href="https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba" target="_blank">
+      <img src="https://img.shields.io/chrome-web-store/users/nipmnhedccgblgibeiikbcphcofgjfba?style=for-the-badge&logo=google-chrome&logoColor=white&label=Users&color=4285F4" alt="Chrome Web Store Users">
+    </a>
+    <a href="https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba" target="_blank">
+      <img src="https://img.shields.io/chrome-web-store/rating/nipmnhedccgblgibeiikbcphcofgjfba?style=for-the-badge&logo=google-chrome&logoColor=white&color=success" alt="Chrome Web Store Rating">
+    </a>
     <a href="https://github.com/hariharen9/jobtrac/blob/main/LICENSE">
       <img src="https://img.shields.io/github/license/hariharen9/jobtrac?style=for-the-badge" alt="License">
     </a>
@@ -22,12 +28,6 @@
       <img src="https://img.shields.io/github/actions/workflow/status/hariharen9/jobtrac/test-and-build.yml?style=for-the-badge" alt="CI Status">
     </a>
     <img src="https://img.shields.io/github/repo-size/hariharen9/jobtrac?style=for-the-badge" alt="Repo Size">
-    <a href="eslint.config.js">
-        <img src="https://img.shields.io/badge/code%20style-eslint-4B32C3?style=for-the-badge&logo=eslint" alt="Code Style: ESLint">
-    </a>
-    <a href="CONTRIBUTING.md">
-      <img src="https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=for-the-badge" alt="Contributions Welcome">
-    </a>
     <a href="https://drive.google.com/file/d/1Yj9Ygg--BnXFu0--GbwAxf8PGxvI72F2/view?usp=sharing" target="_blank">
   <img src="https://img.shields.io/badge/Demo%20Video-Watch%20Now-red?style=for-the-badge&logo=youtube" alt="Complete Demo Video">
 </a>
@@ -38,7 +38,7 @@
 
 ## 🌟 Why JobTrac Changes Everything
 
-> *"JobTrac isn't just another application tracker. It's the strategic co-pilot that transforms your job search from scattered chaos into a precision-engineered campaign."*
+> _"JobTrac isn't just another application tracker. It's the strategic co-pilot that transforms your job search from scattered chaos into a precision-engineered campaign."_
 
 <div align="center">
   <img src="https://ik.imagekit.io/halcyonweb/jt.png?updatedAt=1755524242386" alt="JobTrac Interface" width="900">
@@ -46,14 +46,11 @@
 
 ---
 
-
-
-
 ### 💡 The Problem It Solves
 
--   **From Scattered to Strategic:** Replaces messy spreadsheets, random notes, and forgotten contacts with a unified command center.
--   **From Anxiety to Confidence:** A structured preparation suite turns interview jitters into confident execution.
--   **From Guesswork to Insight:** Data-driven analytics show you what's working, so you can double down on success.
+- **From Scattered to Strategic:** Replaces messy spreadsheets, random notes, and forgotten contacts with a unified command center.
+- **From Anxiety to Confidence:** A structured preparation suite turns interview jitters into confident execution.
+- **From Guesswork to Insight:** Data-driven analytics show you what's working, so you can double down on success.
 
 ---
 
@@ -65,7 +62,9 @@
 <td width="45%">
 
 ### 🎯 **Application Pipeline**
+
 **Kanban-Style Visualization**
+
 - Drag-and-drop status management
 - Visual pipeline from "To Apply" → "Offer"
 - Activity calendar with timeline view
@@ -75,7 +74,9 @@
 <td width="45%">
 
 ### 📚 **Interview Mastery Suite**
+
 **Systematic Preparation System**
+
 - Prep log with confidence tracking
 - STAR story bank for behavioral interviews
 - Topic-based study session management
@@ -87,7 +88,9 @@
 <td width="45%">
 
 ### 🏢 **Company Intelligence**
+
 **Strategic Research Hub**
+
 - Company culture & values database
 - Key contact relationship mapping
 - Interview insights & preparation notes
@@ -96,7 +99,9 @@
 <td width="45%">
 
 ### 🤝 **Networking Powerhouse**
+
 **Relationship Management System**
+
 - Contact database with interaction history
 - Outreach tracking & follow-up reminders
 - Referral opportunity management
@@ -107,7 +112,9 @@
 <td width="45%">
 
 ### 🔐 **Resource Vault**
+
 **Professional Asset Manager**
+
 - Centralized Resume & Portfolio storage
 - Credentials & Certification tracking
 - One-click asset sharing & link previews
@@ -117,7 +124,9 @@
 <td width="45%">
 
 ### 📝 **Smart Notes**
+
 **Integrated Markdown Workspace**
+
 - Floating, minimizable note interface
 - Real-time Firebase synchronization
 - Category tagging & global search
@@ -130,15 +139,15 @@
 
 ### ✨ A Modern, User-First Experience
 
-| Feature                 | Description                                                              |
-| :---------------------- | :----------------------------------------------------------------------- |
-| 🧩 **Browser Extension**| Save jobs in one click from LinkedIn, Indeed, Glassdoor & Naukri.        |
-| 🚀 **Onboarding**       | Get started in seconds with an interactive welcome wizard and demo mode.            |
-| 📱 **Responsive Design**| A seamless experience on desktop, tablet, and mobile.                    |
-| 🎨 **Theming**          | Switch between Light, Dark, and AMOLED themes for your comfort.          |
-| ⌨️ **Power Tools**      | Navigate like a pro with the Command Palette (`Cmd+K`) and keyboard shortcuts and Smart Global Search!. |
-| 🌐 **Landing Page**     | A beautiful, informative landing page to welcome users to the project.   |
-| 🔄 **Data Portability** | Easily import from CSV or export your data for complete ownership.       |
+| Feature                  | Description                                                                                             |
+| :----------------------- | :------------------------------------------------------------------------------------------------------ |
+| 🧩 **Browser Extension** | Save jobs in one click from LinkedIn, Indeed, Glassdoor & Naukri.                                       |
+| 🚀 **Onboarding**        | Get started in seconds with an interactive welcome wizard and demo mode.                                |
+| 📱 **Responsive Design** | A seamless experience on desktop, tablet, and mobile.                                                   |
+| 🎨 **Theming**           | Switch between Light, Dark, and AMOLED themes for your comfort.                                         |
+| ⌨️ **Power Tools**       | Navigate like a pro with the Command Palette (`Cmd+K`) and keyboard shortcuts and Smart Global Search!. |
+| 🌐 **Landing Page**      | A beautiful, informative landing page to welcome users to the project.                                  |
+| 🔄 **Data Portability**  | Easily import from CSV or export your data for complete ownership.                                      |
 
 <img src="assets/screenshots/Hero.png" alt="Hero" width="100%">
 <br>
@@ -238,47 +247,48 @@
 
 ### **🚀 Command Palette**
 
-| **Shortcut** | **Action** | **Description** |
-|:------------:|:----------:|:---------------:|
+|  **Shortcut**  |      **Action**      |                      **Description**                       |
+| :------------: | :------------------: | :--------------------------------------------------------: |
 | `Cmd/Ctrl + K` | Open Command Palette | Universal search, quick actions, and global data discovery |
-| `↑` `↓` | Navigate Commands | Move up and down in command list |
-| `Enter` | Execute Command | Run the selected command or open selected data |
-| `Escape` | Close Palette | Exit command palette |
+|    `↑` `↓`     |  Navigate Commands   |              Move up and down in command list              |
+|    `Enter`     |   Execute Command    |       Run the selected command or open selected data       |
+|    `Escape`    |    Close Palette     |                    Exit command palette                    |
 
 ---
 
 ### **📍 Tab Navigation**
 
-| **Shortcut** | **Tab** | **Feature** |
-|:------------:|:-------:|:-----------:|
+|  **Shortcut**  |   **Tab**    |                **Feature**                |
+| :------------: | :----------: | :---------------------------------------: |
 | `Cmd/Ctrl + 1` | Applications | Job application tracker with Kanban board |
-| `Cmd/Ctrl + 2` | Prep Log | Interview preparation and study sessions |
-| `Cmd/Ctrl + 3` | Research | Company intelligence and insights |
-| `Cmd/Ctrl + 4` | Networking | Professional contacts and referrals |
-| `Cmd/Ctrl + 5` | STAR Stories | Behavioral interview preparation |
+| `Cmd/Ctrl + 2` |   Prep Log   | Interview preparation and study sessions  |
+| `Cmd/Ctrl + 3` |   Research   |     Company intelligence and insights     |
+| `Cmd/Ctrl + 4` |  Networking  |    Professional contacts and referrals    |
+| `Cmd/Ctrl + 5` | STAR Stories |     Behavioral interview preparation      |
 
 ---
 
 ### **🔧 Utility Commands**
 
-| **Shortcut** | **Action** | **Description** |
-|:------------:|:----------:|:---------------:|
-| `Cmd/Ctrl + H` | Help & Guide | Open comprehensive help documentation |
-| `Cmd/Ctrl + P` | Profile & Analytics | View profile, goals, and success metrics |
-| `Cmd+Option+T` / `Ctrl+Shift+T` | Toggle Theme | Switch between light, dark, and amoled themes |
-| `Cmd+Option+N` / `Ctrl+Shift+N` | Toggle Notes | Show or hide the notes panel |
+|          **Shortcut**           |     **Action**      |                **Description**                |
+| :-----------------------------: | :-----------------: | :-------------------------------------------: |
+|         `Cmd/Ctrl + H`          |    Help & Guide     |     Open comprehensive help documentation     |
+|         `Cmd/Ctrl + P`          | Profile & Analytics |   View profile, goals, and success metrics    |
+| `Cmd+Option+T` / `Ctrl+Shift+T` |    Toggle Theme     | Switch between light, dark, and amoled themes |
+| `Cmd+Option+N` / `Ctrl+Shift+N` |    Toggle Notes     |         Show or hide the notes panel          |
 
 ---
 
 ### **⚡ Quick Actions (via Command Palette)**
 
-| **Command** | **Shortcut** | **Action** |
-|:-----------:|:------------:|:----------:|
-| "Add New Application" | `Cmd/Ctrl + K` → Type "add app" | Create new job application entry |
-| "Add Prep Session" | `Cmd/Ctrl + K` → Type "add prep" | Log interview preparation session |
-| "Add Company Research" | `Cmd/Ctrl + K` → Type "add company" | Create company research entry |
-| "Add Contact" | `Cmd/Ctrl + K` → Type "add contact" | Add networking contact |
-| "Add STAR Story" | `Cmd/Ctrl + K` → Type "add story" | Create behavioral interview story |
+|      **Command**       |            **Shortcut**             |            **Action**             |
+| :--------------------: | :---------------------------------: | :-------------------------------: |
+| "Add New Application"  |   `Cmd/Ctrl + K` → Type "add app"   | Create new job application entry  |
+|   "Add Prep Session"   |  `Cmd/Ctrl + K` → Type "add prep"   | Log interview preparation session |
+| "Add Company Research" | `Cmd/Ctrl + K` → Type "add company" |   Create company research entry   |
+|     "Add Contact"      | `Cmd/Ctrl + K` → Type "add contact" |      Add networking contact       |
+|    "Add STAR Story"    |  `Cmd/Ctrl + K` → Type "add story"  | Create behavioral interview story |
+
 ---
 
 ### **📝 Smart Search Features**
@@ -302,15 +312,15 @@
 
 The JobTrac Browser Extension lets you import job postings directly from job boards into your dashboard.
 
-| Feature | Description |
-| :------ | :---------- |
-| **One-Click Import** | Auto-extracts company, role, location, salary & job description |
-| **Supported Sites** | LinkedIn, Indeed, Glassdoor, Naukri + generic career pages |
-| **Quick Edit** | Review and customize before saving |
-| **Theme Support** | Light, Dark & AMOLED modes |
-| **Keyboard Shortcut** | `Ctrl+Shift+J` (Mac) / `Alt+Shift+J` (Windows) |
+| Feature               | Description                                                     |
+| :-------------------- | :-------------------------------------------------------------- |
+| **One-Click Import**  | Auto-extracts company, role, location, salary & job description |
+| **Supported Sites**   | LinkedIn, Indeed, Glassdoor, Naukri + generic career pages      |
+| **Quick Edit**        | Review and customize before saving                              |
+| **Theme Support**     | Light, Dark & AMOLED modes                                      |
+| **Keyboard Shortcut** | `Ctrl+Shift+J` (Mac) / `Alt+Shift+J` (Windows)                  |
 
-📥 **Install from Chrome Web Store** *(Coming Soon)*
+📥 **Install from Chrome Web Store** _(Coming Soon)_
 
 > See [`extension/README.md`](extension/README.md) for development setup.
 
@@ -318,14 +328,14 @@ The JobTrac Browser Extension lets you import job postings directly from job boa
 
 ## 📈 Competitive Advantage
 
-| Feature                  | JobTrac                               | Spreadsheets       | Other Trackers   |
-| :----------------------- | :------------------------------------ | :----------------- | :--------------- |
-| **Application Tracking** | ✅ Kanban + Timeline                  | ❌ Manual rows      | ✅ Basic lists     |
-| **Interview Preparation**| ✅ Integrated system                  | ❌ Separate tools   | ❌ Not included  |
-| **Company Intelligence** | ✅ Research hub                        | ❌ Random notes     | ❓ Limited        |
-| **Networking Management**| ✅ Contact system                      | ❌ Phone contacts   | 🚯 Separate app   |
-| **Analytics & Insights** | ✅ Visual dashboard                    | ❌ Manual charts    | ⛔️ Basic stats    |
-| **Mobile Experience**    | ✅ Native-like                         | ❌ Desktop only     | 🚫 Poor mobile    |
+| Feature                   | JobTrac              | Spreadsheets      | Other Trackers  |
+| :------------------------ | :------------------- | :---------------- | :-------------- |
+| **Application Tracking**  | ✅ Kanban + Timeline | ❌ Manual rows    | ✅ Basic lists  |
+| **Interview Preparation** | ✅ Integrated system | ❌ Separate tools | ❌ Not included |
+| **Company Intelligence**  | ✅ Research hub      | ❌ Random notes   | ❓ Limited      |
+| **Networking Management** | ✅ Contact system    | ❌ Phone contacts | 🚯 Separate app |
+| **Analytics & Insights**  | ✅ Visual dashboard  | ❌ Manual charts  | ⛔️ Basic stats  |
+| **Mobile Experience**     | ✅ Native-like       | ❌ Desktop only   | 🚫 Poor mobile  |
 
 ---
 
@@ -335,14 +345,16 @@ The JobTrac Browser Extension lets you import job postings directly from job boa
 
 JobTrac is, and always will be, fundamentally free and open-source.
 
--   **Everything is Free, Right Now:** All currently available features are free to use without limitation.
--   **Self-Hosted is Always Free:** When you self-host JobTrac, you will **always have access to all features**, including any future premium ones.
--   **Future `JobTrac Pro`:** To support the project's development, we plan to introduce a hosted, premium `JobTrac Pro` service for users who want advanced, cloud-based features (like team collaboration, AI insights, etc.) without the need to self-host.
+- **Everything is Free, Right Now:** All currently available features are free to use without limitation.
+- **Self-Hosted is Always Free:** When you self-host JobTrac, you will **always have access to all features**, including any future premium ones.
+- **Future `JobTrac Pro`:** To support the project's development, we plan to introduce a hosted, premium `JobTrac Pro` service for users who want advanced, cloud-based features (like team collaboration, AI insights, etc.) without the need to self-host.
 
 ### ⭐ Why Star This Repository?
+
 If you find JobTrac useful, please consider giving it a star! It's a simple way to show your appreciation and helps the project gain visibility in the community. More stars mean more contributors and a better tool for everyone. Thank you for your support!
 
 ### **Contributing to Success**
+
 We welcome contributors of all levels! Check out our [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 <div align="center">
@@ -408,6 +420,7 @@ npm run dev
 </div>
 
 ---
+
 <div align="center">
 
 ### **Ready to Transform Your Career Journey?**

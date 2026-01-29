@@ -2,19 +2,7 @@
 // Extracts job data from Indeed job posting pages
 
 import { ExtractedJobData, JobParser } from '../../types';
-
-const getText = (selector: string): string => {
-  const el = document.querySelector(selector);
-  return el?.textContent?.trim() || '';
-};
-
-const getTextFromSelectors = (selectors: string[]): string => {
-  for (const selector of selectors) {
-    const text = getText(selector);
-    if (text) return text;
-  }
-  return '';
-};
+import { getTextFromSelectors, extractFromJsonLd } from './helpers';
 
 export const indeedParser: JobParser = {
   name: 'Indeed',
@@ -25,36 +13,44 @@ export const indeedParser: JobParser = {
 
   extract: (): ExtractedJobData | null => {
     try {
+      // Try JSON-LD first as Indeed usually provides it
+      const jsonLdData = extractFromJsonLd();
+
       // Job title
-      const role = getTextFromSelectors([
+      const role = jsonLdData?.role || getTextFromSelectors([
         '.jobsearch-JobInfoHeader-title',
         'h1[data-testid="jobsearch-JobInfoHeader-title"]',
         '.icl-u-xs-mb--xs.icl-u-xs-mt--none.jobsearch-JobInfoHeader-title',
         'h1.jobTitle',
         '[data-testid="job-title"]',
         '.jcs-JobTitle',
+        '.jobsearch-JobInfoHeader-title-container h1',
       ]);
 
       // Company name
-      const company = getTextFromSelectors([
+      const company = jsonLdData?.company || getTextFromSelectors([
         '[data-testid="inlineHeader-companyName"] a',
         '[data-testid="inlineHeader-companyName"]',
         '.jobsearch-InlineCompanyRating-companyHeader a',
         '.jobsearch-InlineCompanyRating-companyHeader',
         '[data-company-name="true"]',
         '.icl-u-lg-mr--sm.icl-u-xs-mr--xs',
+        '.jobsearch-CompanyReview--heading',
+        '.jobsearch-JobInfoHeader-companyName',
       ]);
 
       // Location
-      const location = getTextFromSelectors([
+      const location = jsonLdData?.location || getTextFromSelectors([
         '[data-testid="inlineHeader-companyLocation"]',
         '[data-testid="job-location"]',
         '.jobsearch-JobInfoHeader-subtitle > div:last-child',
         '.icl-u-xs-mt--xs.jobsearch-JobInfoHeader-subtitle',
+        '.jobsearch-JobInfoHeader-companyLocation',
+        '.jobsearch-DesktopStickyContainer-subtitle .jobsearch-JobInfoHeader-subtitle > div:nth-child(2)',
       ]);
 
       // Job description
-      const jobDescription = getTextFromSelectors([
+      const jobDescription = jsonLdData?.jobDescription || getTextFromSelectors([
         '#jobDescriptionText',
         '.jobsearch-jobDescriptionText',
         '[data-testid="jobDescriptionText"]',
@@ -62,18 +58,20 @@ export const indeedParser: JobParser = {
       ]);
 
       // Salary
-      const salaryRange = getTextFromSelectors([
+      const salaryRange = jsonLdData?.salaryRange || getTextFromSelectors([
         '#salaryInfoAndJobType span',
         '[data-testid="attribute_snippet_testid"]',
         '.jobsearch-JobMetadataHeader-item',
         '.salary-snippet',
         '.metadata.salary-snippet-container',
+        '.jobsearch-JobMetadataHeader-item:contains("$")',
       ]);
 
       // Employment type
-      const employmentType = getTextFromSelectors([
+      const employmentType = jsonLdData?.employmentType || getTextFromSelectors([
         '.jobsearch-JobMetadataHeader-item',
         '[data-testid="job-type"]',
+        '.jobsearch-JobMetadataHeader-item:last-child',
       ]);
 
       if (!role && !company) {
