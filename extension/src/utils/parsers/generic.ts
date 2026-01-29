@@ -2,7 +2,7 @@
 // Fallback parser for company career pages and other job sites
 // Uses common patterns and structured data (JSON-LD)
 
-import { ExtractedJobData, JobParser } from '../../types';
+import { ExtractedJobData, JobParser, ApplicationSource } from '../../types';
 
 const getText = (selector: string): string => {
   const el = document.querySelector(selector);
@@ -40,6 +40,7 @@ const extractFromJsonLd = (): Partial<ExtractedJobData> | null => {
               ? `${item.baseSalary.currency || ''} ${item.baseSalary.value.value}`
               : undefined,
             employmentType: item.employmentType || undefined,
+            // companyLogo removed to let CompanyIcon component handle it
           };
         }
       }
@@ -49,6 +50,19 @@ const extractFromJsonLd = (): Partial<ExtractedJobData> | null => {
   }
 
   return null;
+};
+
+// Heuristic to detect source based on domain
+const detectSourceFromUrl = (url: string): ApplicationSource => {
+  if (url.includes('linkedin.com')) return 'LinkedIn';
+  if (url.includes('indeed.com')) return 'Indeed';
+  if (url.includes('glassdoor.com')) return 'Glassdoor';
+  if (url.includes('naukri.com')) return 'Naukri';
+  if (url.includes('greenhouse.io')) return 'Company Website'; // Common ATS
+  if (url.includes('lever.co')) return 'Company Website'; // Common ATS
+  if (url.includes('workday')) return 'Company Website'; // Common ATS
+
+  return 'Company Website';
 };
 
 export const genericParser: JobParser = {
@@ -107,17 +121,41 @@ export const genericParser: JobParser = {
         '.salary-range',
       ]);
 
+      // Detect Source
+      const source = detectSourceFromUrl(window.location.href);
+
       if (!role && !company) {
-        // Try to get at least the page title
+        // Try to get at least the page title but clean it
         const pageTitle = document.title;
         if (pageTitle) {
+          // Heuristic: "Senior Engineer at Google - Careers" -> Role: Senior Engineer, Company: Google
+          const separators = [' at ', ' | ', ' - ', ' – '];
+          let inferredRole = pageTitle;
+          let inferredCompany = '';
+
+          for (const sep of separators) {
+            if (pageTitle.includes(sep)) {
+              const parts = pageTitle.split(sep);
+              // Assume first part is role, second part is company
+              if (parts.length >= 2) {
+                inferredRole = parts[0].trim();
+                // Take the last part as company often works for "Role | Company"
+                // But for "Role at Company - Careers" it might need more logic
+                // Keep it simple for now
+                inferredCompany = parts[1].trim();
+              }
+              break;
+            }
+          }
+
           return {
-            company: '',
-            role: pageTitle,
+            company: inferredCompany,
+            role: inferredRole,
             location: '',
             jobDescription: '',
             link: window.location.href,
-            source: 'Company Website',
+            source: source,
+            // No companyLogo
           };
         }
         return null;
@@ -130,8 +168,9 @@ export const genericParser: JobParser = {
         salaryRange: salaryRange || undefined,
         jobDescription: jobDescription || undefined,
         link: window.location.href,
-        source: 'Company Website',
+        source: source,
         employmentType: jsonLdData?.employmentType,
+        // No companyLogo - let CompanyIcon handle it
       };
     } catch (error) {
       console.error('Generic parser error:', error);
