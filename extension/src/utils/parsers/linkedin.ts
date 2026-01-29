@@ -18,6 +18,17 @@ const getTextFromSelectors = (selectors: string[]): string => {
   return '';
 };
 
+// Helper to get attribute from multiple possible selectors
+const getAttributeFromSelectors = (selectors: string[], attribute: string): string => {
+  for (const selector of selectors) {
+    const el = document.querySelector(selector);
+    if (el && el.getAttribute(attribute)) {
+      return el.getAttribute(attribute) || '';
+    }
+  }
+  return '';
+};
+
 export const linkedinParser: JobParser = {
   name: 'LinkedIn',
 
@@ -126,13 +137,56 @@ export const linkedinParser: JobParser = {
         return null;
       }
 
+      // Clean URL logic
+      let cleanLink = window.location.href;
+
+      try {
+        const urlObj = new URL(window.location.href);
+        const currentJobId = urlObj.searchParams.get('currentJobId');
+
+        if (currentJobId) {
+          // Priority 1: Get ID from URL query param
+          cleanLink = `https://www.linkedin.com/jobs/view/${currentJobId}/`;
+        } else {
+          // Priority 2: Try to find canonical link in DOM
+          const domLink = getAttributeFromSelectors([
+            '.job-details-jobs-unified-top-card__job-title h1 a',
+            '.jobs-unified-top-card__job-title a',
+            'h1.topcard__title a',
+            '.jobs-details-top-card__job-title a',
+            'a.app-aware-link[href*="/jobs/view/"]'
+          ], 'href');
+
+          if (domLink) {
+            // Handle relative URLs
+            const fullLink = domLink.startsWith('http') ? domLink : `https://www.linkedin.com${domLink}`;
+            const domUrlObj = new URL(fullLink);
+
+            // Extract ID from pathname: /jobs/view/123456/
+            const match = domUrlObj.pathname.match(/\/jobs\/view\/(\d+)/);
+            if (match && match[1]) {
+              cleanLink = `https://www.linkedin.com/jobs/view/${match[1]}/`;
+            } else {
+              // Just clean the params
+              cleanLink = `${domUrlObj.origin}${domUrlObj.pathname}`;
+            }
+          } else if (urlObj.pathname.includes('/jobs/view/')) {
+             // Priority 3: Clean current URL if it is a view page
+             cleanLink = `${urlObj.origin}${urlObj.pathname}`;
+          }
+        }
+      } catch (e) {
+        // Keep original URL if parsing fails
+        console.error('Error cleaning LinkedIn URL:', e);
+      }
+
       return {
         company: company || 'Unknown Company',
         role: role || 'Unknown Role',
         location: location || '',
         salaryRange: salaryRange || undefined,
         jobDescription: jobDescription || undefined,
-        link: window.location.href,
+        link: cleanLink,
         source: 'LinkedIn',
         employmentType: employmentType || undefined,
         companyLogo: companyLogo || undefined,
