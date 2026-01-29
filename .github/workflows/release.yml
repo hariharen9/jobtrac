@@ -1,0 +1,45 @@
+name: 🚀 Production Release
+
+on:
+  push:
+    tags:
+      # Pattern matches version tags ending in .0 (Major & Minor)
+      # e.g., 2.0.0, 0.5.0, 1.2.0
+      # Excludes patch versions like 1.0.1
+      - '[0-9]+.[0-9]+.0'
+
+jobs:
+  release:
+    name: 📦 Create GitHub Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to create a release
+
+    steps:
+      - name: 📦 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+
+      - name: 📚 Install Dependencies
+        run: npm ci
+
+      - name: 🏗️ Build Application
+        run: npm run build
+
+      - name: 🗜️ Archive Release
+        uses: thedoctor0/zip-release@0.7.6
+        with:
+          type: 'zip'
+          filename: 'jobtrac-release.zip'
+          path: 'dist'
+
+      - name: 🚀 Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          generate_release_notes: true
+          files: jobtrac-release.zip
