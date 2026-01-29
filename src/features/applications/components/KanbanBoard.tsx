@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence, LayoutGroup } from 'framer-motion';
 import { useSpring, animated } from '@react-spring/web';
 import { useInView } from 'react-intersection-observer';
-import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move, Archive, Sparkles } from 'lucide-react';
+import { MoreHorizontal, ExternalLink, Pencil, Trash2, Plus, Settings, Flame, Calendar, Move, Archive, Sparkles, Chrome } from 'lucide-react';
 import { Application, ApplicationStatus } from '../../../types';
 import { statusColors } from '../../../utils/statusColors';
 import SettingsModal from '../../../components/shared/SettingsModal';
@@ -514,8 +514,54 @@ const KanbanBoard: React.FC<KanbanBoardProps> = ({
       )}
 
       {applications.length === 0 && (
-        <div className="text-center py-12 text-slate-500 dark:text-slate-400">
-          No applications yet. Click "Add Application" to get started!
+        <div className="text-center py-16 text-slate-500 dark:text-slate-400">
+          <div className="max-w-md mx-auto space-y-6">
+            <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+              <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-600 dark:text-indigo-400">
+                <Sparkles className="w-8 h-8" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                No applications yet
+              </h3>
+              <p className="text-slate-600 dark:text-slate-300 mb-6">
+                Ready to land your dream job? Start tracking your applications now.
+              </p>
+
+              <div className="grid gap-4">
+                <button
+                  onClick={onAddApplication}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                >
+                  <Plus className="w-5 h-5" />
+                  Add First Application
+                </button>
+
+                <div className="relative hidden sm:block">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-white dark:bg-slate-800 text-slate-500">or try this</span>
+                  </div>
+                </div>
+
+                <a
+                  href="https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:flex w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-indigo-300 dark:hover:border-indigo-500 text-slate-700 dark:text-slate-200 font-medium py-3 px-6 rounded-xl transition-all hover:shadow-md items-center justify-center gap-2 group"
+                >
+                  <Chrome className="w-5 h-5 text-indigo-500" />
+                  <span>Use Browser Extension</span>
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 ml-auto" />
+                </a>
+              </div>
+
+              <p className="hidden sm:block mt-4 text-xs text-slate-400 dark:text-slate-500">
+                Instantly import jobs from LinkedIn, Naukri, Glassdoor, etc.
+              </p>
+            </div>
+          </div>
         </div>
       )}
 

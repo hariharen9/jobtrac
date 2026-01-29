@@ -86,6 +86,7 @@ const Footer = () => {
             <h4 className="text-lg font-semibold mb-4 text-indigo-400">Quick Links</h4>
             <ul className="space-y-2">
               {[
+                { name: 'Browser Extension', url: 'https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba' },
                 { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
                 { name: 'Issues', url: 'https://github.com/hariharen9/jobtrac/issues' },
                 { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },

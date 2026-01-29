@@ -4,7 +4,7 @@ import RangeSlider from '../../../components/shared/RangeSlider';
 import { useApplicationSettings } from '../../../hooks/useApplicationSettings';
 import {
   Briefcase, MapPin, Calendar, DollarSign, Star, Link as LinkIcon,
-  Mail, Users, FileText, Flag, ChevronDown, ChevronUp
+  Mail, Users, FileText, Flag, ChevronDown, ChevronUp, Chrome, ExternalLink
 } from 'lucide-react';
 import {
   FormInput,
@@ -345,6 +345,19 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           </div>
         )}
       </div>
+
+      {/* Pro Tip for Extension - Less intrusive placement */}
+      {!initialData && (
+        <div className="hidden sm:flex items-center gap-3 px-1 py-2">
+          <div className="p-1.5 bg-indigo-50 dark:bg-indigo-900/30 rounded-full text-indigo-600 dark:text-indigo-400">
+            <Chrome className="w-4 h-4" />
+          </div>
+          <div className="flex-1 text-xs text-slate-500 dark:text-slate-400">
+            <span className="font-medium text-slate-700 dark:text-slate-300">Pro Tip: </span>
+            You can auto-fill this form using our <a href="https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba" target="_blank" rel="noopener noreferrer" className="text-indigo-600 dark:text-indigo-400 hover:underline">browser extension</a>.
+          </div>
+        </div>
+      )}
 
       <FormActions
         onCancel={onCancel}

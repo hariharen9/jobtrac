@@ -25,7 +25,8 @@ import {
   Target,
   Phone,
   Mail,
-  ExternalLink
+  ExternalLink,
+  Chrome
 } from 'lucide-react';
 import { TabType, Application, PrepEntry, CompanyResearch, NetworkingContact, StarStory, VaultResource, EditableItem } from '../../types';
 import { useMediaQuery } from '../../hooks/shared/useMediaQuery';
@@ -218,6 +219,18 @@ const CommandPalette: React.FC<CommandPaletteProps> = ({
       category: 'navigation',
       shortcut: '⌘⌥N',
       keywords: ['notes', 'toggle', 'show', 'hide', 'panel']
+    },
+    {
+      id: 'install-extension',
+      title: 'Install Browser Extension',
+      description: 'Import jobs from LinkedIn & Indeed with one click',
+      action: () => {
+        window.open('https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba', '_blank');
+        onClose();
+      },
+      icon: Chrome,
+      category: 'navigation',
+      keywords: ['extension', 'chrome', 'browser', 'install', 'import', 'automate', 'linkedin', 'indeed']
     },
     // Action Commands
     {

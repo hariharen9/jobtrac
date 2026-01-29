@@ -1315,6 +1315,7 @@ function App() {
               <h4 className="font-semibold mb-2 text-slate-700 dark:text-dark-text amoled:text-amoled-text text-center md:text-right">Quick Links</h4>
               <ul className="flex flex-wrap justify-center md:justify-end gap-x-4 gap-y-2">
                 {[
+                  { name: 'Browser Extension', url: 'https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba' },
                   { name: 'Source Code', url: 'https://github.com/hariharen9/jobtrac' },
                   { name: 'Report an Issue', url: 'https://github.com/hariharen9/jobtrac/issues' },
                   { name: 'Contributing', url: 'https://github.com/hariharen9/jobtrac/blob/main/CONTRIBUTING.md' },

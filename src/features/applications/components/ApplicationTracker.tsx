@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle, Archive } from 'lucide-react';
+import { Briefcase, Plus, Filter, SortAsc, SortDesc, X, ChevronDown, LayoutGrid, List, Trash2, Settings, HelpCircle, Archive, Sparkles, Chrome, ExternalLink } from 'lucide-react';
 import { Application, ApplicationStatus, ApplicationSource } from '../../../types';
 import ApplicationCard from './ApplicationCard';
 import ApplicationRow from './ApplicationRow';
@@ -556,13 +556,65 @@ const ApplicationTracker: React.FC<ApplicationTrackerProps> = ({
       )}
 
       {processedApplications.length === 0 && (
-        <EmptyState
-          title="No Applications Found"
-          message={hasActiveFilters ? "Try adjusting your filters or add a new application." : "Start tracking your job search by adding your first application."}
-          buttonText={hasActiveFilters ? "Clear Filters" : "Add Application"}
-          onButtonClick={hasActiveFilters ? clearFilters : onAddApplication}
-          icon={<Briefcase className="w-12 h-12 text-slate-400" />}
-        />
+        hasActiveFilters ? (
+          <EmptyState
+            title="No Applications Found"
+            message="Try adjusting your filters or add a new application."
+            buttonText="Clear Filters"
+            onButtonClick={clearFilters}
+            icon={<Briefcase className="w-12 h-12 text-slate-400" />}
+          />
+        ) : (
+          <div className="text-center py-16 text-slate-500 dark:text-slate-400">
+            <div className="max-w-md mx-auto space-y-6">
+              <div className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-200 dark:border-slate-700">
+                <div className="w-16 h-16 bg-indigo-100 dark:bg-indigo-900/30 rounded-2xl flex items-center justify-center mx-auto mb-6 text-indigo-600 dark:text-indigo-400">
+                  <Sparkles className="w-8 h-8" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
+                  No applications yet
+                </h3>
+                <p className="text-slate-600 dark:text-slate-300 mb-6">
+                  Ready to land your dream job? Start tracking your applications now.
+                </p>
+
+                <div className="grid gap-4">
+                  <button
+                    onClick={onAddApplication}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 px-6 rounded-xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Add First Application
+                  </button>
+
+                  <div className="relative hidden sm:block">
+                    <div className="absolute inset-0 flex items-center">
+                      <div className="w-full border-t border-slate-200 dark:border-slate-700"></div>
+                    </div>
+                    <div className="relative flex justify-center text-sm">
+                      <span className="px-2 bg-white dark:bg-slate-800 text-slate-500">or try this</span>
+                    </div>
+                  </div>
+
+                  <a
+                    href="https://chromewebstore.google.com/detail/jobtrac-job-application-i/nipmnhedccgblgibeiikbcphcofgjfba"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hidden sm:flex w-full bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 hover:border-indigo-300 dark:hover:border-indigo-500 text-slate-700 dark:text-slate-200 font-medium py-3 px-6 rounded-xl transition-all hover:shadow-md items-center justify-center gap-2 group"
+                  >
+                    <Chrome className="w-5 h-5 text-indigo-500" />
+                    <span>Use Browser Extension</span>
+                    <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-indigo-500 ml-auto" />
+                  </a>
+                </div>
+
+                <p className="hidden sm:block mt-4 text-xs text-slate-400 dark:text-slate-500">
+                  Instantly import jobs from LinkedIn, Indeed & Glassdoor
+                </p>
+              </div>
+            </div>
+          </div>
+        )
       )}
 
       <ConfirmationModal 
