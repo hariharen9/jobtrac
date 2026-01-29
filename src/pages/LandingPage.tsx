@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { ReactLenis } from 'lenis/react';
 import { useAuth } from '../features/auth/hooks/useAuth';
 import { useTheme } from '../hooks/shared/useTheme';
-import { ChevronDown, Menu, X } from 'lucide-react';
+import { ChevronDown, Menu, X, ArrowUp } from 'lucide-react';
 import Header from '../components/landing/Header';
 import Hero from '../components/landing/Hero';
 import FeaturesSection from '../components/landing/Features';
+import ExtensionSection from '../components/landing/ExtensionSection';
 import WhyJobTracSection from '../components/landing/WhyJobTracSection';
 import ProblemSolutionSection from '../components/landing/ProblemSolutionSection';
 import CompetitiveAdvantageSection from '../components/landing/CompetitiveAdvantageSection';
@@ -19,9 +21,23 @@ import BackToTopButton from '../components/shared/BackToTopButton';
 import { Helmet } from 'react-helmet-async';
 
 const LandingPage = () => {
-  useTheme();
+  const { setTheme } = useTheme();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+
+  // Force AMOLED theme on landing page mount if no preference set or just force it for the vibe
+  useEffect(() => {
+    // We only set it if the user hasn't explicitly set a theme recently,
+    // OR we can just set it and let them change it.
+    // Given "always by default", let's set it.
+    // To avoid annoying flashes if they navigate back/forth, we could check session storage.
+    // But for "always by default", simply setting it is the most direct interpretation.
+
+    // Check if we've already forced it this session to avoid overriding user choice if they change it and refresh?
+    // Let's just set it.
+    setTheme('amoled');
+  }, [setTheme]);
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [showJumpNav, setShowJumpNav] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -80,6 +96,7 @@ const LandingPage = () => {
 
   const navSections = [
     { id: 'features-section', label: 'Features' },
+    { id: 'extension-section', label: 'Extension' },
     { id: 'why-jobtrac-section', label: 'Why JobTrac' },
     { id: 'problem-solution-section', label: 'Solution' },
     { id: 'competitive-advantage-section', label: 'Advantages' },
@@ -94,6 +111,7 @@ const LandingPage = () => {
         <title>JobTrac - The Ultimate Job Search Command Center</title>
       </Helmet>
       <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/20 dark:from-dark-bg dark:via-dark-bg dark:to-dark-card/20 amoled:from-amoled-bg amoled:via-amoled-bg amoled:to-amoled-card/20">
+        <ReactLenis root>
         {/* Animated Background Elements */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <motion.div
@@ -141,23 +159,23 @@ const LandingPage = () => {
 
         {/* Floating Jump Navigation - Desktop */}
         <motion.div
-          className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30 shadow-lg hidden sm:flex"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: showJumpNav ? 1 : 0, y: showJumpNav ? 0 : -20 }}
+          className="fixed top-4 left-1/2 z-50 bg-white/80 dark:bg-dark-card/80 amoled:bg-amoled-card/80 backdrop-blur-sm rounded-full px-4 py-2 border border-white/30 dark:border-dark-border/30 amoled:border-amoled-border/30 shadow-lg hidden sm:flex max-w-[90vw] overflow-x-auto scrollbar-hide"
+          initial={{ opacity: 0, y: -20, x: "-50%" }}
+          animate={{ opacity: showJumpNav ? 1 : 0, y: showJumpNav ? 0 : -20, x: "-50%" }}
           transition={{ duration: 0.3 }}
         >
-          <div className="flex items-center space-x-2 text-sm">
-            <span className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary whitespace-nowrap">Jump to:</span>
+          <div className="flex items-center space-x-2 text-sm whitespace-nowrap">
+            <span className="text-slate-600 dark:text-dark-text-secondary amoled:text-amoled-text-secondary">Jump to:</span>
             {navSections.map((section, index) => (
               <React.Fragment key={section.id}>
-                <button 
+                <button
                   onClick={() => scrollToSection(section.id)}
-                  className="px-2 py-1 text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors whitespace-nowrap"
+                  className="px-2 py-1 text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors"
                 >
                   {section.label}
                 </button>
                 {index < navSections.length - 1 && (
-                  <div className="w-px h-4 bg-slate-300 dark:bg-dark-border amoled:bg-amoled-border"></div>
+                  <div className="w-px h-4 bg-slate-300 dark:bg-dark-border amoled:bg-amoled-border flex-shrink-0"></div>
                 )}
               </React.Fragment>
             ))}
@@ -209,6 +227,9 @@ const LandingPage = () => {
         <div id="features-section">
           <FeaturesSection />
         </div>
+        <div id="extension-section">
+          <ExtensionSection />
+        </div>
         <div id="why-jobtrac-section">
           <WhyJobTracSection />
         </div>
@@ -230,6 +251,7 @@ const LandingPage = () => {
         <CTASection />
         <Footer />
         <BackToTopButton />
+        </ReactLenis>
       </div>
     </>
   );

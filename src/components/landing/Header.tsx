@@ -42,6 +42,14 @@ const Header = () => {
           </button>
           <button
             onClick={() => {
+              document.getElementById('extension-section')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors font-medium"
+          >
+            Extension
+          </button>
+          <button
+            onClick={() => {
               document.getElementById('pricing-section')?.scrollIntoView({ behavior: 'smooth' });
             }}
             className="text-slate-700 dark:text-dark-text amoled:text-amoled-text hover:text-indigo-600 dark:hover:text-indigo-400 amoled:hover:text-indigo-400 transition-colors font-medium"

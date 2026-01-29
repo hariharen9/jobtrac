@@ -37,6 +37,7 @@ import { Helmet } from 'react-helmet-async';
 import SimpleTooltip from './components/shared/SimpleTooltip';
 import StarTooltip from './components/shared/StarTooltip';
 import LoadingSpinner from './components/shared/LoadingSpinner';
+import ExtensionPromo from './components/shared/ExtensionPromo';
 
 import PrivacyPolicyModal from './components/shared/PrivacyPolicyModal';
 import TermsModal from './components/shared/TermsModal';
@@ -1464,15 +1465,18 @@ function App() {
         isSubmitting={isSubmittingProfile}
       />
 
-      <PrivacyPolicyModal 
-        isOpen={isPrivacyOpen} 
-        onClose={() => setIsPrivacyOpen(false)} 
+      <PrivacyPolicyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
       />
-      
-      <TermsModal 
-        isOpen={isTermsOpen} 
-        onClose={() => setIsTermsOpen(false)} 
+
+      <TermsModal
+        isOpen={isTermsOpen}
+        onClose={() => setIsTermsOpen(false)}
       />
+
+      {/* Persistent Extension Promo Badge */}
+      <ExtensionPromo />
     </div>
   );
 }

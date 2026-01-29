@@ -21,14 +21,21 @@ export function useTheme() {
   const toggleTheme = useCallback(() => {
     setTheme(prevTheme => {
       const newTheme = prevTheme === 'light' ? 'dark' : prevTheme === 'dark' ? 'amoled' : 'light';
-      
+
       if (user?.uid) {
         AnalyticsService.trackEvent('theme_changed', user.uid, { theme_name: newTheme });
       }
-      
+
       return newTheme;
     });
   }, [user?.uid]);
 
-  return { theme, toggleTheme };
+  const setThemeValue = useCallback((newTheme: string) => {
+    setTheme(newTheme);
+    if (user?.uid) {
+      AnalyticsService.trackEvent('theme_changed', user.uid, { theme_name: newTheme });
+    }
+  }, [user?.uid]);
+
+  return { theme, toggleTheme, setTheme: setThemeValue };
 }
