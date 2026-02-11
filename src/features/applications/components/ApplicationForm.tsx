@@ -143,7 +143,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FormInput
             label="Company"
             value={formData.company}
-            onChange={(e) => setFormData({ ...formData, company: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, company: value })}
             placeholder="e.g., Google, Microsoft, Startup Inc."
             required
             fullWidth
@@ -152,7 +152,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FormInput
             label="Role"
             value={formData.role}
-            onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, role: value })}
             placeholder="e.g., Senior Software Engineer, Product Manager"
             required
             fullWidth
@@ -168,7 +168,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FormSelect
             label="Status"
             value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value as ApplicationStatus })}
+            onChange={(value) => setFormData({ ...formData, status: value as ApplicationStatus })}
             options={statusOptions}
             fullWidth
           />
@@ -176,7 +176,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FormSelect
             label="Source"
             value={formData.source}
-            onChange={(e) => setFormData({ ...formData, source: e.target.value as ApplicationSource })}
+            onChange={(value) => setFormData({ ...formData, source: value as ApplicationSource })}
             options={sourceOptions}
             fullWidth
           />
@@ -187,7 +187,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
               <FormInput
                 label="Specify Source"
                 value={formData.sourceOther}
-                onChange={(e) => setFormData({ ...formData, sourceOther: e.target.value })}
+                onChange={(value) => setFormData({ ...formData, sourceOther: value })}
                 placeholder="Enter the source name"
                 fullWidth
               />
@@ -198,7 +198,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             label="Date Applied"
             type="date"
             value={formData.date}
-            onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, date: value })}
             icon={Calendar}
             fullWidth
           />
@@ -207,7 +207,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             label="Interview Date"
             type="date"
             value={formData.interviewDate}
-            onChange={(e) => setFormData({ ...formData, interviewDate: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, interviewDate: value })}
             icon={Calendar}
             fullWidth
           />
@@ -222,7 +222,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <FormInput
             label="Location"
             value={formData.location}
-            onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, location: value })}
             placeholder="e.g., San Francisco, Remote, Hybrid"
             fullWidth
           />
@@ -231,7 +231,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
             label="Recruiter Email"
             type="email"
             value={formData.recruiter}
-            onChange={(e) => setFormData({ ...formData, recruiter: e.target.value })}
+            onChange={(value) => setFormData({ ...formData, recruiter: value })}
             placeholder="recruiter@company.com"
             icon={Mail}
             fullWidth
@@ -242,7 +242,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
               label="Job Posting Link"
               type="url"
               value={formData.link}
-              onChange={(e) => setFormData({ ...formData, link: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, link: value })}
               placeholder="https://company.com/careers/job-id"
               icon={LinkIcon}
               fullWidth
@@ -301,7 +301,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
         <FormSectionHeader icon={FileText} title="Additional Notes" />
         <FormTextarea
           value={formData.notes}
-          onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+          onChange={(value) => setFormData({ ...formData, notes: value })}
           rows={4}
           placeholder="Add any additional information, interview feedback, or reminders..."
           fullWidth
@@ -333,7 +333,7 @@ const ApplicationForm: React.FC<ApplicationFormProps> = ({ onSubmit, onCancel, i
           <div className="mt-4 animate-in fade-in slide-in-from-top-2 duration-200">
             <FormTextarea
               value={formData.jobDescription}
-              onChange={(e) => setFormData({ ...formData, jobDescription: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, jobDescription: value })}
               rows={8}
               placeholder="Paste the full job description here for reference..."
               fullWidth
